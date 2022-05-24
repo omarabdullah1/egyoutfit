@@ -34,30 +34,30 @@ Widget defaultButton({
       onPressed: function,
       child: isIcon
           ? Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: Colors.white,
-          ),
-          const SizedBox(
-            width: 5.0,
-          ),
-          Text(
-            isUpperCase ? text.toUpperCase() : text,
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ],
-      )
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  icon,
+                  color: Colors.white,
+                ),
+                const SizedBox(
+                  width: 5.0,
+                ),
+                Text(
+                  isUpperCase ? text.toUpperCase() : text,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            )
           : Text(
-        isUpperCase ? text.toUpperCase() : text,
-        style: const TextStyle(
-          color: Colors.white,
-        ),
-      ),
+              isUpperCase ? text.toUpperCase() : text,
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+            ),
     ),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(
@@ -85,29 +85,29 @@ Widget defaultButton2({
       onPressed: function,
       child: ico != null
           ? Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            ico,
-            color: Colors.white,
-          ),
-          const SizedBox(
-            width: 10.0,
-          ),
-          Text(
-            isUpperCase ? text.toUpperCase() : text,
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ],
-      )
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  ico,
+                  color: Colors.white,
+                ),
+                const SizedBox(
+                  width: 10.0,
+                ),
+                Text(
+                  isUpperCase ? text.toUpperCase() : text,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            )
           : Text(
-        isUpperCase ? text.toUpperCase() : text,
-        style: const TextStyle(
-          color: Colors.white,
-        ),
-      ),
+              isUpperCase ? text.toUpperCase() : text,
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+            ),
     ),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(
@@ -185,11 +185,11 @@ Widget defaultFormField({
         ),
         suffixIcon: suffix != null
             ? IconButton(
-          onPressed: suffixPressed,
-          icon: Icon(
-            suffix,
-          ),
-        )
+                onPressed: suffixPressed,
+                icon: Icon(
+                  suffix,
+                ),
+              )
             : null,
         border: const OutlineInputBorder(),
         enabledBorder: OutlineInputBorder(
@@ -240,11 +240,11 @@ Widget searchFormField({
           ),
           suffixIcon: suffix != null
               ? IconButton(
-            onPressed: suffixPressed,
-            icon: Icon(
-              suffix,
-            ),
-          )
+                  onPressed: suffixPressed,
+                  icon: Icon(
+                    suffix,
+                  ),
+                )
               : null,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(40.0)),
         ),
@@ -290,8 +290,7 @@ Widget categoryButton({
       ),
     );
 
-Widget myDivider({height = 1.0}) =>
-    Padding(
+Widget myDivider({height = 1.0}) => Padding(
       padding: const EdgeInsetsDirectional.only(
         start: 20.0,
       ),
@@ -302,22 +301,23 @@ Widget myDivider({height = 1.0}) =>
       ),
     );
 
-void navigateTo(context, widget) =>
-    Navigator.push(
+void navigateTo(context, widget) => Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => widget,
       ),
     );
 
-void navigateAndFinish(context,
-    widget,) =>
+void navigateAndFinish(
+  context,
+  widget,
+) =>
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
         builder: (context) => widget,
       ),
-          (route) {
+      (route) {
         return false;
       },
     );
@@ -441,12 +441,9 @@ Widget buildListProduct({
                         icon: CircleAvatar(
                           radius: 15.0,
                           backgroundColor:
-                          ShopCubit
-                              .get(context)
-                              .favorites
-                              .contains(idList)
-                              ? defaultColor
-                              : Colors.grey,
+                              ShopCubit.get(context).favorites.contains(idList)
+                                  ? defaultColor
+                                  : Colors.grey,
                           child: const Icon(
                             Icons.favorite_border,
                             size: 14.0,
@@ -473,14 +470,15 @@ class BuildListProduct2 extends StatefulWidget {
   final bool flag;
   final Function validate;
 
-  const BuildListProduct2({Key key,
-    this.model,
-    this.sizee,
-    this.idList,
-    this.context,
-    this.index,
-    this.flag,
-    this.validate})
+  const BuildListProduct2(
+      {Key key,
+      this.model,
+      this.sizee,
+      this.idList,
+      this.context,
+      this.index,
+      this.flag,
+      this.validate})
       : super(key: key);
 
   @override
@@ -494,49 +492,28 @@ class _BuildListProduct2State extends State<BuildListProduct2> {
 
   @override
   Widget build(BuildContext context) {
-    if (ShopCubit
-        .get(context)
-        .counters
-        .isNotEmpty) {
-      if (ShopCubit
-          .get(context)
-          .counters
-          .length <
-          ShopCubit
-              .get(context)
-              .cartModel
-              .length) {
-        ShopCubit
-            .get(context)
-            .counters
-            .add(count);
+    if (ShopCubit.get(context).counters.isNotEmpty) {
+      if (ShopCubit.get(context).counters.length <
+          ShopCubit.get(context).cartModel.length) {
+        ShopCubit.get(context).counters.add(count);
       } else {
-        ShopCubit
-            .get(context)
+        ShopCubit.get(context)
             .counters
-            .removeAt(ShopCubit
-            .get(context)
-            .cartModel
-            .indexOf(widget.model));
-        ShopCubit
-            .get(context)
-            .counters
-            .insert(
-            ShopCubit
-                .get(context)
-                .cartModel
-                .indexOf(widget.model), count);
+            .removeAt(ShopCubit.get(context).cartModel.indexOf(widget.model));
+        ShopCubit.get(context).counters.insert(
+            ShopCubit.get(context).cartModel.indexOf(widget.model), count);
       }
     } else {
-      ShopCubit
-          .get(context)
-          .counters
-          .add(count);
+      ShopCubit.get(context).counters.add(count);
     }
 
     // mCounter =ShopCubit.get(context).counters;
-    var price = (widget.model.price -
-        ((widget.model.price / 100) * widget.model.discount));
+    var price = widget.model.isShipping
+        ? (widget.model.price -
+                ((widget.model.price / 100) * widget.model.discount)) +
+            int.parse(widget.model.shippingPrice)
+        : (widget.model.price -
+            ((widget.model.price / 100) * widget.model.discount));
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: SizedBox(
@@ -576,11 +553,11 @@ class _BuildListProduct2State extends State<BuildListProduct2> {
                           ),
                           widget.sizee != ''
                               ? buildSizeCircle(
-                            size: widget.sizee,
-                            state: false,
-                            innerSize: 15.0,
-                            outerSize: 17.0,
-                          )
+                                  size: widget.sizee,
+                                  state: false,
+                                  innerSize: 15.0,
+                                  outerSize: 17.0,
+                                )
                               : const SizedBox(),
                         ],
                       ),
@@ -668,9 +645,7 @@ class _BuildListProduct2State extends State<BuildListProduct2> {
                     IconButton(
                         onPressed: () {
                           ShopCubit.get(context).removeCart(
-                              ShopCubit
-                                  .get(context)
-                                  .cart[widget.index]);
+                              ShopCubit.get(context).cart[widget.index]);
                           ShopCubit.get(context).getCart();
                         },
                         icon: const Icon(Icons.close)),
@@ -678,32 +653,18 @@ class _BuildListProduct2State extends State<BuildListProduct2> {
                       child: FloatingActionButton(
                         onPressed: () {
                           count++;
-                          ShopCubit
-                              .get(context)
-                              .counters
-                              .removeAt(
-                              ShopCubit
-                                  .get(context)
+                          ShopCubit.get(context).counters.removeAt(
+                              ShopCubit.get(context)
                                   .cartModel
                                   .indexOf(widget.model));
-                          ShopCubit
-                              .get(context)
-                              .counters
-                              .insert(
-                              ShopCubit
-                                  .get(context)
+                          ShopCubit.get(context).counters.insert(
+                              ShopCubit.get(context)
                                   .cartModel
                                   .indexOf(widget.model),
                               count);
                           ShopCubit.get(context).changeCount();
-                          dev.log(ShopCubit
-                              .get(context)
-                              .counters
-                              .toString());
-                          ShopCubit
-                              .get(context)
-                              .counters
-                              .removeAt(0);
+                          dev.log(ShopCubit.get(context).counters.toString());
+                          ShopCubit.get(context).counters.removeAt(0);
 
                           // print(count.toString());
                           // ShopCubit.get(context).changeCount();
@@ -723,60 +684,32 @@ class _BuildListProduct2State extends State<BuildListProduct2> {
                         onPressed: () {
                           if (count <= 1) {
                             count = 1;
-                            ShopCubit
-                                .get(context)
-                                .counters
-                                .removeAt(
-                                ShopCubit
-                                    .get(context)
+                            ShopCubit.get(context).counters.removeAt(
+                                ShopCubit.get(context)
                                     .cartModel
                                     .indexOf(widget.model));
-                            ShopCubit
-                                .get(context)
-                                .counters
-                                .insert(
-                                ShopCubit
-                                    .get(context)
+                            ShopCubit.get(context).counters.insert(
+                                ShopCubit.get(context)
                                     .cartModel
                                     .indexOf(widget.model),
                                 count);
                             ShopCubit.get(context).changeCount();
-                            dev.log(ShopCubit
-                                .get(context)
-                                .counters
-                                .toString());
-                            ShopCubit
-                                .get(context)
-                                .counters
-                                .removeAt(0);
+                            dev.log(ShopCubit.get(context).counters.toString());
+                            ShopCubit.get(context).counters.removeAt(0);
                           } else {
                             count--;
-                            ShopCubit
-                                .get(context)
-                                .counters
-                                .removeAt(
-                                ShopCubit
-                                    .get(context)
+                            ShopCubit.get(context).counters.removeAt(
+                                ShopCubit.get(context)
                                     .cartModel
                                     .indexOf(widget.model));
-                            ShopCubit
-                                .get(context)
-                                .counters
-                                .insert(
-                                ShopCubit
-                                    .get(context)
+                            ShopCubit.get(context).counters.insert(
+                                ShopCubit.get(context)
                                     .cartModel
                                     .indexOf(widget.model),
                                 count);
                             ShopCubit.get(context).changeCount();
-                            dev.log(ShopCubit
-                                .get(context)
-                                .counters
-                                .toString());
-                            ShopCubit
-                                .get(context)
-                                .counters
-                                .removeAt(0);
+                            dev.log(ShopCubit.get(context).counters.toString());
+                            ShopCubit.get(context).counters.removeAt(0);
                           }
                         },
                         backgroundColor: Colors.white,
@@ -890,20 +823,19 @@ Widget buildGridProduct({
                       children: [
                         model[index].discount != 0
                             ? Text(
-                          '${model[index].price - ((model[index].price / 100) *
-                              model[index].discount)}',
-                          style: const TextStyle(
-                            fontSize: 16.0,
-                            color: defaultColor,
-                          ),
-                        )
+                                '${model[index].price - ((model[index].price / 100) * model[index].discount)}',
+                                style: const TextStyle(
+                                  fontSize: 16.0,
+                                  color: defaultColor,
+                                ),
+                              )
                             : Text(
-                          '${model[index].price}',
-                          style: const TextStyle(
-                            fontSize: 16.0,
-                            color: defaultColor,
-                          ),
-                        ),
+                                '${model[index].price}',
+                                style: const TextStyle(
+                                  fontSize: 16.0,
+                                  color: defaultColor,
+                                ),
+                              ),
                         const SizedBox(
                           width: 5.0,
                         ),
@@ -925,10 +857,9 @@ Widget buildGridProduct({
                           },
                           icon: CircleAvatar(
                             radius: 15.0,
-                            backgroundColor: ShopCubit
-                                .get(context)
-                                .favorites
-                                .contains(idList[index])
+                            backgroundColor: ShopCubit.get(context)
+                                    .favorites
+                                    .contains(idList[index])
                                 ? defaultColor
                                 : Colors.grey,
                             child: const Icon(
@@ -965,7 +896,9 @@ Widget buildGridProduct({
 //   @required List<ShopProductsModel> model,
 // }) =>;
 class BuildAllProducts extends StatefulWidget {
-  const BuildAllProducts({Key key, this.screenWidth, this.model,this.modelIDList}) : super(key: key);
+  const BuildAllProducts(
+      {Key key, this.screenWidth, this.model, this.modelIDList})
+      : super(key: key);
   final double screenWidth;
   final List<ShopProductsModel> model;
   final List modelIDList;
@@ -979,168 +912,147 @@ class _BuildAllProductsState extends State<BuildAllProducts> {
   Widget build(BuildContext context) {
     return widget.model.isNotEmpty
         ? SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: ListView.separated(
-          shrinkWrap: true,
-          scrollDirection: Axis.vertical,
-          physics: const BouncingScrollPhysics(),
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () {
-                DashboardCubit
-                    .get(context)
-                    .productCaroIndex = 0;
-                navigateTo(
-                    context,
-                    SellerProduct(
-                      models: widget.model[index],
-                      index: index,
-                      modelId: widget.modelIDList[index],
-                    ));
-              },
-              child: Container(
-                height: 160.0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  color: Colors.white,
-                  border: Border.all(width: 2.0, color: Colors.black),
-                ),
-                child: Stack(
-                  children: [
-                    const SizedBox(
-                      width: 10.0,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            width:
-                            MediaQuery
-                                .of(context)
-                                .size
-                                .width - 240.0,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15.0),
-                                border: Border.all(
-                                    width: 2.0, color: Colors.black)),
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  child: const Icon(Icons.arrow_back_ios),
-                                  left: 0.0,
-                                  height:
-                                  MediaQuery
-                                      .of(context)
-                                      .size
-                                      .height /
-                                      7.0,
-                                ),
-                                CarouselSlider(
-                                  items: widget.model[index].image.isEmpty
-                                      ? const [Icon(Icons.image)]
-                                      : widget.model[index].image
-                                      .map((e) => Image.network(e,width: 150,))
-                                      .toList(),
-                                  options: CarouselOptions(
-                                    aspectRatio: 1.0,
-                                    height: 130,
-                                    viewportFraction: 1.0,
-                                    enlargeCenterPage: false,
-                                    initialPage: 0,
-                                    enableInfiniteScroll: true,
-                                    reverse: false,
-                                    autoPlay: false,
-                                    autoPlayInterval:
-                                    const Duration(seconds: 3),
-                                    autoPlayAnimationDuration:
-                                    const Duration(seconds: 1),
-                                    autoPlayCurve: Curves.fastOutSlowIn,
-                                    scrollDirection: Axis.horizontal,
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: ListView.separated(
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      DashboardCubit.get(context).productCaroIndex = 0;
+                      navigateTo(
+                          context,
+                          SellerProduct(
+                            models: widget.model[index],
+                            index: index,
+                            modelId: widget.modelIDList[index],
+                          ));
+                    },
+                    child: Container(
+                      height: 160.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15.0),
+                        color: Colors.white,
+                        border: Border.all(width: 2.0, color: Colors.black),
+                      ),
+                      child: Stack(
+                        children: [
+                          const SizedBox(
+                            width: 10.0,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width - 240.0,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                      border: Border.all(
+                                          width: 2.0, color: Colors.black)),
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        child: const Icon(Icons.arrow_back_ios),
+                                        left: 0.0,
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                7.0,
+                                      ),
+                                      CarouselSlider(
+                                        items: widget.model[index].image.isEmpty
+                                            ? const [Icon(Icons.image)]
+                                            : widget.model[index].image
+                                                .map((e) => Image.network(
+                                                      e,
+                                                      width: 150,
+                                                    ))
+                                                .toList(),
+                                        options: CarouselOptions(
+                                          aspectRatio: 1.0,
+                                          height: 130,
+                                          viewportFraction: 1.0,
+                                          enlargeCenterPage: false,
+                                          initialPage: 0,
+                                          enableInfiniteScroll: true,
+                                          reverse: false,
+                                          autoPlay: false,
+                                          autoPlayInterval:
+                                              const Duration(seconds: 3),
+                                          autoPlayAnimationDuration:
+                                              const Duration(seconds: 1),
+                                          autoPlayCurve: Curves.fastOutSlowIn,
+                                          scrollDirection: Axis.horizontal,
+                                        ),
+                                        // carouselController: caroController,
+                                      ),
+                                      Positioned(
+                                        child:
+                                            const Icon(Icons.arrow_forward_ios),
+                                        right: 0.0,
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                7.0,
+                                      ),
+                                    ],
                                   ),
-                                  // carouselController: caroController,
                                 ),
-                                Positioned(
-                                  child:
-                                  const Icon(Icons.arrow_forward_ios),
-                                  right: 0.0,
-                                  height:
-                                  MediaQuery
-                                      .of(context)
-                                      .size
-                                      .height /
-                                      7.0,
-                                ),
-                              ],
+                              ),
+                            ],
+                          ),
+                          Positioned(
+                            child: Text(widget.model[index].name),
+                            top: MediaQuery.of(context).size.height / 15,
+                            right: MediaQuery.of(context).size.width / 10,
+                          ),
+                          Positioned(
+                            child: Text('\$ ${widget.model[index].price}'),
+                            top: MediaQuery.of(context).size.height / 10,
+                            right: MediaQuery.of(context).size.width / 10,
+                          ),
+                          Positioned(
+                            top: 10.0,
+                            right: 10.0,
+                            child: Container(
+                              height: 30.0,
+                              width: 80.0,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.0),
+                                color: widget.model[index].state == 'Approved'
+                                    ? Colors.green
+                                    : widget.model[index].state == 'Pending'
+                                        ? Colors.orange
+                                        : widget.model[index].state ==
+                                                'Cancelled'
+                                            ? Colors.red
+                                            : Colors.white,
+                              ),
+                              child: Center(
+                                  child: Text(widget.model[index].state,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                          color: Colors.white))),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Positioned(
-                      child: Text(widget.model[index].name),
-                      top: MediaQuery
-                          .of(context)
-                          .size
-                          .height / 15,
-                      right: MediaQuery
-                          .of(context)
-                          .size
-                          .width / 10,
-                    ),
-                    Positioned(
-                      child: Text('\$ ${widget.model[index].price}'),
-                      top: MediaQuery
-                          .of(context)
-                          .size
-                          .height / 10,
-                      right: MediaQuery
-                          .of(context)
-                          .size
-                          .width / 10,
-                    ),
-                    Positioned(
-                      top: 10.0,
-                      right: 10.0,
-                      child: Container(
-                        height: 30.0,
-                        width: 80.0,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                          color: widget.model[index].state == 'Approved'
-                              ? Colors.green
-                              : widget.model[index].state == 'Pending'
-                              ? Colors.orange
-                              : widget.model[index].state ==
-                              'Cancelled'
-                              ? Colors.red
-                              : Colors.white,
-                        ),
-                        child: Center(
-                            child: Text(widget.model[index].state,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    color: Colors.white))),
+                        ],
                       ),
                     ),
-                  ],
+                  );
+                },
+                separatorBuilder: (context, index) => const SizedBox(
+                  height: 10.0,
                 ),
+                itemCount: widget.model.length,
               ),
-            );
-          },
-          separatorBuilder: (context, index) =>
-          const SizedBox(
-            height: 10.0,
-          ),
-          itemCount: widget.model.length,
-        ),
-      ),
-    )
+            ),
+          )
         : const Center(
-      child: Text('No Products Yet'),
-    );
+            child: Text('No Products Yet'),
+          );
   }
 }
 
@@ -1165,9 +1077,7 @@ Widget buildRequests({
                   children: [
                     CircleAvatar(
                         backgroundColor:
-                        DashboardCubit
-                            .get(context)
-                            .dropDownValueColor,
+                            DashboardCubit.get(context).dropDownValueColor,
                         radius: 5.0),
                     const SizedBox(
                       width: 5.0,
@@ -1178,9 +1088,7 @@ Widget buildRequests({
                         shape: BoxShape.rectangle,
                       ),
                       child: DropdownButton(
-                        value: DashboardCubit
-                            .get(context)
-                            .dropDownValue,
+                        value: DashboardCubit.get(context).dropDownValue,
                         icon: const Icon(Icons.keyboard_arrow_down),
                         items: [
                           'All Requests',
@@ -1207,204 +1115,169 @@ Widget buildRequests({
           ),
           model.isNotEmpty
               ? Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: ListView.separated(
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              physics: const BouncingScrollPhysics(),
-              itemBuilder: (context, index) =>
-                  GestureDetector(
-                    onTap: () {
-                      DashboardCubit
-                          .get(context)
-                          .productCaroIndex = 0;
-                      navigateTo(
-                          context,
-                          SellerRequest(
-                            models: model[index],
-                            orderModel: ordersModel[index],
-                            state: DashboardCubit
-                                .get(context)
-                                .requestModelStateList[index],
-                            index: index,
-                            id: id[index],
-                            dropValue:
-                            DashboardCubit
-                                .get(context)
-                                .dropDownValue,
-                          ));
-                    },
-                    child: Container(
-                      height: 160.0,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15.0),
-                        color: Colors.white,
-                        border: Border.all(width: 2.0, color: Colors.black),
-                      ),
-                      child: Stack(
-                        children: [
-                          const SizedBox(
-                            width: 10.0,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  width: MediaQuery
-                                      .of(context)
-                                      .size
-                                      .width -
-                                      240.0,
-                                  decoration: BoxDecoration(
-                                      borderRadius:
-                                      BorderRadius.circular(15.0),
-                                      border: Border.all(
-                                          width: 2.0, color: Colors.black)),
-                                  child: Stack(
-                                    children: [
-                                      Positioned(
-                                        child:
-                                        const Icon(Icons.arrow_back_ios),
-                                        left: 0.0,
-                                        height: MediaQuery
-                                            .of(context)
-                                            .size
-                                            .height /
-                                            7.0,
-                                      ),
-                                      CarouselSlider(
-                                        items: model[index].image.isEmpty
-                                            ? const [Icon(Icons.image)]
-                                            : model[index]
-                                            .image
-                                            .map((e) => Image.network(e))
-                                            .toList(),
-                                        options: CarouselOptions(
-                                          aspectRatio: 1.0,
-                                          height: 130,
-                                          viewportFraction: 1.0,
-                                          enlargeCenterPage: false,
-                                          initialPage: 0,
-                                          enableInfiniteScroll: true,
-                                          reverse: false,
-                                          autoPlay: false,
-                                          autoPlayInterval:
-                                          const Duration(seconds: 3),
-                                          autoPlayAnimationDuration:
-                                          const Duration(seconds: 1),
-                                          autoPlayCurve: Curves.fastOutSlowIn,
-                                          scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.all(15.0),
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (context, index) => GestureDetector(
+                      onTap: () {
+                        DashboardCubit.get(context).productCaroIndex = 0;
+                        navigateTo(
+                            context,
+                            SellerRequest(
+                              models: model[index],
+                              orderModel: ordersModel[index],
+                              state: DashboardCubit.get(context)
+                                  .requestModelStateList[index],
+                              index: index,
+                              id: id[index],
+                              dropValue:
+                                  DashboardCubit.get(context).dropDownValue,
+                            ));
+                      },
+                      child: Container(
+                        height: 160.0,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15.0),
+                          color: Colors.white,
+                          border: Border.all(width: 2.0, color: Colors.black),
+                        ),
+                        child: Stack(
+                          children: [
+                            const SizedBox(
+                              width: 10.0,
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width -
+                                        240.0,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                        border: Border.all(
+                                            width: 2.0, color: Colors.black)),
+                                    child: Stack(
+                                      children: [
+                                        Positioned(
+                                          child:
+                                              const Icon(Icons.arrow_back_ios),
+                                          left: 0.0,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              7.0,
                                         ),
-                                        // carouselController: caroController,
-                                      ),
-                                      Positioned(
-                                        child: const Icon(
-                                            Icons.arrow_forward_ios),
-                                        right: 0.0,
-                                        height: MediaQuery
-                                            .of(context)
-                                            .size
-                                            .height /
-                                            7.0,
-                                      ),
-                                    ],
+                                        CarouselSlider(
+                                          items: model[index].image.isEmpty
+                                              ? const [Icon(Icons.image)]
+                                              : model[index]
+                                                  .image
+                                                  .map((e) => Image.network(e))
+                                                  .toList(),
+                                          options: CarouselOptions(
+                                            aspectRatio: 1.0,
+                                            height: 130,
+                                            viewportFraction: 1.0,
+                                            enlargeCenterPage: false,
+                                            initialPage: 0,
+                                            enableInfiniteScroll: true,
+                                            reverse: false,
+                                            autoPlay: false,
+                                            autoPlayInterval:
+                                                const Duration(seconds: 3),
+                                            autoPlayAnimationDuration:
+                                                const Duration(seconds: 1),
+                                            autoPlayCurve: Curves.fastOutSlowIn,
+                                            scrollDirection: Axis.horizontal,
+                                          ),
+                                          // carouselController: caroController,
+                                        ),
+                                        Positioned(
+                                          child: const Icon(
+                                              Icons.arrow_forward_ios),
+                                          right: 0.0,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              7.0,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Positioned(
-                            child: Text(model[index].name),
-                            top: MediaQuery
-                                .of(context)
-                                .size
-                                .height / 15,
-                            right: MediaQuery
-                                .of(context)
-                                .size
-                                .width / 20,
-                          ),
-                          Positioned(
-                            child: Text('\$ ${model[index].price}'),
-                            top: MediaQuery
-                                .of(context)
-                                .size
-                                .height / 10,
-                            right: MediaQuery
-                                .of(context)
-                                .size
-                                .width / 20,
-                          ),
-                          Positioned(
-                            child: Text('${countList[index] ?? ''}'),
-                            top: MediaQuery
-                                .of(context)
-                                .size
-                                .height / 8,
-                            right: MediaQuery
-                                .of(context)
-                                .size
-                                .width / 20,
-                          ),
-                          Positioned(
-                            top: 10.0,
-                            right: 10.0,
-                            child: Container(
-                              height: 30.0,
-                              width: 100.0,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  color: DashboardCubit
-                                      .get(context)
-                                      .requestModelStateList[index] ==
-                                      'Completed'
-                                      ? Colors.green
-                                      : DashboardCubit
-                                      .get(context)
-                                      .requestModelStateList[
-                                  index] ==
-                                      'Scheduled'
-                                      ? Colors.blue
-                                      : DashboardCubit
-                                      .get(context)
-                                      .requestModelStateList[
-                                  index] ==
-                                      'Pending'
-                                      ? Colors.orange
-                                      : DashboardCubit
-                                      .get(context)
-                                      .requestModelStateList[
-                                  index] ==
-                                      'Cancelled'
-                                      ? Colors.red
-                                      : Colors.white),
-                              child: Center(
-                                  child: Text(
-                                      DashboardCubit
-                                          .get(context)
-                                          .requestModelStateList[index],
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                      ))),
+                              ],
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              child: Text(model[index].name),
+                              top: MediaQuery.of(context).size.height / 15,
+                              right: MediaQuery.of(context).size.width / 20,
+                            ),
+                            Positioned(
+                              child: Text('\$ ${model[index].price}'),
+                              top: MediaQuery.of(context).size.height / 10,
+                              right: MediaQuery.of(context).size.width / 20,
+                            ),
+                            Positioned(
+                              child: Text('${countList[index] ?? ''}'),
+                              top: MediaQuery.of(context).size.height / 8,
+                              right: MediaQuery.of(context).size.width / 20,
+                            ),
+                            Positioned(
+                              top: 10.0,
+                              right: 10.0,
+                              child: Container(
+                                height: 30.0,
+                                width: 100.0,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    color: DashboardCubit.get(context)
+                                                .requestModelStateList[index] ==
+                                            'Completed'
+                                        ? Colors.green
+                                        : DashboardCubit.get(context)
+                                                        .requestModelStateList[
+                                                    index] ==
+                                                'Scheduled'
+                                            ? Colors.blue
+                                            : DashboardCubit.get(context)
+                                                            .requestModelStateList[
+                                                        index] ==
+                                                    'Pending'
+                                                ? Colors.orange
+                                                : DashboardCubit.get(context)
+                                                                .requestModelStateList[
+                                                            index] ==
+                                                        'Cancelled'
+                                                    ? Colors.red
+                                                    : Colors.white),
+                                child: Center(
+                                    child: Text(
+                                        DashboardCubit.get(context)
+                                            .requestModelStateList[index],
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                        ))),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
+                    separatorBuilder: (context, index) => const SizedBox(
+                      height: 10.0,
+                    ),
+                    itemCount: model.length,
                   ),
-              separatorBuilder: (context, index) =>
-              const SizedBox(
-                height: 10.0,
-              ),
-              itemCount: model.length,
-            ),
-          )
+                )
               : const Center(
-            child: Text('No Requests Yet'),
-          ),
+                  child: Text('No Requests Yet'),
+                ),
         ],
       ),
     );
@@ -1473,20 +1346,19 @@ Widget buildRecommendedItem({
                     children: [
                       model[index].discount != 0
                           ? Text(
-                        '${model[index].price - ((model[index].price / 100) *
-                            model[index].discount)}',
-                        style: const TextStyle(
-                          fontSize: 16.0,
-                          color: defaultColor,
-                        ),
-                      )
+                              '${model[index].price - ((model[index].price / 100) * model[index].discount)}',
+                              style: const TextStyle(
+                                fontSize: 16.0,
+                                color: defaultColor,
+                              ),
+                            )
                           : Text(
-                        '${model[index].price}',
-                        style: const TextStyle(
-                          fontSize: 16.0,
-                          color: defaultColor,
-                        ),
-                      ),
+                              '${model[index].price}',
+                              style: const TextStyle(
+                                fontSize: 16.0,
+                                color: defaultColor,
+                              ),
+                            ),
                       const SizedBox(
                         width: 5.0,
                       ),
@@ -1509,10 +1381,9 @@ Widget buildRecommendedItem({
                         },
                         icon: CircleAvatar(
                           radius: 15.0,
-                          backgroundColor: ShopCubit
-                              .get(context)
-                              .favorites
-                              .contains(idList[index])
+                          backgroundColor: ShopCubit.get(context)
+                                  .favorites
+                                  .contains(idList[index])
                               ? defaultColor
                               : Colors.grey,
                           child: const Icon(
@@ -1616,16 +1487,14 @@ Widget buildUserRegister({
                   defaultFormField(
                     controller: userPasswordController,
                     type: TextInputType.visiblePassword,
-                    suffix: ShopRegisterCubit
-                        .get(context)
-                        .userSuffix,
+                    suffix: ShopRegisterCubit.get(context).userSuffix,
                     isValidate: true,
                     onSubmit: (value) {},
-                    isPassword: ShopRegisterCubit
-                        .get(context)
-                        .userRegisterIsPassword,
+                    isPassword:
+                        ShopRegisterCubit.get(context).userRegisterIsPassword,
                     suffixPressed: () {
-                      ShopRegisterCubit.get(context).userChangePasswordVisibility();
+                      ShopRegisterCubit.get(context)
+                          .userChangePasswordVisibility();
                     },
                     validate: (String value) {
                       if (value.isEmpty) {
@@ -1641,13 +1510,10 @@ Widget buildUserRegister({
                   defaultFormField(
                     controller: userConfirmPasswordController,
                     type: TextInputType.visiblePassword,
-                    suffix: ShopRegisterCubit
-                        .get(context)
-                        .userSuffix2,
+                    suffix: ShopRegisterCubit.get(context).userSuffix2,
                     onSubmit: (value) {},
-                    isPassword: ShopRegisterCubit
-                        .get(context)
-                        .userRegisterIsPassword2,
+                    isPassword:
+                        ShopRegisterCubit.get(context).userRegisterIsPassword2,
                     suffixPressed: () {
                       ShopRegisterCubit.get(context)
                           .userChangeConfirmPasswordVisibility();
@@ -1656,7 +1522,7 @@ Widget buildUserRegister({
                     validate: (String value) {
                       if (value.isEmpty) {
                         return 'password is too short';
-                      }else if (value != userPasswordController.text) {
+                      } else if (value != userPasswordController.text) {
                         return 'password not matching';
                       }
                     },
@@ -1698,26 +1564,22 @@ Widget buildUserRegister({
                                   ),
                                 ],
                               ),
-                              items: ShopRegisterCubit
-                                  .get(context)
+                              items: ShopRegisterCubit.get(context)
                                   .items
-                                  .map((item) =>
-                                  DropdownMenuItem<String>(
-                                    value: item,
-                                    child: Text(
-                                      item,
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ))
+                                  .map((item) => DropdownMenuItem<String>(
+                                        value: item,
+                                        child: Text(
+                                          item,
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ))
                                   .toList(),
-                              value:
-                              ShopRegisterCubit
-                                  .get(context)
+                              value: ShopRegisterCubit.get(context)
                                   .userRegisterDropdownValue,
                               onChanged: (value) {
                                 ShopRegisterCubit.get(context)
@@ -1734,7 +1596,7 @@ Widget buildUserRegister({
                               buttonHeight: 50,
                               buttonWidth: 160,
                               buttonPadding:
-                              const EdgeInsets.only(left: 14, right: 14),
+                                  const EdgeInsets.only(left: 14, right: 14),
                               buttonDecoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
@@ -1745,7 +1607,7 @@ Widget buildUserRegister({
                               ),
                               itemHeight: 40,
                               itemPadding:
-                              const EdgeInsets.only(left: 14, right: 14),
+                                  const EdgeInsets.only(left: 14, right: 14),
                               dropdownMaxHeight: 200,
                               dropdownWidth: 200,
                               dropdownPadding: null,
@@ -1810,8 +1672,7 @@ Widget buildUserRegister({
                           borderRadius: BorderRadius.circular(20)),
                       onPressed: () {
                         if (userFormKey.currentState.validate() &&
-                            DashboardCubit
-                                .get(context)
+                            DashboardCubit.get(context)
                                 .dropDownValue
                                 .isNotEmpty &&
                             userConfirmPasswordController.text ==
@@ -1824,7 +1685,8 @@ Widget buildUserRegister({
                                 email: userEmailController.text,
                                 password: userPasswordController.text,
                                 address: userStreetController.text,
-                                city: ShopRegisterCubit.get(context).userRegisterDropdownValue,
+                                city: ShopRegisterCubit.get(context)
+                                    .userRegisterDropdownValue,
                                 isSeller: false,
                                 area: userAreaController.text,
                               ));
@@ -1991,26 +1853,22 @@ Widget buildSellerRegister({
                                   ),
                                 ],
                               ),
-                              items: ShopRegisterCubit
-                                  .get(context)
+                              items: ShopRegisterCubit.get(context)
                                   .items
-                                  .map((item) =>
-                                  DropdownMenuItem<String>(
-                                    value: item,
-                                    child: Text(
-                                      item,
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ))
+                                  .map((item) => DropdownMenuItem<String>(
+                                        value: item,
+                                        child: Text(
+                                          item,
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ))
                                   .toList(),
-                              value:
-                              ShopRegisterCubit
-                                  .get(context)
+                              value: ShopRegisterCubit.get(context)
                                   .sellerRegisterDropdownValue,
                               onChanged: (value) {
                                 ShopRegisterCubit.get(context)
@@ -2027,7 +1885,7 @@ Widget buildSellerRegister({
                               buttonHeight: 50,
                               buttonWidth: 160,
                               buttonPadding:
-                              const EdgeInsets.only(left: 14, right: 14),
+                                  const EdgeInsets.only(left: 14, right: 14),
                               buttonDecoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
@@ -2038,7 +1896,7 @@ Widget buildSellerRegister({
                               ),
                               itemHeight: 40,
                               itemPadding:
-                              const EdgeInsets.only(left: 14, right: 14),
+                                  const EdgeInsets.only(left: 14, right: 14),
                               dropdownMaxHeight: 200,
                               dropdownWidth: 200,
                               dropdownPadding: null,
@@ -2114,13 +1972,10 @@ Widget buildSellerRegister({
                     fontSize: 14.0,
                     controller: sellerPasswordController,
                     type: TextInputType.visiblePassword,
-                    suffix: ShopRegisterCubit
-                        .get(context)
-                        .sellerSuffix,
+                    suffix: ShopRegisterCubit.get(context).sellerSuffix,
                     onSubmit: (value) {},
-                    isPassword: ShopRegisterCubit
-                        .get(context)
-                        .sellerRegisterIsPassword,
+                    isPassword:
+                        ShopRegisterCubit.get(context).sellerRegisterIsPassword,
                     suffixPressed: () {
                       ShopRegisterCubit.get(context)
                           .sellerChangePasswordVisibility();
@@ -2141,12 +1996,9 @@ Widget buildSellerRegister({
                     fontSize: 14.0,
                     controller: sellerSecondPasswordController,
                     type: TextInputType.visiblePassword,
-                    suffix: ShopRegisterCubit
-                        .get(context)
-                        .sellerSuffix2,
+                    suffix: ShopRegisterCubit.get(context).sellerSuffix2,
                     onSubmit: (value) {},
-                    isPassword: ShopRegisterCubit
-                        .get(context)
+                    isPassword: ShopRegisterCubit.get(context)
                         .sellerRegisterIsPassword2,
                     suffixPressed: () {
                       ShopRegisterCubit.get(context)
@@ -2156,7 +2008,7 @@ Widget buildSellerRegister({
                     validate: (String value) {
                       if (value.isEmpty) {
                         return 'password is too short';
-                      }else if (value != sellerPasswordController.text) {
+                      } else if (value != sellerPasswordController.text) {
                         return 'password not matching';
                       }
                     },
@@ -2185,9 +2037,11 @@ Widget buildSellerRegister({
                                 password: sellerPasswordController.text,
                                 address: sellerStreetController.text,
                                 isSeller: true,
-                                city: ShopRegisterCubit.get(context).sellerRegisterDropdownValue,
+                                city: ShopRegisterCubit.get(context)
+                                    .sellerRegisterDropdownValue,
                                 area: sellerAreaController.text,
-                                organization: sellerOrganizationNameController.text,
+                                organization:
+                                    sellerOrganizationNameController.text,
                               ));
                           // dev.log(sellerOrganizationNameController.text.toString());
                         }
@@ -2236,11 +2090,12 @@ Widget buildSellerRegister({
   );
 }
 
-Widget buildSizeCircle({String size,
-  bool state,
-  outerSize = 22.0,
-  innerSize = 20.0,
-  color = Colors.black}) {
+Widget buildSizeCircle(
+    {String size,
+    bool state,
+    outerSize = 22.0,
+    innerSize = 20.0,
+    color = Colors.black}) {
   if (!state) {
     return CircleAvatar(
       backgroundColor: color,
@@ -2269,10 +2124,7 @@ Widget buildSizeCircle({String size,
 Widget textFieldCardNumber({@required bool first, last, @required context}) {
   return Container(
     color: Colors.black,
-    width: MediaQuery
-        .of(context)
-        .size
-        .width / 5.0,
+    width: MediaQuery.of(context).size.width / 5.0,
     height: 60.0,
     child: AspectRatio(
       aspectRatio: 1.0,
@@ -2312,10 +2164,7 @@ Widget textFieldDateValidation(
     {@required bool first, last, @required context}) {
   return Container(
     color: Colors.black,
-    width: MediaQuery
-        .of(context)
-        .size
-        .width / 6,
+    width: MediaQuery.of(context).size.width / 6,
     height: 50,
     child: AspectRatio(
       aspectRatio: 1.0,

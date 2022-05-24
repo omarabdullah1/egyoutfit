@@ -6,7 +6,6 @@ import 'package:egyoutfit/shared/network/local/cache_helper.dart';
 import 'package:egyoutfit/shared/network/remote/dio_helper.dart';
 import 'package:egyoutfit/shared/styles/themes.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'layout/dashboard_layout/cubit/cubit.dart';

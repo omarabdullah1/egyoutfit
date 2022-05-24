@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
@@ -46,13 +47,27 @@ class SellerProduct extends StatelessWidget {
               actions: [
                 IconButton(
                     onPressed: () {
-                      DashboardCubit.get(context).removeProduct(
-                          DashboardCubit
-                              .get(context)
-                              .productsID[index]);
-                      DashboardCubit.get(context).getAllProducts();
-                      DashboardCubit.get(context).getAllOrdered();
-                      Navigator.pop(context);
+                      AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.WARNING,
+                        animType: AnimType.BOTTOMSLIDE,
+                        title: 'Warning',
+                        desc:
+                        'Your Product will be deleted if you want to continue press ok.',
+                        btnOkOnPress: () {
+                          DashboardCubit.get(context).removeProduct(
+                              DashboardCubit
+                                  .get(context)
+                                  .productsID[index]);
+                          DashboardCubit.get(context).getAllProducts();
+                          DashboardCubit.get(context).getAllOrdered();
+                          Navigator.pop(context);
+                          // Navigator.of(context).pop();
+                        },
+                        btnCancelOnPress: (){
+                          Navigator.pop(context);
+                        }
+                      ).show();
                     },
                     icon: const Icon(Icons.delete)),
                 IconButton(
