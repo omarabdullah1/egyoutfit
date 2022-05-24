@@ -1,0 +1,2352 @@
+import 'dart:developer' as dev;
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:egyoutfit/modules/service_provider/seller_request/seller_request.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import '../../layout/dashboard_layout/cubit/cubit.dart';
+import '../../layout/shop_app/cubit/cubit.dart';
+import '../../models/orders/orders_model.dart';
+import '../../models/shop_app/products_model.dart';
+import '../../modules/register/cubit/cubit.dart';
+import '../../modules/register/phone_screen.dart';
+import '../../modules/service_provider/seller_product/seller_product.dart';
+import '../../modules/user/check_out/check_out.dart';
+import '../../modules/user/home_selected_product/selected_prodct.dart';
+import '../../modules/user/selected_category_screen/selected_category_screen.dart';
+import '../styles/colors.dart';
+
+Widget defaultButton({
+  double width = double.infinity,
+  double height = double.infinity,
+  IconData icon,
+  background = Colors.black,
+  bool isUpperCase = true,
+  bool isIcon = false,
+  double radius = 3.0,
+  @required Function function,
+  @required String text,
+}) {
+  return Container(
+    width: width,
+    height: height,
+    child: MaterialButton(
+      onPressed: function,
+      child: isIcon
+          ? Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            color: Colors.white,
+          ),
+          const SizedBox(
+            width: 5.0,
+          ),
+          Text(
+            isUpperCase ? text.toUpperCase() : text,
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ],
+      )
+          : Text(
+        isUpperCase ? text.toUpperCase() : text,
+        style: const TextStyle(
+          color: Colors.white,
+        ),
+      ),
+    ),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(
+        radius,
+      ),
+      color: background,
+    ),
+  );
+}
+
+Widget defaultButton2({
+  double width,
+  double height,
+  background = defaultColor2,
+  bool isUpperCase = true,
+  double radius = 3.0,
+  IconData ico,
+  @required Function function,
+  @required String text,
+}) {
+  return Container(
+    width: width,
+    height: height,
+    child: MaterialButton(
+      onPressed: function,
+      child: ico != null
+          ? Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            ico,
+            color: Colors.white,
+          ),
+          const SizedBox(
+            width: 10.0,
+          ),
+          Text(
+            isUpperCase ? text.toUpperCase() : text,
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ],
+      )
+          : Text(
+        isUpperCase ? text.toUpperCase() : text,
+        style: const TextStyle(
+          color: Colors.white,
+        ),
+      ),
+    ),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(
+        radius,
+      ),
+      color: background,
+    ),
+  );
+}
+
+Widget defaultTextButton({
+  @required Function function,
+  @required String text,
+}) =>
+    TextButton(
+      onPressed: function,
+      child: Text(
+        text.toUpperCase(),
+      ),
+    );
+
+Widget defaultFormField({
+  @required TextEditingController controller,
+  @required TextInputType type,
+  Function onSubmit,
+  Function onChange,
+  Function onTap,
+  bool isPassword = false,
+  bool isValidate = false,
+  Function validate,
+  @required String label,
+  @required IconData prefix,
+  IconData suffix,
+  Function suffixPressed,
+  bool isClickable = true,
+  double borderRadius = 20.0,
+  double fontSize = 16.0,
+}) =>
+    TextFormField(
+      style: TextStyle(fontSize: fontSize),
+      controller: controller,
+      keyboardType: type,
+      obscureText: isPassword,
+      enabled: isClickable,
+      onFieldSubmitted: onSubmit,
+      onChanged: onChange,
+      onTap: onTap,
+      validator: isValidate ? validate : null,
+      decoration: InputDecoration(
+        disabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: Colors.black12,
+            width: 2.5,
+          ),
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: Colors.black26,
+            width: 2.5,
+          ),
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: Colors.black,
+            width: 2.5,
+          ),
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
+        labelText: label,
+        labelStyle: TextStyle(fontSize: fontSize),
+        prefixIcon: Icon(
+          prefix,
+        ),
+        suffixIcon: suffix != null
+            ? IconButton(
+          onPressed: suffixPressed,
+          icon: Icon(
+            suffix,
+          ),
+        )
+            : null,
+        border: const OutlineInputBorder(),
+        enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(
+              color: Colors.black26,
+              width: 2.5,
+            ),
+            borderRadius: BorderRadius.circular(borderRadius)),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: Colors.black,
+            width: 2.5,
+          ),
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
+      ),
+    );
+
+Widget searchFormField({
+  @required TextEditingController controller,
+  @required TextInputType type,
+  Function onSubmit,
+  Function onChange,
+  Function onTap,
+  bool isPassword = false,
+  @required Function validate,
+  @required String label,
+  @required IconData prefix,
+  IconData suffix,
+  Function suffixPressed,
+  bool isClickable = true,
+}) =>
+    SizedBox(
+      height: 50.0,
+      child: TextFormField(
+        controller: controller,
+        keyboardType: type,
+        obscureText: isPassword,
+        enabled: isClickable,
+        onFieldSubmitted: onSubmit,
+        onChanged: onChange,
+        onTap: onTap,
+        validator: validate,
+        decoration: InputDecoration(
+          labelText: label,
+          prefixIcon: Icon(
+            prefix,
+          ),
+          suffixIcon: suffix != null
+              ? IconButton(
+            onPressed: suffixPressed,
+            icon: Icon(
+              suffix,
+            ),
+          )
+              : null,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(40.0)),
+        ),
+      ),
+    );
+
+Widget categoryButton({
+  color = Colors.lightBlue,
+  @required text,
+  @required iconPath,
+  @required context,
+  width = 30.0,
+  @required mmodel,
+  @required mmodelID,
+  @required name,
+}) =>
+    MaterialButton(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      onPressed: () {
+        navigateTo(
+            context,
+            SelectedCategoryScreen(
+              mmodel: mmodel,
+              mmodelID: mmodelID,
+              nameOfCategory: name,
+            ));
+      },
+      color: color,
+      child: Row(
+        children: [
+          Text(
+            text,
+            style: const TextStyle(
+                fontSize: 12.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
+          ),
+          const Spacer(),
+          Image.asset(iconPath, width: width, fit: BoxFit.cover),
+        ],
+      ),
+    );
+
+Widget myDivider({height = 1.0}) =>
+    Padding(
+      padding: const EdgeInsetsDirectional.only(
+        start: 20.0,
+      ),
+      child: Container(
+        width: double.infinity,
+        height: height,
+        color: Colors.grey[300],
+      ),
+    );
+
+void navigateTo(context, widget) =>
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => widget,
+      ),
+    );
+
+void navigateAndFinish(context,
+    widget,) =>
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => widget,
+      ),
+          (route) {
+        return false;
+      },
+    );
+
+void showToast({
+  @required String text,
+  @required ToastStates state,
+}) =>
+    Fluttertoast.showToast(
+      msg: text,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 5,
+      backgroundColor: chooseToastColor(state),
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+
+// enum
+enum ToastStates { success, error, warning }
+
+Color chooseToastColor(ToastStates state) {
+  Color color;
+
+  switch (state) {
+    case ToastStates.success:
+      color = Colors.green;
+      break;
+    case ToastStates.error:
+      color = Colors.red;
+      break;
+    case ToastStates.warning:
+      color = Colors.amber;
+      break;
+  }
+
+  return color;
+}
+
+Widget buildListProduct({
+  @required ShopProductsModel model,
+  @required idList,
+  @required context,
+  bool isOldPrice = true,
+}) =>
+    Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: SizedBox(
+        height: 120.0,
+        child: Row(
+          children: [
+            Stack(
+              alignment: AlignmentDirectional.bottomStart,
+              children: [
+                Image(
+                  image: NetworkImage(model.image.first),
+                  width: 120.0,
+                  height: 120.0,
+                ),
+                if (model.discount != 0 && isOldPrice)
+                  Container(
+                    color: Colors.red,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 5.0,
+                    ),
+                    child: const Text(
+                      'DISCOUNT',
+                      style: TextStyle(
+                        fontSize: 8.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(
+              width: 20.0,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    model.name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 14.0,
+                      height: 1.3,
+                    ),
+                  ),
+                  const Spacer(),
+                  Row(
+                    children: [
+                      Text(
+                        model.price.toString(),
+                        style: const TextStyle(
+                          fontSize: 12.0,
+                          color: defaultColor,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5.0,
+                      ),
+                      if (model.discount != 0 && isOldPrice)
+                        Text(
+                          model.oldPrice.toString(),
+                          style: const TextStyle(
+                            fontSize: 10.0,
+                            color: Colors.grey,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                      const Spacer(),
+                      IconButton(
+                        onPressed: () {
+                          // ShopCubit.get(context).changeFavorites(model.id);
+                          ShopCubit.get(context).inFavorites(pid: idList);
+                          ShopCubit.get(context).updateData();
+                        },
+                        icon: CircleAvatar(
+                          radius: 15.0,
+                          backgroundColor:
+                          ShopCubit
+                              .get(context)
+                              .favorites
+                              .contains(idList)
+                              ? defaultColor
+                              : Colors.grey,
+                          child: const Icon(
+                            Icons.favorite_border,
+                            size: 14.0,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+class BuildListProduct2 extends StatefulWidget {
+  final ShopProductsModel model;
+  final String idList;
+  final String sizee;
+  final BuildContext context;
+  final int index;
+  final bool flag;
+  final Function validate;
+
+  const BuildListProduct2({Key key,
+    this.model,
+    this.sizee,
+    this.idList,
+    this.context,
+    this.index,
+    this.flag,
+    this.validate})
+      : super(key: key);
+
+  @override
+  State<BuildListProduct2> createState() => _BuildListProduct2State();
+}
+
+class _BuildListProduct2State extends State<BuildListProduct2> {
+  int count = 1;
+  List mCounter;
+  var promoController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    if (ShopCubit
+        .get(context)
+        .counters
+        .isNotEmpty) {
+      if (ShopCubit
+          .get(context)
+          .counters
+          .length <
+          ShopCubit
+              .get(context)
+              .cartModel
+              .length) {
+        ShopCubit
+            .get(context)
+            .counters
+            .add(count);
+      } else {
+        ShopCubit
+            .get(context)
+            .counters
+            .removeAt(ShopCubit
+            .get(context)
+            .cartModel
+            .indexOf(widget.model));
+        ShopCubit
+            .get(context)
+            .counters
+            .insert(
+            ShopCubit
+                .get(context)
+                .cartModel
+                .indexOf(widget.model), count);
+      }
+    } else {
+      ShopCubit
+          .get(context)
+          .counters
+          .add(count);
+    }
+
+    // mCounter =ShopCubit.get(context).counters;
+    var price = (widget.model.price -
+        ((widget.model.price / 100) * widget.model.discount));
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+      child: SizedBox(
+        height: 150.0,
+        width: double.infinity,
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Image(
+                  image: NetworkImage(widget.model.image.first),
+                  width: 160.0,
+                  height: 150.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        '${widget.model.name} x$count',
+                        maxLines: 2,
+                        // overflow: TextOverflow.,
+                      ),
+                      Row(
+                        children: [
+                          Text('LE ${price * count}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                              )),
+                          const SizedBox(
+                            width: 15.0,
+                          ),
+                          widget.sizee != ''
+                              ? buildSizeCircle(
+                            size: widget.sizee,
+                            state: false,
+                            innerSize: 15.0,
+                            outerSize: 17.0,
+                          )
+                              : const SizedBox(),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: defaultButton(
+                          function: () {
+                            dev.log(widget.model.uid.toString());
+                            navigateTo(
+                                context,
+                                CheckoutScreen(
+                                  count: count,
+                                  size: widget.sizee,
+                                  index: widget.index,
+                                  id: widget.idList,
+                                  price: (price * count).toInt(),
+                                  image: widget.model.image.first,
+                                  model: widget.model,
+                                ));
+                          },
+                          text: 'checkout',
+                          width: 120.0,
+                          height: 30.0,
+                          radius: 12.0,
+                        ),
+                      )
+                      // Padding(
+                      //   padding: const EdgeInsets.only(
+                      //     top: 8.0,
+                      //     bottom: 8.0,
+                      //     right: 8.0,
+                      //   ),
+                      //   child: SizedBox(
+                      //     width: 150.0,
+                      //     height: 50.0,
+                      //     child: defaultFormField(
+                      //       controller: promoController,
+                      //       type: TextInputType.text,
+                      //       validate: widget.validate,
+                      //       label: 'Promo Code',
+                      //       prefix: Icons.local_offer,
+                      //       fontSize: 12.0,
+                      //     ),
+                      //   ),
+                      // ),
+                      // defaultButton(
+                      //     function: () {
+                      //       bool flag = false;
+                      //       dev.log(promoController.text);
+                      //       if (ShopCubit.get(context)
+                      //           .promoCodesList
+                      //           .contains(promoController.text)) {
+                      //         flag = true;
+                      //       } else {
+                      //         flag = false;
+                      //       }
+                      //
+                      //       if (flag) {
+                      //         showToast(
+                      //             text: 'activated promo code',
+                      //             state: ToastStates.success);
+                      //         price = price -
+                      //             ((widget.model.price / 100) *
+                      //                 ShopCubit.get(context).discountList[
+                      //                     ShopCubit.get(context)
+                      //                         .promoCodesList
+                      //                         .indexOf(promoController.text)]);
+                      //         ShopCubit.get(context).changeCartPrice();
+                      //         dev.log(price.toString());
+                      //       } else {
+                      //         showToast(
+                      //             text: 'Wrong promo code',
+                      //             state: ToastStates.error);
+                      //       }
+                      //     },
+                      //     text: 'Apply',
+                      //     height: 29.0,
+                      //     width: 80.0,
+                      //     radius: 14.0),
+                    ],
+                  ),
+                ),
+                Column(
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          ShopCubit.get(context).removeCart(
+                              ShopCubit
+                                  .get(context)
+                                  .cart[widget.index]);
+                          ShopCubit.get(context).getCart();
+                        },
+                        icon: const Icon(Icons.close)),
+                    SizedBox(
+                      child: FloatingActionButton(
+                        onPressed: () {
+                          count++;
+                          ShopCubit
+                              .get(context)
+                              .counters
+                              .removeAt(
+                              ShopCubit
+                                  .get(context)
+                                  .cartModel
+                                  .indexOf(widget.model));
+                          ShopCubit
+                              .get(context)
+                              .counters
+                              .insert(
+                              ShopCubit
+                                  .get(context)
+                                  .cartModel
+                                  .indexOf(widget.model),
+                              count);
+                          ShopCubit.get(context).changeCount();
+                          dev.log(ShopCubit
+                              .get(context)
+                              .counters
+                              .toString());
+                          ShopCubit
+                              .get(context)
+                              .counters
+                              .removeAt(0);
+
+                          // print(count.toString());
+                          // ShopCubit.get(context).changeCount();
+                        },
+                        backgroundColor: Colors.white,
+                        child: const Icon(
+                          Icons.add_circle_outline,
+                          color: Colors.black,
+                        ),
+                      ),
+                      width: 35.0,
+                      height: 35.0,
+                    ),
+                    Text(count.toString()),
+                    SizedBox(
+                      child: FloatingActionButton(
+                        onPressed: () {
+                          if (count <= 1) {
+                            count = 1;
+                            ShopCubit
+                                .get(context)
+                                .counters
+                                .removeAt(
+                                ShopCubit
+                                    .get(context)
+                                    .cartModel
+                                    .indexOf(widget.model));
+                            ShopCubit
+                                .get(context)
+                                .counters
+                                .insert(
+                                ShopCubit
+                                    .get(context)
+                                    .cartModel
+                                    .indexOf(widget.model),
+                                count);
+                            ShopCubit.get(context).changeCount();
+                            dev.log(ShopCubit
+                                .get(context)
+                                .counters
+                                .toString());
+                            ShopCubit
+                                .get(context)
+                                .counters
+                                .removeAt(0);
+                          } else {
+                            count--;
+                            ShopCubit
+                                .get(context)
+                                .counters
+                                .removeAt(
+                                ShopCubit
+                                    .get(context)
+                                    .cartModel
+                                    .indexOf(widget.model));
+                            ShopCubit
+                                .get(context)
+                                .counters
+                                .insert(
+                                ShopCubit
+                                    .get(context)
+                                    .cartModel
+                                    .indexOf(widget.model),
+                                count);
+                            ShopCubit.get(context).changeCount();
+                            dev.log(ShopCubit
+                                .get(context)
+                                .counters
+                                .toString());
+                            ShopCubit
+                                .get(context)
+                                .counters
+                                .removeAt(0);
+                          }
+                        },
+                        backgroundColor: Colors.white,
+                        child: const Icon(
+                          Icons.remove_circle_outline,
+                          color: Colors.black,
+                        ),
+                      ),
+                      width: 35.0,
+                      height: 35.0,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+Widget buildCategoryButton(String imagePath) {
+  return Stack(
+    alignment: Alignment.center,
+    children: [
+      const SizedBox(
+        height: 150.0,
+        child: CircleAvatar(
+          radius: 40,
+          backgroundColor: Colors.grey,
+        ),
+      ),
+      Positioned(
+          top: 20.0,
+          child: Image.asset(
+            imagePath,
+            width: 70,
+          )),
+    ],
+  );
+}
+
+Widget buildGridProduct({
+  @required context,
+  @required List<ShopProductsModel> model,
+  @required index,
+  @required idList,
+  @required category,
+  @required color,
+}) =>
+    InkWell(
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: 18.0,
+          left: 15.0,
+          right: 15.0,
+          bottom: 15.0,
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+              color: const Color(0xffF7F7F7),
+              borderRadius: BorderRadius.circular(14.0)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Stack(
+                alignment: AlignmentDirectional.bottomStart,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image(
+                      image: NetworkImage(
+                        model[index].image.first,
+                      ),
+                      width: double.infinity,
+                      height: 160.0,
+                    ),
+                  ),
+                  if (model[index].discount != 0)
+                    Container(
+                      color: Colors.red,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 5.0,
+                      ),
+                      child: const Text(
+                        'DISCOUNT',
+                        style: TextStyle(
+                          fontSize: 8.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      model[index].name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 14.0,
+                        height: 1.3,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        model[index].discount != 0
+                            ? Text(
+                          '${model[index].price - ((model[index].price / 100) *
+                              model[index].discount)}',
+                          style: const TextStyle(
+                            fontSize: 16.0,
+                            color: defaultColor,
+                          ),
+                        )
+                            : Text(
+                          '${model[index].price}',
+                          style: const TextStyle(
+                            fontSize: 16.0,
+                            color: defaultColor,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 5.0,
+                        ),
+                        if (model[index].discount != 0)
+                          Text(
+                            '${model[index].price}',
+                            style: TextStyle(
+                              fontSize: 10.0,
+                              color: Colors.grey[500],
+                              decoration: TextDecoration.lineThrough,
+                            ),
+                          ),
+                        const Spacer(),
+                        IconButton(
+                          onPressed: () {
+                            ShopCubit.get(context)
+                                .inFavorites(pid: idList[index]);
+                            // ShopCubit.get(context).updateData();
+                          },
+                          icon: CircleAvatar(
+                            radius: 15.0,
+                            backgroundColor: ShopCubit
+                                .get(context)
+                                .favorites
+                                .contains(idList[index])
+                                ? defaultColor
+                                : Colors.grey,
+                            child: const Icon(
+                              Icons.favorite_border,
+                              size: 14.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      onTap: () {
+        navigateTo(
+            context,
+            HomeSelectedProductScreen(
+              productIndex: index,
+              mmodel: model[index],
+              mmodelID: idList,
+              category: category,
+              color: color,
+            ));
+      },
+    );
+
+// Widget buildAllProducts({
+//   @required width,
+//   @required List<ShopProductsModel> model,
+// }) =>;
+class BuildAllProducts extends StatefulWidget {
+  const BuildAllProducts({Key key, this.screenWidth, this.model,this.modelIDList}) : super(key: key);
+  final double screenWidth;
+  final List<ShopProductsModel> model;
+  final List modelIDList;
+
+  @override
+  State<BuildAllProducts> createState() => _BuildAllProductsState();
+}
+
+class _BuildAllProductsState extends State<BuildAllProducts> {
+  @override
+  Widget build(BuildContext context) {
+    return widget.model.isNotEmpty
+        ? SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          physics: const BouncingScrollPhysics(),
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () {
+                DashboardCubit
+                    .get(context)
+                    .productCaroIndex = 0;
+                navigateTo(
+                    context,
+                    SellerProduct(
+                      models: widget.model[index],
+                      index: index,
+                      modelId: widget.modelIDList[index],
+                    ));
+              },
+              child: Container(
+                height: 160.0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: Colors.white,
+                  border: Border.all(width: 2.0, color: Colors.black),
+                ),
+                child: Stack(
+                  children: [
+                    const SizedBox(
+                      width: 10.0,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            width:
+                            MediaQuery
+                                .of(context)
+                                .size
+                                .width - 240.0,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15.0),
+                                border: Border.all(
+                                    width: 2.0, color: Colors.black)),
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  child: const Icon(Icons.arrow_back_ios),
+                                  left: 0.0,
+                                  height:
+                                  MediaQuery
+                                      .of(context)
+                                      .size
+                                      .height /
+                                      7.0,
+                                ),
+                                CarouselSlider(
+                                  items: widget.model[index].image.isEmpty
+                                      ? const [Icon(Icons.image)]
+                                      : widget.model[index].image
+                                      .map((e) => Image.network(e,width: 150,))
+                                      .toList(),
+                                  options: CarouselOptions(
+                                    aspectRatio: 1.0,
+                                    height: 130,
+                                    viewportFraction: 1.0,
+                                    enlargeCenterPage: false,
+                                    initialPage: 0,
+                                    enableInfiniteScroll: true,
+                                    reverse: false,
+                                    autoPlay: false,
+                                    autoPlayInterval:
+                                    const Duration(seconds: 3),
+                                    autoPlayAnimationDuration:
+                                    const Duration(seconds: 1),
+                                    autoPlayCurve: Curves.fastOutSlowIn,
+                                    scrollDirection: Axis.horizontal,
+                                  ),
+                                  // carouselController: caroController,
+                                ),
+                                Positioned(
+                                  child:
+                                  const Icon(Icons.arrow_forward_ios),
+                                  right: 0.0,
+                                  height:
+                                  MediaQuery
+                                      .of(context)
+                                      .size
+                                      .height /
+                                      7.0,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Positioned(
+                      child: Text(widget.model[index].name),
+                      top: MediaQuery
+                          .of(context)
+                          .size
+                          .height / 15,
+                      right: MediaQuery
+                          .of(context)
+                          .size
+                          .width / 10,
+                    ),
+                    Positioned(
+                      child: Text('\$ ${widget.model[index].price}'),
+                      top: MediaQuery
+                          .of(context)
+                          .size
+                          .height / 10,
+                      right: MediaQuery
+                          .of(context)
+                          .size
+                          .width / 10,
+                    ),
+                    Positioned(
+                      top: 10.0,
+                      right: 10.0,
+                      child: Container(
+                        height: 30.0,
+                        width: 80.0,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          color: widget.model[index].state == 'Approved'
+                              ? Colors.green
+                              : widget.model[index].state == 'Pending'
+                              ? Colors.orange
+                              : widget.model[index].state ==
+                              'Cancelled'
+                              ? Colors.red
+                              : Colors.white,
+                        ),
+                        child: Center(
+                            child: Text(widget.model[index].state,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    color: Colors.white))),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+          separatorBuilder: (context, index) =>
+          const SizedBox(
+            height: 10.0,
+          ),
+          itemCount: widget.model.length,
+        ),
+      ),
+    )
+        : const Center(
+      child: Text('No Products Yet'),
+    );
+  }
+}
+
+Widget buildRequests({
+  @required width,
+  @required context,
+  @required List<ShopProductsModel> model,
+  @required List<OrdersModel> ordersModel,
+  @required List countList,
+  @required List id,
+}) =>
+    SingleChildScrollView(
+      child: Column(
+        children: [
+          // const SizedBox(height: 15.0,),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Row(
+                  children: [
+                    CircleAvatar(
+                        backgroundColor:
+                        DashboardCubit
+                            .get(context)
+                            .dropDownValueColor,
+                        radius: 5.0),
+                    const SizedBox(
+                      width: 5.0,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15.0),
+                        shape: BoxShape.rectangle,
+                      ),
+                      child: DropdownButton(
+                        value: DashboardCubit
+                            .get(context)
+                            .dropDownValue,
+                        icon: const Icon(Icons.keyboard_arrow_down),
+                        items: [
+                          'All Requests',
+                          'Pending',
+                          'Scheduled',
+                          'Completed',
+                          'Cancelled',
+                        ].map((String items) {
+                          return DropdownMenuItem(
+                            value: items,
+                            child: Text(items),
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          DashboardCubit.get(context)
+                              .changeDropButtonValue(newValue);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          model.isNotEmpty
+              ? Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: ListView.separated(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              physics: const BouncingScrollPhysics(),
+              itemBuilder: (context, index) =>
+                  GestureDetector(
+                    onTap: () {
+                      DashboardCubit
+                          .get(context)
+                          .productCaroIndex = 0;
+                      navigateTo(
+                          context,
+                          SellerRequest(
+                            models: model[index],
+                            orderModel: ordersModel[index],
+                            state: DashboardCubit
+                                .get(context)
+                                .requestModelStateList[index],
+                            index: index,
+                            id: id[index],
+                            dropValue:
+                            DashboardCubit
+                                .get(context)
+                                .dropDownValue,
+                          ));
+                    },
+                    child: Container(
+                      height: 160.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15.0),
+                        color: Colors.white,
+                        border: Border.all(width: 2.0, color: Colors.black),
+                      ),
+                      child: Stack(
+                        children: [
+                          const SizedBox(
+                            width: 10.0,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  width: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width -
+                                      240.0,
+                                  decoration: BoxDecoration(
+                                      borderRadius:
+                                      BorderRadius.circular(15.0),
+                                      border: Border.all(
+                                          width: 2.0, color: Colors.black)),
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        child:
+                                        const Icon(Icons.arrow_back_ios),
+                                        left: 0.0,
+                                        height: MediaQuery
+                                            .of(context)
+                                            .size
+                                            .height /
+                                            7.0,
+                                      ),
+                                      CarouselSlider(
+                                        items: model[index].image.isEmpty
+                                            ? const [Icon(Icons.image)]
+                                            : model[index]
+                                            .image
+                                            .map((e) => Image.network(e))
+                                            .toList(),
+                                        options: CarouselOptions(
+                                          aspectRatio: 1.0,
+                                          height: 130,
+                                          viewportFraction: 1.0,
+                                          enlargeCenterPage: false,
+                                          initialPage: 0,
+                                          enableInfiniteScroll: true,
+                                          reverse: false,
+                                          autoPlay: false,
+                                          autoPlayInterval:
+                                          const Duration(seconds: 3),
+                                          autoPlayAnimationDuration:
+                                          const Duration(seconds: 1),
+                                          autoPlayCurve: Curves.fastOutSlowIn,
+                                          scrollDirection: Axis.horizontal,
+                                        ),
+                                        // carouselController: caroController,
+                                      ),
+                                      Positioned(
+                                        child: const Icon(
+                                            Icons.arrow_forward_ios),
+                                        right: 0.0,
+                                        height: MediaQuery
+                                            .of(context)
+                                            .size
+                                            .height /
+                                            7.0,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Positioned(
+                            child: Text(model[index].name),
+                            top: MediaQuery
+                                .of(context)
+                                .size
+                                .height / 15,
+                            right: MediaQuery
+                                .of(context)
+                                .size
+                                .width / 20,
+                          ),
+                          Positioned(
+                            child: Text('\$ ${model[index].price}'),
+                            top: MediaQuery
+                                .of(context)
+                                .size
+                                .height / 10,
+                            right: MediaQuery
+                                .of(context)
+                                .size
+                                .width / 20,
+                          ),
+                          Positioned(
+                            child: Text('${countList[index] ?? ''}'),
+                            top: MediaQuery
+                                .of(context)
+                                .size
+                                .height / 8,
+                            right: MediaQuery
+                                .of(context)
+                                .size
+                                .width / 20,
+                          ),
+                          Positioned(
+                            top: 10.0,
+                            right: 10.0,
+                            child: Container(
+                              height: 30.0,
+                              width: 100.0,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  color: DashboardCubit
+                                      .get(context)
+                                      .requestModelStateList[index] ==
+                                      'Completed'
+                                      ? Colors.green
+                                      : DashboardCubit
+                                      .get(context)
+                                      .requestModelStateList[
+                                  index] ==
+                                      'Scheduled'
+                                      ? Colors.blue
+                                      : DashboardCubit
+                                      .get(context)
+                                      .requestModelStateList[
+                                  index] ==
+                                      'Pending'
+                                      ? Colors.orange
+                                      : DashboardCubit
+                                      .get(context)
+                                      .requestModelStateList[
+                                  index] ==
+                                      'Cancelled'
+                                      ? Colors.red
+                                      : Colors.white),
+                              child: Center(
+                                  child: Text(
+                                      DashboardCubit
+                                          .get(context)
+                                          .requestModelStateList[index],
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ))),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              separatorBuilder: (context, index) =>
+              const SizedBox(
+                height: 10.0,
+              ),
+              itemCount: model.length,
+            ),
+          )
+              : const Center(
+            child: Text('No Requests Yet'),
+          ),
+        ],
+      ),
+    );
+
+Widget buildRecommendedItem({
+  @required context,
+  @required List<ShopProductsModel> model,
+  @required index,
+  @required idList,
+}) =>
+    Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Container(
+        width: 180.0,
+        decoration: BoxDecoration(
+          color: const Color(0xffF7F7F7),
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              alignment: AlignmentDirectional.bottomStart,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image(
+                    image: NetworkImage(
+                      model[index].image.first,
+                    ),
+                    width: double.infinity,
+                    height: 160.0,
+                  ),
+                ),
+                if (model[index].discount != 0)
+                  Container(
+                    color: Colors.red,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 5.0,
+                    ),
+                    child: const Text(
+                      'DISCOUNT',
+                      style: TextStyle(
+                        fontSize: 8.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    model[index].name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 14.0,
+                      height: 1.3,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      model[index].discount != 0
+                          ? Text(
+                        '${model[index].price - ((model[index].price / 100) *
+                            model[index].discount)}',
+                        style: const TextStyle(
+                          fontSize: 16.0,
+                          color: defaultColor,
+                        ),
+                      )
+                          : Text(
+                        '${model[index].price}',
+                        style: const TextStyle(
+                          fontSize: 16.0,
+                          color: defaultColor,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5.0,
+                      ),
+                      if (model[index].discount != 0)
+                        Text(
+                          '${model[index].price}',
+                          style: TextStyle(
+                            fontSize: 10.0,
+                            color: Colors.grey[500],
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                      const Spacer(),
+                      IconButton(
+                        onPressed: () {
+                          // print(index);
+                          ShopCubit.get(context)
+                              .inFavorites(pid: idList[index]);
+                          // ShopCubit.get(context).updateData();
+                        },
+                        icon: CircleAvatar(
+                          radius: 15.0,
+                          backgroundColor: ShopCubit
+                              .get(context)
+                              .favorites
+                              .contains(idList[index])
+                              ? defaultColor
+                              : Colors.grey,
+                          child: const Icon(
+                            Icons.favorite_border,
+                            size: 14.0,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+Widget buildUserRegister({
+  GlobalKey<FormState> userFormKey,
+  TextEditingController userFirstNameController,
+  TextEditingController userSecondNameController,
+  TextEditingController userEmailController,
+  TextEditingController userPasswordController,
+  TextEditingController userConfirmPasswordController,
+  TextEditingController userAreaController,
+  TextEditingController userStreetController,
+  BuildContext context,
+}) {
+  return SingleChildScrollView(
+    scrollDirection: Axis.vertical,
+    child: Container(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Form(
+              key: userFormKey,
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: defaultFormField(
+                          controller: userFirstNameController,
+                          type: TextInputType.name,
+                          isValidate: true,
+                          validate: (String value) {
+                            if (value.isEmpty) {
+                              return 'please enter your first name';
+                            }
+                          },
+                          label: 'First Name',
+                          prefix: Icons.drive_file_rename_outline,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10.0,
+                      ),
+                      Expanded(
+                        child: defaultFormField(
+                          isValidate: true,
+                          controller: userSecondNameController,
+                          type: TextInputType.name,
+                          validate: (String value) {
+                            if (value.isEmpty) {
+                              return 'please enter your second name';
+                            }
+                          },
+                          label: 'Second Name',
+                          prefix: Icons.drive_file_rename_outline,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  defaultFormField(
+                    controller: userEmailController,
+                    type: TextInputType.emailAddress,
+                    isValidate: true,
+                    validate: (String value) {
+                      if (value.isEmpty) {
+                        return 'please enter your email address';
+                      }
+                    },
+                    label: 'Email Address',
+                    prefix: Icons.email_outlined,
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  defaultFormField(
+                    controller: userPasswordController,
+                    type: TextInputType.visiblePassword,
+                    suffix: ShopRegisterCubit
+                        .get(context)
+                        .userSuffix,
+                    isValidate: true,
+                    onSubmit: (value) {},
+                    isPassword: ShopRegisterCubit
+                        .get(context)
+                        .userRegisterIsPassword,
+                    suffixPressed: () {
+                      ShopRegisterCubit.get(context).userChangePasswordVisibility();
+                    },
+                    validate: (String value) {
+                      if (value.isEmpty) {
+                        return 'password is too short';
+                      }
+                    },
+                    label: 'Password',
+                    prefix: Icons.lock_outline,
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  defaultFormField(
+                    controller: userConfirmPasswordController,
+                    type: TextInputType.visiblePassword,
+                    suffix: ShopRegisterCubit
+                        .get(context)
+                        .userSuffix2,
+                    onSubmit: (value) {},
+                    isPassword: ShopRegisterCubit
+                        .get(context)
+                        .userRegisterIsPassword2,
+                    suffixPressed: () {
+                      ShopRegisterCubit.get(context)
+                          .userChangeConfirmPasswordVisibility();
+                    },
+                    isValidate: true,
+                    validate: (String value) {
+                      if (value.isEmpty) {
+                        return 'password is too short';
+                      }else if (value != userPasswordController.text) {
+                        return 'password not matching';
+                      }
+                    },
+                    label: 'Confirm Password',
+                    prefix: Icons.lock_outline,
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 73.0,
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton2(
+                              isExpanded: true,
+                              hint: Row(
+                                children: const [
+                                  Icon(
+                                    Icons.list,
+                                    size: 30,
+                                    color: Colors.black,
+                                  ),
+                                  SizedBox(
+                                    width: 4,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      'Select City',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              items: ShopRegisterCubit
+                                  .get(context)
+                                  .items
+                                  .map((item) =>
+                                  DropdownMenuItem<String>(
+                                    value: item,
+                                    child: Text(
+                                      item,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ))
+                                  .toList(),
+                              value:
+                              ShopRegisterCubit
+                                  .get(context)
+                                  .userRegisterDropdownValue,
+                              onChanged: (value) {
+                                ShopRegisterCubit.get(context)
+                                    .userChangeDropValue(value);
+                                // selectedValue = value as String;
+                              },
+                              icon: const Icon(
+                                Icons.keyboard_arrow_down_sharp,
+                                size: 20.0,
+                              ),
+                              iconSize: 14,
+                              iconEnabledColor: Colors.black,
+                              iconDisabledColor: Colors.grey,
+                              buttonHeight: 50,
+                              buttonWidth: 160,
+                              buttonPadding:
+                              const EdgeInsets.only(left: 14, right: 14),
+                              buttonDecoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  width: 2.5,
+                                  color: Colors.black26,
+                                ),
+                                color: Colors.white,
+                              ),
+                              itemHeight: 40,
+                              itemPadding:
+                              const EdgeInsets.only(left: 14, right: 14),
+                              dropdownMaxHeight: 200,
+                              dropdownWidth: 200,
+                              dropdownPadding: null,
+                              dropdownDecoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                color: Colors.white,
+                              ),
+                              scrollbarRadius: const Radius.circular(40),
+                              scrollbarThickness: 6,
+                              scrollbarAlwaysShow: true,
+                              offset: const Offset(0, 0),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5.0,
+                      ),
+                      Expanded(
+                        child: defaultFormField(
+                          controller: userAreaController,
+                          type: TextInputType.text,
+                          onSubmit: (value) {},
+                          isValidate: true,
+                          validate: (String value) {
+                            if (value.isEmpty) {
+                              return 'Area must not be empty';
+                            }
+                          },
+                          label: 'Area',
+                          prefix: Icons.map_outlined,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  defaultFormField(
+                    controller: userStreetController,
+                    type: TextInputType.text,
+                    onSubmit: (value) {},
+                    isValidate: true,
+                    validate: (String value) {
+                      if (value.isEmpty) {
+                        return 'Address is must not be empty';
+                      }
+                    },
+                    label: 'Address',
+                    prefix: Icons.home_outlined,
+                  ),
+                  const SizedBox(
+                    height: 25.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 70),
+                    child: MaterialButton(
+                      height: 55,
+                      minWidth: 340,
+                      elevation: 5.0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      onPressed: () {
+                        if (userFormKey.currentState.validate() &&
+                            DashboardCubit
+                                .get(context)
+                                .dropDownValue
+                                .isNotEmpty &&
+                            userConfirmPasswordController.text ==
+                                userPasswordController.text) {
+                          navigateTo(
+                              context,
+                              PhoneScreen(
+                                firstName: userFirstNameController.text,
+                                secondName: userSecondNameController.text,
+                                email: userEmailController.text,
+                                password: userPasswordController.text,
+                                address: userStreetController.text,
+                                city: ShopRegisterCubit.get(context).userRegisterDropdownValue,
+                                isSeller: false,
+                                area: userAreaController.text,
+                              ));
+                        }
+                      },
+                      child: const Text(
+                        "Sign Up",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 5.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Already have account ?',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Sign In',
+                            style: TextStyle(
+                                color: Colors.deepOrange,
+                                fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+Widget buildSellerRegister({
+  GlobalKey<FormState> sellerFormKey,
+  TextEditingController sellerFirstNameController,
+  TextEditingController sellerSecondNameController,
+  TextEditingController sellerOrganizationNameController,
+  TextEditingController sellerEmailController,
+  TextEditingController sellerPasswordController,
+  TextEditingController sellerSecondPasswordController,
+  TextEditingController sellerAreaController,
+  TextEditingController sellerStreetController,
+  context,
+}) {
+  return SingleChildScrollView(
+    scrollDirection: Axis.vertical,
+    child: Container(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Form(
+              key: sellerFormKey,
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: defaultFormField(
+                          fontSize: 14.0,
+                          controller: sellerFirstNameController,
+                          type: TextInputType.name,
+                          isValidate: true,
+                          validate: (String value) {
+                            if (value.isEmpty) {
+                              return 'please enter your first name';
+                            }
+                          },
+                          label: 'First Name',
+                          prefix: Icons.drive_file_rename_outline,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10.0,
+                      ),
+                      Expanded(
+                        child: defaultFormField(
+                          fontSize: 14.0,
+                          controller: sellerSecondNameController,
+                          type: TextInputType.name,
+                          isValidate: true,
+                          validate: (String value) {
+                            if (value.isEmpty) {
+                              return 'please enter your second name';
+                            }
+                          },
+                          label: 'Second Name',
+                          prefix: Icons.drive_file_rename_outline,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  defaultFormField(
+                    fontSize: 14.0,
+                    controller: sellerOrganizationNameController,
+                    type: TextInputType.text,
+                    isValidate: true,
+                    validate: (String value) {
+                      if (value.isEmpty) {
+                        return 'please enter your organization name';
+                      }
+                    },
+                    label: 'Organization Name',
+                    prefix: Icons.home_repair_service,
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 73.0,
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton2(
+                              isExpanded: true,
+                              hint: Row(
+                                children: const [
+                                  Icon(
+                                    Icons.list,
+                                    size: 30,
+                                    color: Colors.black,
+                                  ),
+                                  SizedBox(
+                                    width: 4,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      'Select City',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              items: ShopRegisterCubit
+                                  .get(context)
+                                  .items
+                                  .map((item) =>
+                                  DropdownMenuItem<String>(
+                                    value: item,
+                                    child: Text(
+                                      item,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ))
+                                  .toList(),
+                              value:
+                              ShopRegisterCubit
+                                  .get(context)
+                                  .sellerRegisterDropdownValue,
+                              onChanged: (value) {
+                                ShopRegisterCubit.get(context)
+                                    .sellerChangeDropValue(value);
+                                // selectedValue = value as String;
+                              },
+                              icon: const Icon(
+                                Icons.keyboard_arrow_down_sharp,
+                                size: 20.0,
+                              ),
+                              iconSize: 14,
+                              iconEnabledColor: Colors.black,
+                              iconDisabledColor: Colors.grey,
+                              buttonHeight: 50,
+                              buttonWidth: 160,
+                              buttonPadding:
+                              const EdgeInsets.only(left: 14, right: 14),
+                              buttonDecoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  width: 2.5,
+                                  color: Colors.black26,
+                                ),
+                                color: Colors.white,
+                              ),
+                              itemHeight: 40,
+                              itemPadding:
+                              const EdgeInsets.only(left: 14, right: 14),
+                              dropdownMaxHeight: 200,
+                              dropdownWidth: 200,
+                              dropdownPadding: null,
+                              dropdownDecoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                color: Colors.white,
+                              ),
+                              scrollbarRadius: const Radius.circular(40),
+                              scrollbarThickness: 6,
+                              scrollbarAlwaysShow: true,
+                              offset: const Offset(0, 0),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5.0,
+                      ),
+                      Expanded(
+                        child: defaultFormField(
+                          fontSize: 14.0,
+                          controller: sellerAreaController,
+                          type: TextInputType.text,
+                          onSubmit: (value) {},
+                          validate: (String value) {
+                            if (value.isEmpty) {
+                              return 'Area is must not be empty';
+                            }
+                          },
+                          label: 'Area',
+                          prefix: Icons.map_outlined,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  defaultFormField(
+                    fontSize: 14.0,
+                    controller: sellerStreetController,
+                    type: TextInputType.text,
+                    onSubmit: (value) {},
+                    isValidate: true,
+                    validate: (String value) {
+                      if (value.isEmpty) {
+                        return 'Street is must not be empty';
+                      }
+                    },
+                    label: 'Street',
+                    prefix: Icons.home_outlined,
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  defaultFormField(
+                    fontSize: 14.0,
+                    controller: sellerEmailController,
+                    type: TextInputType.emailAddress,
+                    isValidate: true,
+                    validate: (String value) {
+                      if (value.isEmpty) {
+                        return 'please enter your email address';
+                      }
+                    },
+                    label: 'Email Address',
+                    prefix: Icons.email_outlined,
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  defaultFormField(
+                    fontSize: 14.0,
+                    controller: sellerPasswordController,
+                    type: TextInputType.visiblePassword,
+                    suffix: ShopRegisterCubit
+                        .get(context)
+                        .sellerSuffix,
+                    onSubmit: (value) {},
+                    isPassword: ShopRegisterCubit
+                        .get(context)
+                        .sellerRegisterIsPassword,
+                    suffixPressed: () {
+                      ShopRegisterCubit.get(context)
+                          .sellerChangePasswordVisibility();
+                    },
+                    isValidate: true,
+                    validate: (String value) {
+                      if (value.isEmpty) {
+                        return 'password is too short';
+                      }
+                    },
+                    label: 'Password',
+                    prefix: Icons.lock_outline,
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  defaultFormField(
+                    fontSize: 14.0,
+                    controller: sellerSecondPasswordController,
+                    type: TextInputType.visiblePassword,
+                    suffix: ShopRegisterCubit
+                        .get(context)
+                        .sellerSuffix2,
+                    onSubmit: (value) {},
+                    isPassword: ShopRegisterCubit
+                        .get(context)
+                        .sellerRegisterIsPassword2,
+                    suffixPressed: () {
+                      ShopRegisterCubit.get(context)
+                          .sellerChangeConfirmPasswordVisibility();
+                    },
+                    isValidate: true,
+                    validate: (String value) {
+                      if (value.isEmpty) {
+                        return 'password is too short';
+                      }else if (value != sellerPasswordController.text) {
+                        return 'password not matching';
+                      }
+                    },
+                    label: 'Confirm Password',
+                    prefix: Icons.lock_outline,
+                  ),
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 70),
+                    child: MaterialButton(
+                      height: 55,
+                      minWidth: 340,
+                      elevation: 5.0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      onPressed: () {
+                        if (sellerFormKey.currentState.validate()) {
+                          navigateTo(
+                              context,
+                              PhoneScreen(
+                                firstName: sellerFirstNameController.text,
+                                secondName: sellerSecondNameController.text,
+                                email: sellerEmailController.text,
+                                password: sellerPasswordController.text,
+                                address: sellerStreetController.text,
+                                isSeller: true,
+                                city: ShopRegisterCubit.get(context).sellerRegisterDropdownValue,
+                                area: sellerAreaController.text,
+                                organization: sellerOrganizationNameController.text,
+                              ));
+                          // dev.log(sellerOrganizationNameController.text.toString());
+                        }
+                      },
+                      child: const Text(
+                        "Sign Up",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 5.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Already have account ?',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Sign In',
+                            style: TextStyle(
+                                color: Colors.deepOrange,
+                                fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+Widget buildSizeCircle({String size,
+  bool state,
+  outerSize = 22.0,
+  innerSize = 20.0,
+  color = Colors.black}) {
+  if (!state) {
+    return CircleAvatar(
+      backgroundColor: color,
+      child: CircleAvatar(
+        child: Text(
+          size,
+          style: const TextStyle(fontSize: 14.0),
+        ),
+        radius: innerSize,
+        backgroundColor: Colors.white,
+      ),
+      radius: outerSize,
+    );
+  } else {
+    return CircleAvatar(
+      backgroundColor: color,
+      child: Text(
+        size,
+        style: const TextStyle(fontSize: 14.0),
+      ),
+      radius: innerSize,
+    );
+  }
+}
+
+Widget textFieldCardNumber({@required bool first, last, @required context}) {
+  return Container(
+    color: Colors.black,
+    width: MediaQuery
+        .of(context)
+        .size
+        .width / 5.0,
+    height: 60.0,
+    child: AspectRatio(
+      aspectRatio: 1.0,
+      child: TextField(
+        autofocus: true,
+        onChanged: (value) {
+          if (value.length == 4 && last == false) {
+            FocusScope.of(context).nextFocus();
+          }
+          if (value.isEmpty && first == false) {
+            FocusScope.of(context).previousFocus();
+          }
+        },
+        showCursor: false,
+        readOnly: false,
+        textAlignVertical: TextAlignVertical.top,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+        keyboardType: TextInputType.number,
+        maxLength: 4,
+        decoration: InputDecoration(
+          counter: const Offstage(),
+          enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(width: 2, color: Colors.white),
+              borderRadius: BorderRadius.circular(13)),
+          focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(width: 2, color: Colors.deepOrange),
+              borderRadius: BorderRadius.circular(12)),
+        ),
+      ),
+    ),
+  );
+}
+
+Widget textFieldDateValidation(
+    {@required bool first, last, @required context}) {
+  return Container(
+    color: Colors.black,
+    width: MediaQuery
+        .of(context)
+        .size
+        .width / 6,
+    height: 50,
+    child: AspectRatio(
+      aspectRatio: 1.0,
+      child: TextField(
+        autofocus: true,
+        onChanged: (value) {
+          if (value.length == 4 && last == false) {
+            FocusScope.of(context).nextFocus();
+          }
+          if (value.isEmpty && first == false) {
+            FocusScope.of(context).previousFocus();
+          }
+        },
+        showCursor: false,
+        readOnly: false,
+        textAlignVertical: TextAlignVertical.top,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+        keyboardType: TextInputType.number,
+        maxLength: 2,
+        decoration: InputDecoration(
+          counter: const Offstage(),
+          enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(width: 2, color: Colors.white),
+              borderRadius: BorderRadius.circular(13)),
+          focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(width: 2, color: Colors.deepOrange),
+              borderRadius: BorderRadius.circular(12)),
+        ),
+      ),
+    ),
+  );
+}
