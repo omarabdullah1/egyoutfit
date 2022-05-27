@@ -1,4 +1,3 @@
-import 'package:egyoutfit/modules/user/profile/user_order_screen_opened.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../layout/shop_app/cubit/cubit.dart';
