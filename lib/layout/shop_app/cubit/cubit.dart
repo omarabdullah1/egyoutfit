@@ -82,6 +82,8 @@ class ShopCubit extends Cubit<ShopStates> {
   bool is4XL = false;
   bool is5XL = false;
 
+  bool isEnglish = true;
+
   List<Widget> bottomScreens = [
     const ProductsScreen(),
     const CartScreen(),
@@ -194,7 +196,10 @@ class ShopCubit extends Cubit<ShopStates> {
   getOffers() {
     FirebaseFirestore.instance.collection('banners').get().then((value) {
       for (var element in value.docs) {
-        offers = element.data().values.first;
+        offers = element
+            .data()
+            .values
+            .first;
         for (var ele in offers) {
           log(ele);
         }
@@ -227,27 +232,29 @@ class ShopCubit extends Cubit<ShopStates> {
         .then((value) {
       // log(value.docs.first.id);
       for (var element in value.docs) {
-        if (categoryName == 'Men') {
-          menCategory.add(ShopProductsModel.fromJson(element.data()));
-          menCategoryID.add(element.id);
-        } else if (categoryName == 'Women') {
-          womenCategory.add(ShopProductsModel.fromJson(element.data()));
-          womenCategoryID.add(element.id);
-        } else if (categoryName == 'Children') {
-          childrenCategory.add(ShopProductsModel.fromJson(element.data()));
-          childrenCategoryID.add(element.id);
-        } else if (categoryName == 'Bags') {
-          bagCategory.add(ShopProductsModel.fromJson(element.data()));
-          bagCategoryID.add(element.id);
-        } else if (categoryName == 'Accessories') {
-          accessoriesCategory.add(ShopProductsModel.fromJson(element.data()));
-          accessoriesCategoryID.add(element.id);
-        } else if (categoryName == 'Shoe') {
-          shoeCategory.add(ShopProductsModel.fromJson(element.data()));
-          shoeCategoryID.add(element.id);
-        } else if (categoryName == 'Sports') {
-          sportCategory.add(ShopProductsModel.fromJson(element.data()));
-          sportCategoryID.add(element.id);
+        if (element.data()['state'] == 'Approved') {
+          if (categoryName == 'Men') {
+            menCategory.add(ShopProductsModel.fromJson(element.data()));
+            menCategoryID.add(element.id);
+          } else if (categoryName == 'Women') {
+            womenCategory.add(ShopProductsModel.fromJson(element.data()));
+            womenCategoryID.add(element.id);
+          } else if (categoryName == 'Children') {
+            childrenCategory.add(ShopProductsModel.fromJson(element.data()));
+            childrenCategoryID.add(element.id);
+          } else if (categoryName == 'Bags') {
+            bagCategory.add(ShopProductsModel.fromJson(element.data()));
+            bagCategoryID.add(element.id);
+          } else if (categoryName == 'Accessories') {
+            accessoriesCategory.add(ShopProductsModel.fromJson(element.data()));
+            accessoriesCategoryID.add(element.id);
+          } else if (categoryName == 'Shoe') {
+            shoeCategory.add(ShopProductsModel.fromJson(element.data()));
+            shoeCategoryID.add(element.id);
+          } else if (categoryName == 'Sports') {
+            sportCategory.add(ShopProductsModel.fromJson(element.data()));
+            sportCategoryID.add(element.id);
+          }
         }
       }
       // log('$menCategory menCAtegry');
@@ -259,10 +266,15 @@ class ShopCubit extends Cubit<ShopStates> {
 
   getAllProducts() {
     products.clear();
+    productsID.clear();
     FirebaseFirestore.instance.collection('products').get().then((value) {
       for (var element in value.docs) {
-        products.add(ShopProductsModel.fromJson(element.data()));
-        productsID.add(element.id);
+        if (element.data()['state'] == 'Approved') {
+          products.add(ShopProductsModel.fromJson(element.data()));
+          productsID.add(element.id);
+        } else {
+          log('no');
+        }
       }
       // log('$menCategory menCAtegry');
       emit(GetProductsSuccessState());
@@ -334,12 +346,12 @@ class ShopCubit extends Cubit<ShopStates> {
           .collection('users')
           .doc(CacheHelper.getData(key: 'token'))
           .update({
-            'favorites': favorites,
-          })
+        'favorites': favorites,
+      })
           .then((value) => emit(AddFavouritesSuccessState()))
           .catchError((error) {
-            emit(AddFavouritesErrorState());
-          });
+        emit(AddFavouritesErrorState());
+      });
     } else {
       if (favorites.contains(pid)) {
         favorites.remove(pid);
@@ -348,12 +360,12 @@ class ShopCubit extends Cubit<ShopStates> {
             .collection('users')
             .doc(CacheHelper.getData(key: 'token'))
             .update({
-              'favorites': favorites,
-            })
+          'favorites': favorites,
+        })
             .then((value) => emit(RemoveFavouritesSuccessState()))
             .catchError((error) {
-              emit(RemoveFavouritesErrorState());
-            });
+          emit(RemoveFavouritesErrorState());
+        });
       } else {
         favorites.add(pid);
         log(favorites.toString());
@@ -363,12 +375,12 @@ class ShopCubit extends Cubit<ShopStates> {
             .collection('users')
             .doc(CacheHelper.getData(key: 'token'))
             .update({
-              'favorites': favorites,
-            })
+          'favorites': favorites,
+        })
             .then((value) => emit(UpdateFavouritesSuccessState()))
             .catchError((error) {
-              emit(UpdateFavouritesErrorState());
-            });
+          emit(UpdateFavouritesErrorState());
+        });
       }
     }
   }
@@ -376,9 +388,9 @@ class ShopCubit extends Cubit<ShopStates> {
   getFavourite() {
     favoritesModel.clear();
     FirebaseFirestore.instance.collection('products').get().then((value) {
-      for(var element in favorites){
-        for(var ele in value.docs){
-          if(ele.id == element){
+      for (var element in favorites) {
+        for (var ele in value.docs) {
+          if (ele.id == element) {
             favoritesModel.add(ShopProductsModel.fromJson(ele.data()));
           }
         }
@@ -402,13 +414,13 @@ class ShopCubit extends Cubit<ShopStates> {
         .collection('users')
         .doc(CacheHelper.getData(key: 'token'))
         .update({
-          'cart': cart,
-          'size': size,
-        })
+      'cart': cart,
+      'size': size,
+    })
         .then((value) => emit(AddCartSuccessState()))
         .catchError((error) {
-          emit(AddCartErrorState());
-        });
+      emit(AddCartErrorState());
+    });
   }
 
   removeCart(pid) {
@@ -421,13 +433,13 @@ class ShopCubit extends Cubit<ShopStates> {
           .collection('users')
           .doc(CacheHelper.getData(key: 'token'))
           .update({
-            'cart': cart,
-            'size': size,
-          })
+        'cart': cart,
+        'size': size,
+      })
           .then((value) => emit(RemoveCartSuccessState()))
           .catchError((error) {
-            emit(RemoveCartErrorState());
-          });
+        emit(RemoveCartErrorState());
+      });
     }
   }
 
@@ -507,6 +519,7 @@ class ShopCubit extends Cubit<ShopStates> {
 
   createOrder({
     orderAddress,
+    orderName,
     orderPromoCode,
     orderPromoDiscount,
     orderSize,
@@ -536,6 +549,7 @@ class ShopCubit extends Cubit<ShopStates> {
       'orderPromo': orderPromoCode,
       'orderPromoDiscount': orderPromoDiscount,
       'orderImage': orderImage,
+      'orderName': orderName,
     }).then((value) {
       showToast(text: 'Order Created Successfully', state: ToastStates.success);
       removeCart(cart[orderIndex]);
@@ -544,12 +558,12 @@ class ShopCubit extends Cubit<ShopStates> {
           .collection('users')
           .doc(CacheHelper.getData(key: 'token'))
           .update({
-            'cart': cart,
-          })
+        'cart': cart,
+      })
           .then((value) => emit(RemoveCartSuccessState()))
           .catchError((error) {
-            emit(RemoveCartErrorState());
-          });
+        emit(RemoveCartErrorState());
+      });
       emit(CreateOrderSuccessState());
     }).catchError((error) {
       log(error);
@@ -567,6 +581,7 @@ class ShopCubit extends Cubit<ShopStates> {
         .then((value) {
       for (var element in value.docs) {
         ordersModel.add(OrdersModel.fromJson(element.data()));
+        log(element.data()['pState'].toString());
       }
       for (var ele in ordersModel) {
         log(ele.orderedProductsCount.toString());
@@ -640,6 +655,40 @@ class ShopCubit extends Cubit<ShopStates> {
     });
   }
 
+  updateUserData({nameFirst, nameSecond, address, phone, uid, context}) {
+    emit(UpdateStateLoadingShopState());
+
+    FirebaseFirestore.instance.collection('users').doc(uid).update({
+      'address': address,
+      'firstName': nameFirst,
+      'secondName': nameSecond,
+      'phone': phone,
+      'address': address,
+    }).then((value) async {
+      userLogin(
+          context: context,
+          email: CacheHelper.getData(key: 'user'),
+          password: CacheHelper.getData(key: 'pass'));
+      emit(UpdateStateSuccessShopState());
+      Navigator.pop(context);
+    }).catchError((err) {
+      log(err.toString());
+      emit(UpdateStateErrorShopState());
+    });
+  }
+
+  updateUserPassword(newPassword,context) async {
+    emit(UpdateStateLoadingShopState());
+    await FirebaseAuth.instance.currentUser.updatePassword(newPassword).then((
+        value) {
+      emit(UpdateStateSuccessShopState());
+      signOut(context);
+    }).catchError((err) {
+      log(err.toString());
+      emit(UpdateStateErrorShopState());
+    });
+  }
+
   getData(context) {
     userLogin(
         context: context,
@@ -677,5 +726,11 @@ class ShopCubit extends Cubit<ShopStates> {
 
   changeProductCarouselList() {
     emit(ChangeCarouselState());
+  }
+
+  changeLanguageValue(v, context) async {
+    isEnglish = v;
+    log(isEnglish.toString());
+    emit(ChangeLanguageState());
   }
 }

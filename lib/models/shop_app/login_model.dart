@@ -5,8 +5,10 @@ class ShopLoginModel
   String firstName;
   String secondName;
   String email;
+  String image;
   String address;
   String phone;
+  String organization;
   String uId;
   bool isEmailVerfied;
   bool isSeller;
@@ -23,6 +25,8 @@ class ShopLoginModel
     @required this.isSeller,
     @required this.cart,
     @required this.favorites,
+    @required this.image,
+    @required this.organization,
   });
   ShopLoginModel.fromJson(Map<String, dynamic> json) {
     email = json['email'];
@@ -35,6 +39,8 @@ class ShopLoginModel
     isSeller = json['isSeller'];
     cart = json['cart'];
     favorites = json['favorites'];
+    image = json['image'];
+    organization = json['organization'];
   }
   Map<String, dynamic> toMap() {
     return {
@@ -48,6 +54,8 @@ class ShopLoginModel
       'isSeller': isSeller,
       'cart': cart,
       'favorites': favorites,
+      'image': image,
+      'organization': organization,
     };
   }
 }

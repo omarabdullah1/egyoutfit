@@ -47,14 +47,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   void initState() {
-    phoneController.text = ShopCubit
-        .get(context)
-        .loginModel
-        .phone;
-    addressController.text = ShopCubit
-        .get(context)
-        .loginModel
-        .address;
+    phoneController.text = ShopCubit.get(context).loginModel.phone;
+    addressController.text = ShopCubit.get(context).loginModel.address;
     screenPrice = widget.price.toDouble();
     screenPriceCPY = widget.price.toDouble();
     super.initState();
@@ -112,12 +106,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 validate: (value) {
                                   if (value.isEmpty) {
                                     return "Phone  must not be empty";
-                                  } else if (value
-                                      .toString()
-                                      .length > 11 ||
-                                      value
-                                          .toString()
-                                          .length < 11) {
+                                  } else if (value.toString().length > 11 ||
+                                      value.toString().length < 11) {
                                     return 'Wrong phone number';
                                   }
                                 }),
@@ -153,10 +143,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           Row(
                             children: [
                               SizedBox(
-                                width: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width / 2,
+                                width: MediaQuery.of(context).size.width / 2,
                                 height: 50.0,
                                 child: Padding(
                                   padding: const EdgeInsets.only(left: 8.0),
@@ -170,57 +157,49 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 ),
                               ),
                               SizedBox(
-                                width: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width / 9,
+                                width: MediaQuery.of(context).size.width / 9,
                               ),
                               defaultButton(
                                   function: () {
                                     if (!promo
                                         .contains(promoCodeController.text)) {
-                                      log(ShopCubit
-                                          .get(context)
+                                      log(ShopCubit.get(context)
                                           .promoCodesList
                                           .contains(promoCodeController.text)
                                           .toString());
                                       bool flag = false;
                                       log(promoCodeController.text);
-                                      if (ShopCubit
-                                          .get(context)
+                                      if (ShopCubit.get(context)
                                           .promoCodesList
                                           .contains(promoCodeController.text)) {
-                                        log(ShopCubit
-                                            .get(context)
+                                        log(ShopCubit.get(context)
                                             .promoCodesIDList
                                             .toString());
-                                        if (ShopCubit
-                                            .get(context)
-                                            .promoCodesIDList[ShopCubit
-                                            .get(context)
-                                            .promoCodesList
-                                            .indexOf(
-                                            promoCodeController.text)] ==
+                                        if (ShopCubit.get(context)
+                                                    .promoCodesIDList[
+                                                ShopCubit.get(context)
+                                                    .promoCodesList
+                                                    .indexOf(promoCodeController
+                                                        .text)] ==
                                             widget.model.uid) {
-                                          if (ShopCubit
-                                              .get(context)
-                                              .promoCodesStateList[ShopCubit
-                                              .get(context)
-                                              .promoCodesList
-                                              .indexOf(
-                                              promoCodeController.text)] ==
+                                          if (ShopCubit.get(context)
+                                                      .promoCodesStateList[
+                                                  ShopCubit.get(context)
+                                                      .promoCodesList
+                                                      .indexOf(
+                                                          promoCodeController
+                                                              .text)] ==
                                               'Active') {
                                             flag = true;
-                                          }
-                                          else {
+                                          } else {
                                             showToast(
                                                 text: 'Not Active promo code',
                                                 state: ToastStates.error);
                                           }
-                                        }
-                                        else {
+                                        } else {
                                           showToast(
-                                              text: 'The Promo Code Not Activated with this product',
+                                              text:
+                                                  'The Promo Code Not Activated with this product',
                                               state: ToastStates.error);
                                         }
                                       } else {
@@ -232,11 +211,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                         showToast(
                                             text: 'Activated promo code',
                                             state: ToastStates.success);
-                                        int x = ShopCubit
-                                            .get(context)
-                                            .discountList[ShopCubit
-                                            .get(
-                                            context)
+                                        int x = ShopCubit.get(context)
+                                            .discountList[ShopCubit.get(
+                                                context)
                                             .promoCodesList
                                             .indexOf(promoCodeController.text)];
                                         screenPrice = screenPrice -
@@ -261,22 +238,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                             state: ToastStates.error);
                                       }
                                     }
-                                    log(ShopCubit
-                                        .get(context)
+                                    log(ShopCubit.get(context)
                                         .promoCodesIDList
                                         .toString());
-                                    log(ShopCubit
-                                        .get(context)
+                                    log(ShopCubit.get(context)
                                         .promoCodesList
                                         .indexOf(promoCodeController.text)
                                         .toString());
                                     log(widget.model.uid.toString());
                                   },
                                   text: 'Apply',
-                                  width: MediaQuery
-                                      .of(context)
-                                      .size
-                                      .width / 3,
+                                  width: MediaQuery.of(context).size.width / 3,
                                   height: 40.0,
                                   radius: 12)
                             ],
@@ -285,26 +257,25 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             padding: const EdgeInsets.only(top: 8.0),
                             child: Text('Price: ${screenPrice}LE'),
                           ),
-                          widget.model.isShipping?const Padding(
-                              padding: EdgeInsets.only(top: 8.0),
-                              child: Text('*Price includes delivery',
-                                style: TextStyle(
-                                    color: Colors.red, fontSize: 14.0),),
-                          ):const SizedBox(),
+                          widget.model.isShipping
+                              ? const Padding(
+                                  padding: EdgeInsets.only(top: 8.0),
+                                  child: Text(
+                                    '*Price includes delivery',
+                                    style: TextStyle(
+                                        color: Colors.red, fontSize: 14.0),
+                                  ),
+                                )
+                              : const SizedBox(),
                         ],
                       ),
-                      // const SizedBox(
-                      //   height: 10,
-                      // ),
                       Text('Payment',
-                          style: Theme
-                              .of(context)
+                          style: Theme.of(context)
                               .textTheme
                               .headline3
                               .copyWith(fontSize: 23)),
                       Text('All transaction are secure and encrypted',
-                          style: Theme
-                              .of(context)
+                          style: Theme.of(context)
                               .textTheme
                               .headline3
                               .copyWith(fontSize: 16)),
@@ -312,9 +283,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         children: [
                           Radio(
                               value: 1,
-                              groupValue: ShopCubit
-                                  .get(context)
-                                  .group,
+                              groupValue: ShopCubit.get(context).group,
                               onChanged: (T) {
                                 ShopCubit.get(context).changePaymentMethod(1);
                               }),
@@ -328,9 +297,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         children: [
                           Radio(
                               value: 2,
-                              groupValue: ShopCubit
-                                  .get(context)
-                                  .group,
+                              groupValue: ShopCubit.get(context).group,
                               onChanged: (T) {
                                 ShopCubit.get(context).changePaymentMethod(2);
                               }),
@@ -344,11 +311,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         height: 20,
                       ),
                       ConditionalBuilder(
-                          condition: ShopCubit
-                              .get(context)
-                              .group == 2,
-                          builder: (context) =>
-                              Container(
+                          condition: ShopCubit.get(context).group == 2,
+                          builder: (context) => Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(12),
                                   color: Colors.black,
@@ -358,7 +322,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       vertical: 20.0, horizontal: 14),
                                   child: Column(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: const [
@@ -423,7 +387,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       ),
                                       Row(
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                            CrossAxisAlignment.center,
                                         children: [
                                           const Text(
                                             'MCV:  ',
@@ -432,10 +396,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                                 fontSize: 18),
                                           ),
                                           SizedBox(
-                                            width: MediaQuery
-                                                .of(context)
-                                                .size
-                                                .width /
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
                                                 5,
                                             height: 50,
                                             child: TextField(
@@ -443,37 +406,37 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                               showCursor: false,
                                               readOnly: false,
                                               textAlignVertical:
-                                              TextAlignVertical.top,
+                                                  TextAlignVertical.top,
                                               textAlign: TextAlign.center,
                                               style: const TextStyle(
                                                   fontSize: 20,
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white),
                                               keyboardType:
-                                              TextInputType.number,
+                                                  TextInputType.number,
                                               maxLength: 3,
                                               decoration: InputDecoration(
                                                 counter: const Offstage(),
                                                 enabledBorder:
-                                                OutlineInputBorder(
-                                                    borderSide:
-                                                    const BorderSide(
-                                                        width: 2,
-                                                        color: Colors
-                                                            .white),
-                                                    borderRadius:
-                                                    BorderRadius
-                                                        .circular(13)),
+                                                    OutlineInputBorder(
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                width: 2,
+                                                                color: Colors
+                                                                    .white),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(13)),
                                                 focusedBorder:
-                                                OutlineInputBorder(
-                                                    borderSide:
-                                                    const BorderSide(
-                                                        width: 2,
-                                                        color: Colors
-                                                            .deepOrange),
-                                                    borderRadius:
-                                                    BorderRadius
-                                                        .circular(12)),
+                                                    OutlineInputBorder(
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                width: 2,
+                                                                color: Colors
+                                                                    .deepOrange),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12)),
                                               ),
                                             ),
                                           ),
@@ -482,9 +445,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       ),
                                       Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.end,
+                                            MainAxisAlignment.end,
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                            CrossAxisAlignment.center,
                                         children: [
                                           const Text(
                                             'valid  ',
@@ -533,18 +496,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               phoneController.text.isNotEmpty &&
                               phoneController.text.length == 11) {
                             ShopCubit.get(context).createOrder(
-                                orderCount: widget.count,
-                                orderId: widget.id,
-                                orderSize: widget.size,
-                                orderIndex: widget.index,
-                                orderAddress: addressController.text,
-                                orderComment: commentController.text,
-                                orderCost: screenPrice,
-                                orderPhone: phoneController.text,
-                                orderOtherPhone: otherPhoneController.text,
-                                orderPromoCode: promo,
-                                orderPromoDiscount: promoDiscount,
-                                orderImage: widget.image);
+                              orderCount: widget.count,
+                              orderId: widget.id,
+                              orderSize: widget.size,
+                              orderIndex: widget.index,
+                              orderAddress: addressController.text,
+                              orderComment: commentController.text,
+                              orderCost: screenPrice,
+                              orderPhone: phoneController.text,
+                              orderOtherPhone: otherPhoneController.text,
+                              orderPromoCode: promo,
+                              orderPromoDiscount: promoDiscount,
+                              orderImage: widget.image,
+                              orderName: widget.model.name,
+                            );
                             // ShopCubit
                             //     .get(context)
                             //     .currentIndex = 0;

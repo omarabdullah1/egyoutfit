@@ -2,6 +2,7 @@ import 'dart:developer' as dev;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:egyoutfit/modules/service_provider/seller_request/seller_request.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../layout/dashboard_layout/cubit/cubit.dart';
@@ -133,7 +134,7 @@ Widget defaultFormField({
   @required TextEditingController controller,
   @required TextInputType type,
   Function onSubmit,
-  Function onChange,
+  ValueChanged<String> onChange,
   Function onTap,
   bool isPassword = false,
   bool isValidate = false,
@@ -360,10 +361,53 @@ Color chooseToastColor(ToastStates state) {
 Widget buildListProduct({
   @required ShopProductsModel model,
   @required idList,
+  @required index,
   @required context,
   bool isOldPrice = true,
-}) =>
-    Padding(
+}) {
+  dev.log(ShopCubit.get(context).sportCategoryID.toString());
+  dev.log(idList[index].toString());
+  var color = Colors.deepOrange;
+  var category = 'Men\'s';
+  if (ShopCubit.get(context).menCategoryID.contains(idList[index])) {
+    color = Colors.deepOrange;
+    category = 'Men\'s';
+  } else if (ShopCubit.get(context).womenCategoryID.contains(idList[index])) {
+    color = Colors.pink;
+    category = 'Women\'s';
+  } else if (ShopCubit.get(context).shoeCategoryID.contains(idList[index])) {
+    color = Colors.purple;
+    category = 'Shoes';
+  } else if (ShopCubit.get(context).bagCategoryID.contains(idList[index])) {
+    color = Colors.teal;
+    category = 'Bags';
+  } else if (ShopCubit.get(context).sportCategoryID.contains(idList[index])) {
+    color = Colors.green;
+    category = 'Sporting';
+  } else if (ShopCubit.get(context)
+      .childrenCategoryID
+      .contains(idList[index])) {
+    color = Colors.blue;
+    category = 'Children';
+  } else if (ShopCubit.get(context)
+      .accessoriesCategoryID
+      .contains(idList[index])) {
+    color = Colors.red;
+    category = 'Accessories';
+  }
+  return InkWell(
+    onTap: () {
+      navigateTo(
+          context,
+          HomeSelectedProductScreen(
+            mmodel: model,
+            mmodelID: idList,
+            category: category,
+            color: color,
+            productIndex: index,
+          ));
+    },
+    child: Padding(
       padding: const EdgeInsets.all(20.0),
       child: SizedBox(
         height: 120.0,
@@ -377,7 +421,7 @@ Widget buildListProduct({
                   width: 120.0,
                   height: 120.0,
                 ),
-                if (model.discount != 0 && isOldPrice)
+                if (model.discount != 0)
                   Container(
                     color: Colors.red,
                     padding: const EdgeInsets.symmetric(
@@ -413,7 +457,8 @@ Widget buildListProduct({
                   Row(
                     children: [
                       Text(
-                        model.price.toString(),
+                        '${model.price - ((model.price / 100) * model.discount)}',
+                        // model.price.toString(),
                         style: const TextStyle(
                           fontSize: 12.0,
                           color: defaultColor,
@@ -422,9 +467,9 @@ Widget buildListProduct({
                       const SizedBox(
                         width: 5.0,
                       ),
-                      if (model.discount != 0 && isOldPrice)
+                      if (model.discount != 0)
                         Text(
-                          model.oldPrice.toString(),
+                          model.price.toString(),
                           style: const TextStyle(
                             fontSize: 10.0,
                             color: Colors.grey,
@@ -435,15 +480,17 @@ Widget buildListProduct({
                       IconButton(
                         onPressed: () {
                           // ShopCubit.get(context).changeFavorites(model.id);
-                          ShopCubit.get(context).inFavorites(pid: idList);
+                          ShopCubit.get(context)
+                              .inFavorites(pid: idList[index]);
                           ShopCubit.get(context).updateData();
                         },
                         icon: CircleAvatar(
                           radius: 15.0,
-                          backgroundColor:
-                              ShopCubit.get(context).favorites.contains(idList)
-                                  ? defaultColor
-                                  : Colors.grey,
+                          backgroundColor: ShopCubit.get(context)
+                                  .favorites
+                                  .contains(idList[index])
+                              ? defaultColor
+                              : Colors.grey,
                           child: const Icon(
                             Icons.favorite_border,
                             size: 14.0,
@@ -459,7 +506,158 @@ Widget buildListProduct({
           ],
         ),
       ),
-    );
+    ),
+  );
+}
+
+Widget buildOrdersListProduct({
+  @required List<OrdersModel> model,
+  @required index,
+  @required context,
+  bool isOldPrice = true,
+}) {
+  SingleChildScrollView(
+    child: Column(
+      children: [
+        // const SizedBox(height: 15.0,),
+        Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [],
+          ),
+        ),
+        model.isNotEmpty
+            ? Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: ListView.separated(
+                  physics: const BouncingScrollPhysics(),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, index) => Container(
+                    height: 160.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.0),
+                      color: Colors.white,
+                      border: Border.all(
+                        width: 2.0,
+                        color: Colors.black,
+                      ),
+                    ),
+                    child: Stack(
+                      children: [
+                        const SizedBox(
+                          width: 10.0,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                width:
+                                    MediaQuery.of(context).size.width - 240.0,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    border: Border.all(
+                                        width: 2.0, color: Colors.black)),
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      child: const Icon(Icons.arrow_back_ios),
+                                      left: 0.0,
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              7.0,
+                                    ),
+                                    CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                        model[index].orderImage,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      child:
+                                          const Icon(Icons.arrow_forward_ios),
+                                      right: 0.0,
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              7.0,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Positioned(
+                          child: Text(model[index].orderedProduct),
+                          top: MediaQuery.of(context).size.height / 15,
+                          right: MediaQuery.of(context).size.width / 20,
+                        ),
+                        Positioned(
+                          child: Text('\$ ${model[index].orderCost}'),
+                          top: MediaQuery.of(context).size.height / 10,
+                          right: MediaQuery.of(context).size.width / 20,
+                        ),
+                        Positioned(
+                          child: Text('${model[index].orderedProductsCount ?? ''}'),
+                          top: MediaQuery.of(context).size.height / 8,
+                          right: MediaQuery.of(context).size.width / 20,
+                        ),
+                        Positioned(
+                          top: 10.0,
+                          right: 10.0,
+                          child: Container(
+                            height: 30.0,
+                            width: 100.0,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.0),
+                                color: DashboardCubit.get(context)
+                                            .requestModelStateList[index] ==
+                                        'Completed'
+                                    ? Colors.green
+                                    : DashboardCubit.get(context)
+                                                    .requestModelStateList[
+                                                index] ==
+                                            'Scheduled'
+                                        ? Colors.blue
+                                        : DashboardCubit.get(context)
+                                                        .requestModelStateList[
+                                                    index] ==
+                                                'Pending'
+                                            ? Colors.orange
+                                            : DashboardCubit.get(context)
+                                                            .requestModelStateList[
+                                                        index] ==
+                                                    'Cancelled'
+                                                ? Colors.red
+                                                : Colors.white),
+                            child: Center(
+                                child: Text(
+                                    DashboardCubit.get(context)
+                                        .requestModelStateList[index],
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                    ))),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  separatorBuilder: (context, index) => const SizedBox(
+                    height: 10.0,
+                  ),
+                  itemCount: model.length,
+                ),
+              )
+            : const Center(
+                child: Text('No Requests Yet'),
+              ),
+      ],
+    ),
+  );
+}
 
 class BuildListProduct2 extends StatefulWidget {
   final ShopProductsModel model;
@@ -911,229 +1109,29 @@ class _BuildAllProductsState extends State<BuildAllProducts> {
   @override
   Widget build(BuildContext context) {
     return widget.model.isNotEmpty
-        ? SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: ListView.separated(
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                physics: const BouncingScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      DashboardCubit.get(context).productCaroIndex = 0;
-                      navigateTo(
-                          context,
-                          SellerProduct(
-                            models: widget.model[index],
-                            index: index,
-                            modelId: widget.modelIDList[index],
-                          ));
-                    },
-                    child: Container(
-                      height: 160.0,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15.0),
-                        color: Colors.white,
-                        border: Border.all(width: 2.0, color: Colors.black),
-                      ),
-                      child: Stack(
-                        children: [
-                          const SizedBox(
-                            width: 10.0,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width - 240.0,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15.0),
-                                      border: Border.all(
-                                          width: 2.0, color: Colors.black)),
-                                  child: Stack(
-                                    children: [
-                                      Positioned(
-                                        child: const Icon(Icons.arrow_back_ios),
-                                        left: 0.0,
-                                        height:
-                                            MediaQuery.of(context).size.height /
-                                                7.0,
-                                      ),
-                                      CarouselSlider(
-                                        items: widget.model[index].image.isEmpty
-                                            ? const [Icon(Icons.image)]
-                                            : widget.model[index].image
-                                                .map((e) => Image.network(
-                                                      e,
-                                                      width: 150,
-                                                    ))
-                                                .toList(),
-                                        options: CarouselOptions(
-                                          aspectRatio: 1.0,
-                                          height: 130,
-                                          viewportFraction: 1.0,
-                                          enlargeCenterPage: false,
-                                          initialPage: 0,
-                                          enableInfiniteScroll: true,
-                                          reverse: false,
-                                          autoPlay: false,
-                                          autoPlayInterval:
-                                              const Duration(seconds: 3),
-                                          autoPlayAnimationDuration:
-                                              const Duration(seconds: 1),
-                                          autoPlayCurve: Curves.fastOutSlowIn,
-                                          scrollDirection: Axis.horizontal,
-                                        ),
-                                        // carouselController: caroController,
-                                      ),
-                                      Positioned(
-                                        child:
-                                            const Icon(Icons.arrow_forward_ios),
-                                        right: 0.0,
-                                        height:
-                                            MediaQuery.of(context).size.height /
-                                                7.0,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Positioned(
-                            child: Text(widget.model[index].name),
-                            top: MediaQuery.of(context).size.height / 15,
-                            right: MediaQuery.of(context).size.width / 10,
-                          ),
-                          Positioned(
-                            child: Text('\$ ${widget.model[index].price}'),
-                            top: MediaQuery.of(context).size.height / 10,
-                            right: MediaQuery.of(context).size.width / 10,
-                          ),
-                          Positioned(
-                            top: 10.0,
-                            right: 10.0,
-                            child: Container(
-                              height: 30.0,
-                              width: 80.0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                color: widget.model[index].state == 'Approved'
-                                    ? Colors.green
-                                    : widget.model[index].state == 'Pending'
-                                        ? Colors.orange
-                                        : widget.model[index].state ==
-                                                'Cancelled'
-                                            ? Colors.red
-                                            : Colors.white,
-                              ),
-                              child: Center(
-                                  child: Text(widget.model[index].state,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                          color: Colors.white))),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                separatorBuilder: (context, index) => const SizedBox(
-                  height: 10.0,
-                ),
-                itemCount: widget.model.length,
-              ),
-            ),
-          )
-        : const Center(
-            child: Text('No Products Yet'),
-          );
-  }
-}
-
-Widget buildRequests({
-  @required width,
-  @required context,
-  @required List<ShopProductsModel> model,
-  @required List<OrdersModel> ordersModel,
-  @required List countList,
-  @required List id,
-}) =>
-    SingleChildScrollView(
-      child: Column(
-        children: [
-          // const SizedBox(height: 15.0,),
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                        backgroundColor:
-                            DashboardCubit.get(context).dropDownValueColor,
-                        radius: 5.0),
-                    const SizedBox(
-                      width: 5.0,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15.0),
-                        shape: BoxShape.rectangle,
-                      ),
-                      child: DropdownButton(
-                        value: DashboardCubit.get(context).dropDownValue,
-                        icon: const Icon(Icons.keyboard_arrow_down),
-                        items: [
-                          'All Requests',
-                          'Pending',
-                          'Scheduled',
-                          'Completed',
-                          'Cancelled',
-                        ].map((String items) {
-                          return DropdownMenuItem(
-                            value: items,
-                            child: Text(items),
-                          );
-                        }).toList(),
-                        onChanged: (newValue) {
-                          DashboardCubit.get(context)
-                              .changeDropButtonValue(newValue);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          model.isNotEmpty
-              ? Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) => GestureDetector(
+        ? RefreshIndicator(
+            onRefresh: () {
+              return Future.delayed(const Duration(seconds: 2), () async {
+                await DashboardCubit.get(context).getAllProducts();
+              });
+            },
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: ListView.separated(
+                  physics: const PageScrollPhysics(),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
                       onTap: () {
                         DashboardCubit.get(context).productCaroIndex = 0;
                         navigateTo(
                             context,
-                            SellerRequest(
-                              models: model[index],
-                              orderModel: ordersModel[index],
-                              state: DashboardCubit.get(context)
-                                  .requestModelStateList[index],
+                            SellerProduct(
+                              models: widget.model[index],
                               index: index,
-                              id: id[index],
-                              dropValue:
-                                  DashboardCubit.get(context).dropDownValue,
+                              modelId: widget.modelIDList[index],
                             ));
                       },
                       child: Container(
@@ -1157,28 +1155,24 @@ Widget buildRequests({
                                     width: MediaQuery.of(context).size.width -
                                         240.0,
                                     decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(15.0),
-                                        border: Border.all(
-                                            width: 2.0, color: Colors.black)),
+                                      borderRadius: BorderRadius.circular(15.0),
+                                      border: Border.all(
+                                        width: 2.0,
+                                        color: Colors.black,
+                                      ),
+                                    ),
                                     child: Stack(
                                       children: [
-                                        Positioned(
-                                          child:
-                                              const Icon(Icons.arrow_back_ios),
-                                          left: 0.0,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height /
-                                              7.0,
-                                        ),
                                         CarouselSlider(
-                                          items: model[index].image.isEmpty
-                                              ? const [Icon(Icons.image)]
-                                              : model[index]
-                                                  .image
-                                                  .map((e) => Image.network(e))
-                                                  .toList(),
+                                          items:
+                                              widget.model[index].image.isEmpty
+                                                  ? const [Icon(Icons.image)]
+                                                  : widget.model[index].image
+                                                      .map((e) => Image.network(
+                                                            e,
+                                                            width: 110,
+                                                          ))
+                                                      .toList(),
                                           options: CarouselOptions(
                                             aspectRatio: 1.0,
                                             height: 130,
@@ -1198,13 +1192,37 @@ Widget buildRequests({
                                           // carouselController: caroController,
                                         ),
                                         Positioned(
-                                          child: const Icon(
-                                              Icons.arrow_forward_ios),
-                                          right: 0.0,
-                                          height: MediaQuery.of(context)
+                                          top: MediaQuery.of(context)
                                                   .size
                                                   .height /
-                                              7.0,
+                                              16.0,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.52,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                              right: 1.0,
+                                              left: 2.0,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: const [
+                                                Icon(
+                                                  Icons.arrow_back_ios,
+                                                  color: Colors.black,
+                                                  size: 30.0,
+                                                ),
+                                                Icon(
+                                                  Icons.arrow_forward_ios,
+                                                  color: Colors.black,
+                                                  size: 30.0,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -1213,72 +1231,298 @@ Widget buildRequests({
                               ],
                             ),
                             Positioned(
-                              child: Text(model[index].name),
+                              child: Text(widget.model[index].name),
                               top: MediaQuery.of(context).size.height / 15,
-                              right: MediaQuery.of(context).size.width / 20,
+                              right: MediaQuery.of(context).size.width / 10,
                             ),
                             Positioned(
-                              child: Text('\$ ${model[index].price}'),
+                              child: Text('\$ ${widget.model[index].price}'),
                               top: MediaQuery.of(context).size.height / 10,
-                              right: MediaQuery.of(context).size.width / 20,
-                            ),
-                            Positioned(
-                              child: Text('${countList[index] ?? ''}'),
-                              top: MediaQuery.of(context).size.height / 8,
-                              right: MediaQuery.of(context).size.width / 20,
+                              right: MediaQuery.of(context).size.width / 10,
                             ),
                             Positioned(
                               top: 10.0,
                               right: 10.0,
                               child: Container(
                                 height: 30.0,
-                                width: 100.0,
+                                width: 80.0,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    color: DashboardCubit.get(context)
-                                                .requestModelStateList[index] ==
-                                            'Completed'
-                                        ? Colors.green
-                                        : DashboardCubit.get(context)
-                                                        .requestModelStateList[
-                                                    index] ==
-                                                'Scheduled'
-                                            ? Colors.blue
-                                            : DashboardCubit.get(context)
-                                                            .requestModelStateList[
-                                                        index] ==
-                                                    'Pending'
-                                                ? Colors.orange
-                                                : DashboardCubit.get(context)
-                                                                .requestModelStateList[
-                                                            index] ==
-                                                        'Cancelled'
-                                                    ? Colors.red
-                                                    : Colors.white),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  color: widget.model[index].state == 'Approved'
+                                      ? Colors.green
+                                      : widget.model[index].state == 'Pending'
+                                          ? Colors.orange
+                                          : widget.model[index].state ==
+                                                  'Cancelled'
+                                              ? Colors.red
+                                              : Colors.white,
+                                ),
                                 child: Center(
-                                    child: Text(
-                                        DashboardCubit.get(context)
-                                            .requestModelStateList[index],
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                        ))),
+                                  child: Text(
+                                    widget.model[index].state,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                    separatorBuilder: (context, index) => const SizedBox(
-                      height: 10.0,
-                    ),
-                    itemCount: model.length,
+                    );
+                  },
+                  separatorBuilder: (context, index) => const SizedBox(
+                    height: 10.0,
                   ),
-                )
-              : const Center(
-                  child: Text('No Requests Yet'),
+                  itemCount: widget.model.length,
                 ),
-        ],
+              ),
+            ),
+          )
+        : const Center(
+            child: Text('No Products Yet'),
+          );
+  }
+}
+
+Widget buildRequests({
+  @required width,
+  @required context,
+  @required List<ShopProductsModel> model,
+  @required List<OrdersModel> ordersModel,
+  @required List countList,
+  @required List id,
+}) =>
+    RefreshIndicator(
+      onRefresh: () {
+        return Future.delayed(const Duration(seconds: 2), () async {
+          await DashboardCubit.get(context).getAllOrdered();
+        });
+      },
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            // const SizedBox(height: 15.0,),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                          backgroundColor:
+                              DashboardCubit.get(context).dropDownValueColor,
+                          radius: 5.0),
+                      const SizedBox(
+                        width: 5.0,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15.0),
+                          shape: BoxShape.rectangle,
+                        ),
+                        child: DropdownButton(
+                          value: DashboardCubit.get(context).dropDownValue,
+                          icon: const Icon(Icons.keyboard_arrow_down),
+                          items: [
+                            'All Requests',
+                            'Pending',
+                            'Scheduled',
+                            'Completed',
+                            'Cancelled',
+                          ].map((String items) {
+                            return DropdownMenuItem(
+                              value: items,
+                              child: Text(items),
+                            );
+                          }).toList(),
+                          onChanged: (newValue) {
+                            DashboardCubit.get(context)
+                                .changeDropButtonValue(newValue);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            model.isNotEmpty
+                ? Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: ListView.separated(
+                      physics: const BouncingScrollPhysics(),
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (context, index) => GestureDetector(
+                        onTap: () {
+                          DashboardCubit.get(context).productCaroIndex = 0;
+                          navigateTo(
+                              context,
+                              SellerRequest(
+                                models: model[index],
+                                orderModel: ordersModel[index],
+                                state: DashboardCubit.get(context)
+                                    .requestModelStateList[index],
+                                index: index,
+                                id: id[index],
+                                dropValue:
+                                    DashboardCubit.get(context).dropDownValue,
+                              ));
+                        },
+                        child: Container(
+                          height: 160.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15.0),
+                            color: Colors.white,
+                            border: Border.all(
+                              width: 2.0,
+                              color: Colors.black,
+                            ),
+                          ),
+                          child: Stack(
+                            children: [
+                              const SizedBox(
+                                width: 10.0,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width -
+                                          240.0,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15.0),
+                                          border: Border.all(
+                                              width: 2.0, color: Colors.black)),
+                                      child: Stack(
+                                        children: [
+                                          Positioned(
+                                            child: const Icon(
+                                                Icons.arrow_back_ios),
+                                            left: 0.0,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                7.0,
+                                          ),
+                                          CarouselSlider(
+                                            items: model[index].image.isEmpty
+                                                ? const [Icon(Icons.image)]
+                                                : model[index]
+                                                    .image
+                                                    .map(
+                                                        (e) => Image.network(e))
+                                                    .toList(),
+                                            options: CarouselOptions(
+                                              aspectRatio: 1.0,
+                                              height: 130,
+                                              viewportFraction: 1.0,
+                                              enlargeCenterPage: false,
+                                              initialPage: 0,
+                                              enableInfiniteScroll: true,
+                                              reverse: false,
+                                              autoPlay: false,
+                                              autoPlayInterval:
+                                                  const Duration(seconds: 3),
+                                              autoPlayAnimationDuration:
+                                                  const Duration(seconds: 1),
+                                              autoPlayCurve:
+                                                  Curves.fastOutSlowIn,
+                                              scrollDirection: Axis.horizontal,
+                                            ),
+                                            // carouselController: caroController,
+                                          ),
+                                          Positioned(
+                                            child: const Icon(
+                                                Icons.arrow_forward_ios),
+                                            right: 0.0,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                7.0,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Positioned(
+                                child: Text(model[index].name),
+                                top: MediaQuery.of(context).size.height / 15,
+                                right: MediaQuery.of(context).size.width / 20,
+                              ),
+                              Positioned(
+                                child: Text('\$ ${model[index].price}'),
+                                top: MediaQuery.of(context).size.height / 10,
+                                right: MediaQuery.of(context).size.width / 20,
+                              ),
+                              Positioned(
+                                child: Text('${countList[index] ?? ''}'),
+                                top: MediaQuery.of(context).size.height / 8,
+                                right: MediaQuery.of(context).size.width / 20,
+                              ),
+                              Positioned(
+                                top: 10.0,
+                                right: 10.0,
+                                child: Container(
+                                  height: 30.0,
+                                  width: 100.0,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      color: DashboardCubit.get(context)
+                                                      .requestModelStateList[
+                                                  index] ==
+                                              'Completed'
+                                          ? Colors.green
+                                          : DashboardCubit.get(context)
+                                                          .requestModelStateList[
+                                                      index] ==
+                                                  'Scheduled'
+                                              ? Colors.blue
+                                              : DashboardCubit.get(context)
+                                                              .requestModelStateList[
+                                                          index] ==
+                                                      'Pending'
+                                                  ? Colors.orange
+                                                  : DashboardCubit.get(context)
+                                                                  .requestModelStateList[
+                                                              index] ==
+                                                          'Cancelled'
+                                                      ? Colors.red
+                                                      : Colors.white),
+                                  child: Center(
+                                      child: Text(
+                                          DashboardCubit.get(context)
+                                              .requestModelStateList[index],
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                          ))),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      separatorBuilder: (context, index) => const SizedBox(
+                        height: 10.0,
+                      ),
+                      itemCount: model.length,
+                    ),
+                  )
+                : const Center(
+                    child: Text('No Requests Yet'),
+                  ),
+          ],
+        ),
       ),
     );
 

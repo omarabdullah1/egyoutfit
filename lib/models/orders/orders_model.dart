@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class OrdersModel {
   String address;
+  String orderName;
   String email;
   String firstName;
   String orderedProduct;
@@ -33,6 +34,7 @@ class OrdersModel {
     @required this.phoneNumber,
     @required this.otherPhoneNumber,
     @required this.pState,
+    @required this.orderName,
   });
   OrdersModel.fromJson(Map<String, dynamic> json) {
     email = json['email'];
@@ -50,6 +52,7 @@ class OrdersModel {
     otherPhoneNumber = json['otherPhoneNumber'];
     orderedProductsCount = json['orderedProductsCount'];
     pState = json['pState'];
+    orderName = json['orderName'];
   }
   Map<String, dynamic> toMap() {
     return {
@@ -60,6 +63,8 @@ class OrdersModel {
       'phoneNumber': phoneNumber,
       'orderedProductsCount': orderedProductsCount,
       'pState': pState,
+      'orderImage': orderImage,
+      'v': orderName,
     };
   }
 }

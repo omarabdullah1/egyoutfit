@@ -50,7 +50,8 @@ dependencies:
   dots_indicator: ^2.1.0
   awesome_dialog: ^2.2.1
   dropdown_button2: ^1.4.0
-
+  flutter_speed_dial: any
+  easy_localization: any
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +65,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/lang/
   fonts:
     - family: Jannah
       fonts:

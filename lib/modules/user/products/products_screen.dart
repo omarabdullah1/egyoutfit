@@ -54,6 +54,7 @@ class ProductsScreen extends StatelessWidget {
             ShopCubit.get(context).getAllProducts();
             ShopCubit.get(context).getFavourite();
             ShopCubit.get(context).getCart();
+            ShopCubit.get(context).getOrders();
             ShopCubit.get(context).getPromoCodes();
             ShopCubit.get(context).getProducts('Men');
             ShopCubit.get(context).getProducts('Women');

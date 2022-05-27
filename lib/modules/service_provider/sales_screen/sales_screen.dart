@@ -16,8 +16,7 @@ class SalesScreen extends StatefulWidget {
 class _SalesScreenState extends State<SalesScreen> {
   @override
   void initState() {
-    DashboardCubit.get(context).getAllOrdered();
-    DashboardCubit.get(context).getOffers();
+    DashboardCubit.get(context).getPromoCodes();
     super.initState();
   }
 
@@ -54,79 +53,86 @@ class _SalesScreenState extends State<SalesScreen> {
                   ),
                   Expanded(
                     flex: 9,
-                    child: ListView.separated(
-                      itemBuilder: (context, index) => Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              navigateTo(
-                                  context,
-                                  EditOfferScreen(
-                                    promo: DashboardCubit.get(context)
-                                        .myPromoCodesList[index],
-                                    discount: DashboardCubit.get(context)
-                                        .myDiscountList[index],
-                                    state: DashboardCubit.get(context)
-                                        .myPromoCodesStateList[index],
-                                    id: DashboardCubit.get(context)
-                                        .allPromoCodesIDList[index],
-                                  ));
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: width - 50.0,
-                                  height: height / 8,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(14.0),
-                                    border: Border.all(
-                                        color: Colors.black54, width: 2.0),
-                                  ),
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text('Promo Code: '),
-                                            Text(DashboardCubit.get(context)
-                                                .myPromoCodesList[index]),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text('Discount: '),
-                                            Text(DashboardCubit.get(context)
-                                                    .myDiscountList[index]
-                                                    .toString() +
-                                                '%'),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text('State: '),
-                                            Text(DashboardCubit.get(context)
-                                                .myPromoCodesStateList[index]),
-                                          ],
-                                        ),
-                                      ],
+                    child: RefreshIndicator(
+                      onRefresh: (){
+                        return Future.delayed(const Duration(seconds: 2), () async {
+                          await DashboardCubit.get(context).getPromoCodes();
+                         });
+                      },
+                      child: ListView.separated(
+                        itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                navigateTo(
+                                    context,
+                                    EditOfferScreen(
+                                      promo: DashboardCubit.get(context)
+                                          .myPromoCodesList[index],
+                                      discount: DashboardCubit.get(context)
+                                          .myDiscountList[index],
+                                      state: DashboardCubit.get(context)
+                                          .myPromoCodesStateList[index],
+                                      id: DashboardCubit.get(context)
+                                          .allPromoCodesIDList[index],
+                                    ));
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: width - 50.0,
+                                    height: height / 8,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(14.0),
+                                      border: Border.all(
+                                          color: Colors.black54, width: 2.0),
+                                    ),
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text('Promo Code: '),
+                                              Text(DashboardCubit.get(context)
+                                                  .myPromoCodesList[index]),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text('Discount: '),
+                                              Text(DashboardCubit.get(context)
+                                                      .myDiscountList[index]
+                                                      .toString() +
+                                                  '%'),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text('State: '),
+                                              Text(DashboardCubit.get(context)
+                                                  .myPromoCodesStateList[index]),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          )),
-                      separatorBuilder: (context, index) => myDivider(),
-                      itemCount:
-                          DashboardCubit.get(context).myPromoCodesList.length,
+                                ],
+                              ),
+                            )),
+                        separatorBuilder: (context, index) => myDivider(),
+                        itemCount:
+                            DashboardCubit.get(context).myPromoCodesList.length,
+                      ),
                     ),
                   ),
                 ],

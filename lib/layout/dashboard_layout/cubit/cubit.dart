@@ -15,7 +15,7 @@ import '../../../models/shop_app/login_model.dart';
 import '../../../models/shop_app/products_model.dart';
 import '../../../modules/login/login_screen.dart';
 import '../../../modules/service_provider/dashboard_screen/dashboard_screen.dart';
-import '../../../modules/service_provider/profile_screen/profile_screen.dart';
+import '../../../modules/service_provider/profile_screen/seller_setting_screen.dart';
 import '../../../modules/service_provider/sales_screen/sales_screen.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
@@ -29,8 +29,11 @@ class DashboardCubit extends Cubit<DashboardStates> {
 
   int currentIndex = 0;
   List listImage = [];
+  String image;
+
   List<String> firebaseLink;
   List firebaseLinkEdit;
+  String firebaseImagesEdit;
   List<ShopProductsModel> products = [];
   List productsID = [];
   List allProductsID = [];
@@ -118,11 +121,12 @@ class DashboardCubit extends Cubit<DashboardStates> {
   bool promoDiscountToggle = false;
   bool stateChanged = false;
   bool isUpdate = false;
+  bool isDialOpen = false;
 
   List<Widget> bottomScreens = [
     const DashboardScreen(),
     const SalesScreen(),
-    const ProfileScreen(),
+    const SellerSettingScreen(),
   ];
 
   void changeBottom(int index) {
@@ -163,6 +167,59 @@ class DashboardCubit extends Cubit<DashboardStates> {
     }).catchError((error) {
       emit(DashboardLoginErrorState(error.toString()));
     });
+  }
+
+  updateSellerData({
+    uid,
+    name,
+    phone,
+    address,
+    organization,
+    image,
+    context,
+  }) {
+    emit(UpdateStateLoadingDashboardState());
+    if (image != null) {
+      FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'address': address,
+        'firstName': name,
+        'phone': phone,
+        'organization': organization,
+        'image': image,
+      }).then((value) async {
+        await userLogin(
+            context: context,
+            email: CacheHelper.getData(key: 'user'),
+            password: CacheHelper.getData(key: 'pass'));
+        listImage = [];
+        image = null;
+        firebaseImagesEdit = null;
+        emit(UpdateStateSuccessDashboardState());
+        Navigator.pop(context);
+      }).catchError((err) {
+        log(err.toString());
+        emit(UpdateStateErrorDashboardState());
+      });
+    } else {
+      FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'address': address,
+        'firstName': name,
+        'phone': phone,
+        'organization': organization,
+      }).then((value) async {
+        await userLogin(
+            context: context,
+            email: CacheHelper.getData(key: 'user'),
+            password: CacheHelper.getData(key: 'pass'));
+        image = null;
+        firebaseImagesEdit = null;
+        emit(UpdateStateSuccessDashboardState());
+        Navigator.pop(context);
+      }).catchError((err) {
+        log(err.toString());
+        emit(UpdateStateErrorDashboardState());
+      });
+    }
   }
 
   getOffers() {
@@ -373,18 +430,18 @@ class DashboardCubit extends Cubit<DashboardStates> {
       emit(CreateProductErrorState());
     });
   }
+
   createPromo({
     @required String promo,
     @required int discount,
     @required bool isDiscount,
-
   }) async {
     emit(CreatePromoLoadingState());
-     FirebaseFirestore.instance.collection('promo').doc().set({
+    FirebaseFirestore.instance.collection('promo').doc().set({
       'global': false,
       'discount': discount,
       'uid': await CacheHelper.getData(key: 'token'),
-      'state': isDiscount?'Active':'NotActive',
+      'state': isDiscount ? 'Active' : 'NotActive',
       'product': '',
       'promo': promo,
     }).then((value) {
@@ -395,19 +452,19 @@ class DashboardCubit extends Cubit<DashboardStates> {
       emit(CreatePromoErrorState());
     });
   }
+
   updatePromo({
     @required String id,
     @required String promo,
     @required int discount,
     @required bool isDiscount,
-
   }) async {
     emit(CreatePromoLoadingState());
-     FirebaseFirestore.instance.collection('promo').doc(id).update({
+    FirebaseFirestore.instance.collection('promo').doc(id).update({
       'global': false,
       'discount': discount,
       'uid': await CacheHelper.getData(key: 'token'),
-      'state': isDiscount?'Active':'NotActive',
+      'state': isDiscount ? 'Active' : 'NotActive',
       'product': '',
       'promo': promo,
     }).then((value) {
@@ -472,7 +529,7 @@ class DashboardCubit extends Cubit<DashboardStates> {
     });
   }
 
-  Future<void>updateProductImage({
+  Future<void> updateProductImage({
     @required String id,
     @required List images,
   }) async {
@@ -496,7 +553,7 @@ class DashboardCubit extends Cubit<DashboardStates> {
     final pickedFile = await picker.pickImage(
         source: isCamera ? ImageSource.camera : ImageSource.gallery);
     if (pickedFile != null) {
-      listImage.add(pickedFile.path);
+      image = pickedFile.path;
       emit(SuccessPickImageState());
     } else {
       log('No image selected.');
@@ -561,7 +618,7 @@ class DashboardCubit extends Cubit<DashboardStates> {
     }
   }
 
-  Future<void> uploadEditToFireBase() async {
+  Future<void> uploadEditToFireBase({pId, pListImage, context}) async {
     emit(LoadingUploadImageState());
     firebaseLinkEdit = [];
     for (var element in listImage) {
@@ -573,17 +630,65 @@ class DashboardCubit extends Cubit<DashboardStates> {
         value.ref
             .getDownloadURL()
             .then((value) {
-          firebaseLinkEdit.add(value.toString());
+              firebaseLinkEdit.add(value.toString());
               log(value.toString());
+              updateProductImage(
+                id: pId,
+                images: firebaseLinkEdit + pListImage,
+              ).whenComplete(() {
+                getAllProducts();
+                getAllOrdered();
+                Navigator.pop(context);
+                Navigator.pop(context);
+              });
             })
-            .whenComplete(() => emit(SuccessUploadImageState()))
-            .catchError((err) {
+            .whenComplete(
+              () => emit(SuccessUploadImageState()),
+            ).catchError((err) {
               log(err.toString());
               emit(ErrorUploadImageState());
             });
       });
     }
     emit(SuccessUploadAllImageState());
+  }
+
+  Future<void> uploadProfileImageToFireBase({
+    uid,
+    name,
+    phone,
+    address,
+    organization,
+    context,
+  }) async {
+    emit(LoadingUploadImageState());
+    firebaseImagesEdit = '';
+    firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child('products/${Uri.file(image).pathSegments.last}')
+        .putFile(File(image))
+        .then((value) {
+      value.ref
+          .getDownloadURL()
+          .then((value) {
+            firebaseImagesEdit = value.toString();
+            log(value.toString());
+            updateSellerData(
+              uid: uid,
+              name: name,
+              phone: phone,
+              organization: organization,
+              address: address,
+              image: firebaseImagesEdit,
+              context: context,
+            );
+          })
+          .whenComplete(() => emit(SuccessUploadImageState()))
+          .catchError((err) {
+            log(err.toString());
+            emit(ErrorUploadImageState());
+          });
+    });
   }
 
   // Future<List> uploadEditToFireBase() async {
@@ -612,20 +717,23 @@ class DashboardCubit extends Cubit<DashboardStates> {
   //   return firebaseLink;
   // }
 
-timeProgress() {
+  timeProgress() {
     emit(LoadingState());
-      // log(firebaseLinkEdit.toString());
-      //  updateProductImage(
-      //     id: id,
-      //     images: list);
-      //  getAllProducts();
-      //  getAllOrdered();
-    var tim =Timer(const Duration(seconds: 5), (){emit(SuccessState());});
-tim.cancel();
+    // log(firebaseLinkEdit.toString());
+    //  updateProductImage(
+    //     id: id,
+    //     images: list);
+    //  getAllProducts();
+    //  getAllOrdered();
+    var tim = Timer(const Duration(seconds: 5), () {
+      emit(SuccessState());
+    });
+    tim.cancel();
     // firebaseLinkEdit = [];
     // Navigator.pop(context);
     //   Navigator.pop(context);
-}
+  }
+
   getAllOrdered() {
     orderedProducts.clear();
     orderedProductsIDList.clear();
@@ -762,7 +870,8 @@ tim.cancel();
       emit(GetProductsErrorState());
     });
   }
-  getPromoCodes() {
+
+  getPromoCodes() async {
     promoModel.clear();
     promoCodesList.clear();
     promoCodesIDList.clear();
@@ -774,7 +883,10 @@ tim.cancel();
     promoCodesStateList.clear();
     myPromoCodesStateList.clear();
     emit(GetPromoCodesLoadingState());
-    FirebaseFirestore.instance.collection('promo').get().then((value) async {
+    await FirebaseFirestore.instance
+        .collection('promo')
+        .get()
+        .then((value) async {
       for (var element in value.docs) {
         // log(element.data()['promo']);
         promoModel.add(PromoModel.fromJson(element.data()));
@@ -787,18 +899,20 @@ tim.cancel();
         promoCodesStateList.add(element.state);
         log(element.product.toString());
       }
-      for(var element in promoCodesList){
-        if(promoCodesIDList[promoCodesList.indexOf(element)]==await CacheHelper.getData(key: 'token')){
+      for (var element in promoCodesList) {
+        if (promoCodesIDList[promoCodesList.indexOf(element)] ==
+            await CacheHelper.getData(key: 'token')) {
           myPromoCodesList.add(element);
           myDiscountList.add(discountList[promoCodesList.indexOf(element)]);
-          myPromoCodesStateList.add(promoCodesStateList[promoCodesList.indexOf(element)]);
+          myPromoCodesStateList
+              .add(promoCodesStateList[promoCodesList.indexOf(element)]);
         }
       }
-      for(var ele in promoCodesStateList){
+      for (var ele in promoCodesStateList) {
         log(ele.toString());
         log('');
       }
-      for(var ele in myPromoCodesStateList){
+      for (var ele in myPromoCodesStateList) {
         log(ele.toString());
         // log('');
       }
@@ -810,11 +924,22 @@ tim.cancel();
       //   }
       // }
       emit(GetPromoCodesSuccessState());
+      return promoCodesList;
     }).catchError((err) {
       log(err.toString());
       emit(GetPromoCodesErrorState());
+      return err;
     });
   }
+
+  deletePromo(id) async {
+    if (allPromoCodesIDList.contains(id)) {
+      log('message');
+      await FirebaseFirestore.instance.collection('promo').doc(id).delete();
+      // await getPromoCodes();
+    }
+  }
+
   saveState(drop) {
     if (drop == 'Completed') {
       dropDownValueColor = Colors.green;
@@ -974,6 +1099,12 @@ tim.cancel();
     deliveryToggle = val;
     emit(ChangeToggleValueState());
   }
+
+  changeDialValue(val) {
+    isDialOpen = val;
+    emit(ChangeToggleValueState());
+  }
+
   changePromoDiscountValue(val) {
     promoDiscountToggle = val;
     emit(ChangeToggleValueState());

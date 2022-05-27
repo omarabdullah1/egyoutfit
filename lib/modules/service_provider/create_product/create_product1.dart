@@ -275,6 +275,12 @@ class CreateProductScreen extends StatelessWidget {
                                         return "Please Enter Product Name";
                                       }
                                     },
+                                    onChange: (v){
+                                      if(v.length>18){
+                                          log('true');
+                                          nameController.text = nameController.text.substring(0, nameController.text.length - 1);
+                                      }
+                                    },
                                     isPassword: false,
                                     controller: nameController,
                                     label: " Product Name",

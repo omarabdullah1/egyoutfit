@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../layout/dashboard_layout/cubit/cubit.dart';
@@ -6,37 +7,60 @@ import '../../../layout/dashboard_layout/cubit/states.dart';
 import '../../../shared/components/components.dart';
 
 class EditOfferScreen extends StatelessWidget {
-  const EditOfferScreen({Key key,this.state,this.promo,this.discount,this.id}) : super(key: key);
-final String promo;
-final String state;
-final num discount;
-final String id;
+  const EditOfferScreen(
+      {Key key, this.state, this.promo, this.discount, this.id})
+      : super(key: key);
+  final String promo;
+  final String state;
+  final num discount;
+  final String id;
 
   @override
   Widget build(BuildContext context) {
     var formKey = GlobalKey<FormState>();
     var discountController = TextEditingController();
     var promoController = TextEditingController();
-    discountController.text=discount.toString();
-    promoController.text=promo;
+    discountController.text = discount.toString();
+    promoController.text = promo;
     log(state);
     log(id);
-    if(state == 'Active') {
-      DashboardCubit.get(context)
-          .promoDiscountToggle=true;
-    }else if(state == 'NotActive'){
-      DashboardCubit.get(context)
-          .promoDiscountToggle=false;
+    if (state == 'Active') {
+      DashboardCubit.get(context).promoDiscountToggle = true;
+    } else if (state == 'NotActive') {
+      DashboardCubit.get(context).promoDiscountToggle = false;
     }
 
     return BlocConsumer<DashboardCubit, DashboardStates>(
-      listener: (context, state) {
-        // if (state is CreateProductSuccessState) {
-        // }
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(),
+          appBar: AppBar(
+            actions: [
+              IconButton(
+                onPressed: () async {
+                  AwesomeDialog(
+                      context: context,
+                      dialogType: DialogType.WARNING,
+                      animType: AnimType.BOTTOMSLIDE,
+                      title: 'Warning',
+                      desc:
+                          'Your Offer will be deleted if you want to continue press ok.',
+                      btnOkOnPress: () async {
+                        await DashboardCubit.get(context).deletePromo(id);
+                        await DashboardCubit.get(context).getPromoCodes();
+                        DashboardCubit.get(context)
+                            .changePromoDiscountValue(false);
+                        Navigator.pop(context);
+                        // Navigator.of(context).pop();
+                      },
+                      btnCancelOnPress: () {
+                        // Navigator.pop(context);
+                      }).show();
+                },
+                icon: const Icon(Icons.delete),
+              ),
+            ],
+          ),
           backgroundColor: Colors.white,
           body: SafeArea(
             child: Center(
@@ -54,16 +78,23 @@ final String id;
                         padding: const EdgeInsets.all(15.0),
                         child: Column(
                           children: [
-                            Row(children: const [
-                              Text('Promo Code'),
-                            ]),
+                            Row(
+                              children: const [
+                                Text('Promo Code'),
+                              ],
+                            ),
                             defaultFormField(
                               type: TextInputType.text,
                               prefix: Icons.local_offer_outlined,
                               isValidate: true,
-                              validate: (value) {
-                                if (value.isEmpty) {
-                                  return 'please enter Promo Code ';
+                              onChange: (String v) {
+                                promoController.text.toUpperCase();
+
+                                if (v.length > 6) {
+                                  log('true');
+                                  promoController.text = promoController.text
+                                      .substring(
+                                          0, promoController.text.length - 1);
                                 }
                               },
                               isPassword: false,
@@ -83,12 +114,13 @@ final String id;
                                       color: Colors.black45),
                                 ),
                                 Switch(
-                                    value: DashboardCubit.get(context)
-                                        .promoDiscountToggle,
-                                    onChanged: (v) {
-                                      DashboardCubit.get(context)
-                                          .changePromoDiscountValue(v);
-                                    }),
+                                  value: DashboardCubit.get(context)
+                                      .promoDiscountToggle,
+                                  onChanged: (v) {
+                                    DashboardCubit.get(context)
+                                        .changePromoDiscountValue(v);
+                                  },
+                                ),
                               ],
                             ),
                             defaultFormField(
@@ -118,27 +150,28 @@ final String id;
                   Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: defaultButton(
-                        function: () {
-                          if (formKey.currentState.validate()) {
-                            log('message');
-                            DashboardCubit.get(context).updatePromo(
-                              id: id,
-                              discount: int.parse(discountController.text),
-                              isDiscount: DashboardCubit.get(context)
-                                  .promoDiscountToggle,
-                              promo: promoController.text.toUpperCase(),
-                            );
-                            DashboardCubit.get(context).getAllProducts();
-                            DashboardCubit.get(context).getAllOrdered();
-                            DashboardCubit.get(context).getPromoCodes();
-                            Navigator.pop(context);
-                          }
-                        },
-                        text: 'Submit',
-                        isUpperCase: true,
-                        width: 300.0,
-                        height: 50.0,
-                        radius: 15.0),
+                      function: () async {
+                        if (formKey.currentState.validate()) {
+                          log('message');
+                          DashboardCubit.get(context).updatePromo(
+                            id: id,
+                            discount: int.parse(discountController.text),
+                            isDiscount:
+                                DashboardCubit.get(context).promoDiscountToggle,
+                            promo: promoController.text.toUpperCase(),
+                          );
+                          DashboardCubit.get(context)
+                              .changePromoDiscountValue(false);
+                          await DashboardCubit.get(context).getPromoCodes();
+                          Navigator.pop(context);
+                        }
+                      },
+                      text: 'Submit',
+                      isUpperCase: true,
+                      width: 300.0,
+                      height: 50.0,
+                      radius: 15.0,
+                    ),
                   )
                 ],
               ),

@@ -71,7 +71,8 @@ class _SearchScreenState extends State<SearchScreen> {
                           isOldPrice: false,
                           model: ShopCubit.get(context).productsSearched[index],
                           context: context,
-                          idList: ShopCubit.get(context).productsSearchedID[index],
+                          idList: ShopCubit.get(context).productsSearchedID,
+                          index: index
                         ),
                         separatorBuilder: (context, index) => myDivider(),
                         itemCount:

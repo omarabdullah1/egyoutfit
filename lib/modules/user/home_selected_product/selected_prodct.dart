@@ -463,7 +463,7 @@ class _HomeSelectedProductScreenState extends State<HomeSelectedProductScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
+            padding: const EdgeInsets.only(bottom: 8.0,left: 12.0,right: 12.0,),
             child: defaultButton2(
                 function: () {
                   String s = '';

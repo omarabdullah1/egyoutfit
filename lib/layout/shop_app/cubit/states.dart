@@ -130,11 +130,19 @@ class CreateOrderLoadingState extends ShopStates {}
 
 class ShopLogoutState extends ShopStates {}
 
+class UpdateStateLoadingShopState extends ShopStates {}
+
+class UpdateStateSuccessShopState extends ShopStates {}
+
+class UpdateStateErrorShopState extends ShopStates {}
+
 class ChangePaymentMethodState extends ShopStates {}
 
 class ChangeCartCounterState extends ShopStates {}
 
 class ChangeCarouselState extends ShopStates {}
+
+class ChangeLanguageState extends ShopStates {}
 
 class ChangeSizedState extends ShopStates {}
 

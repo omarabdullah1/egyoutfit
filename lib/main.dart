@@ -1,10 +1,12 @@
 import 'dart:developer';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:egyoutfit/shared/bloc_observer.dart';
 import 'package:egyoutfit/shared/components/constants.dart';
 import 'package:egyoutfit/shared/network/local/cache_helper.dart';
 import 'package:egyoutfit/shared/network/remote/dio_helper.dart';
 import 'package:egyoutfit/shared/styles/themes.dart';
+import 'package:egyoutfit/translations/codegen_loader.g.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +20,7 @@ import 'modules/on_boarding/on_boarding_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = MyBlocObserver();
+  await EasyLocalization.ensureInitialized();
   Firebase.initializeApp(
     options: const FirebaseOptions(
       apiKey: "AIzaSyAcSAZkDsjBYGXuN1545nN5hzT_LaHBQS4",
@@ -51,8 +54,14 @@ void main() async {
     widget = const OnBoardingScreen();
   }
   // widget = const OtpScreen();
-  runApp(MyApp(
-    startWidget: widget,
+  runApp(EasyLocalization(
+    supportedLocales: const [Locale('en'), Locale('ar')],
+    path: 'assets/lang',
+    assetLoader: const CodegenLoader(),
+    fallbackLocale: const Locale('en'),
+    child: MyApp(
+      startWidget: widget,
+    ),
   ));
 }
 
@@ -69,16 +78,22 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => ShopCubit(),),
-        BlocProvider(create: (context) => DashboardCubit(),)
+        BlocProvider(
+          create: (context) => ShopCubit(),
+        ),
+        BlocProvider(
+          create: (context) => DashboardCubit(),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
         theme: lightTheme,
         // theme: lightTheme,
         // darkTheme: darkTheme,
@@ -86,7 +101,7 @@ class _MyAppState extends State<MyApp> {
         home: AnimatedSplashScreen(
           nextScreen: widget.startWidget,
           backgroundColor: Colors.white,
-          duration: 3000,
+          duration: 1500,
           centered: true,
           splash: Image.asset('assets/images/logo black.png'),
           splashIconSize: 250,

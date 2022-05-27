@@ -145,8 +145,8 @@ class SellerProduct extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: SizedBox(
-                                    width: 30.0,
-                                    height: 30.0,
+                                    width: 50.0,
+                                    height: 50.0,
                                     child: FloatingActionButton(
                                       heroTag: 'uniqueTa',
                                       onPressed: () {
