@@ -10,6 +10,7 @@ class UserModel {
   String address;
   String phone;
   String uId;
+  String image;
   bool isEmailVerfied;
   bool isSeller;
   List cart;
@@ -30,6 +31,7 @@ class UserModel {
     @required this.area,
     @required this.city,
     @required this.organization,
+    @required this.image,
   });
   UserModel.fromJson(Map<String, dynamic> json) {
     email = json['email'];
@@ -46,6 +48,7 @@ class UserModel {
     city = json['city'];
     organization = json['organization'];
     size = json['size'];
+    image = json['userImage'];
   }
   Map<String, dynamic> toMap() {
     return {
@@ -63,6 +66,7 @@ class UserModel {
       'city': city,
       'organization': organization,
       'size': size,
+      'userImage': image,
     };
   }
 }

@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder/conditional_builder.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../layout/dashboard_layout/cubit/cubit.dart';
 import '../../../layout/dashboard_layout/cubit/states.dart';
 import '../../../shared/components/components.dart';
+import '../../../translations/locale_keys.g.dart';
 import 'create_product2.dart';
 
 class CreateProductScreen extends StatelessWidget {
@@ -166,7 +168,7 @@ class CreateProductScreen extends StatelessWidget {
                                 DashboardCubit.get(context)
                                     .getMultiImage(false);
                               },
-                              text: 'Photos',
+                              text: LocaleKeys.sellerAcountScreen_Photos.tr(),
                               background: Colors.black,
                               isIcon: true,
                               icon: Icons.image,
@@ -178,7 +180,7 @@ class CreateProductScreen extends StatelessWidget {
                               function: () {
                                 DashboardCubit.get(context).getImage(true);
                               },
-                              text: 'Camera',
+                              text: LocaleKeys.sellerAcountScreen_Camera.tr(),
                               background: Colors.black,
                               isIcon: true,
                               icon: Icons.camera_alt,
@@ -226,29 +228,19 @@ class CreateProductScreen extends StatelessWidget {
                                             width: 15.0,
                                           ),
                                           Text(
-                                            'Category',
+                                            LocaleKeys.sellerCreateProductScreen_category.tr(),
                                             style: TextStyle(
                                                 color: Colors.grey[600],
                                                 fontSize: 16.0),
                                           ),
-                                          const SizedBox(
-                                            width: 80.0,
-                                          ),
+                                          const Spacer(),
                                           DropdownButton(
                                             value: DashboardCubit.get(context)
-                                                .createScreenDropDownValue,
+                                                .createScreenDropDownValueEn,
                                             icon: const Icon(
                                                 Icons.keyboard_arrow_down),
-                                            items: [
-                                              'None',
-                                              'Men',
-                                              'Women',
-                                              'Shoe',
-                                              'Children',
-                                              'Bags',
-                                              'Sports',
-                                              'Accessories'
-                                            ].map((String items) {
+                                            items: DashboardCubit.get(context)
+                                                .createProductItemsEn.map((String items) {
                                               return DropdownMenuItem(
                                                 value: items,
                                                 child: Text(items),
@@ -272,7 +264,7 @@ class CreateProductScreen extends StatelessWidget {
                                     prefix: Icons.text_fields_outlined,
                                     validate: (value) {
                                       if (value.isEmpty) {
-                                        return "Please Enter Product Name";
+                                        return LocaleKeys.sellerCreateProductScreen_pleaseEnterProductName.tr();
                                       }
                                     },
                                     onChange: (v){
@@ -283,7 +275,7 @@ class CreateProductScreen extends StatelessWidget {
                                     },
                                     isPassword: false,
                                     controller: nameController,
-                                    label: " Product Name",
+                                    label: LocaleKeys.sellerCreateProductScreen_productName.tr(),
                                   ),
                                   const SizedBox(
                                     height: 25,
@@ -326,7 +318,7 @@ class CreateProductScreen extends StatelessWidget {
                                         borderRadius:
                                             BorderRadius.circular(25.0),
                                       ),
-                                      labelText: 'Description',
+                                      labelText: LocaleKeys.sellerCreateProductScreen_description.tr(),
                                       prefixIcon: const Icon(Icons.text_fields),
                                     ),
                                   ),
@@ -377,12 +369,12 @@ class CreateProductScreen extends StatelessWidget {
                                       width: MediaQuery.of(context).size.width,
                                       radius: 20.0,
                                       height: 50.0,
-                                      text: "Continue",
+                                      text: LocaleKeys.sellerCreateProductScreen_continue.tr(),
                                       function: () {
                                         if (formKey.currentState.validate() &&
                                             isDescripted &&
                                             DashboardCubit.get(context)
-                                                    .createScreenDropDownValue !=
+                                                    .createScreenDropDownValueEn !=
                                                 'None' &&
                                             DashboardCubit.get(context)
                                                 .listImage
@@ -398,7 +390,7 @@ class CreateProductScreen extends StatelessWidget {
                                                         .firebaseLink,
                                                 category: DashboardCubit.get(
                                                         context)
-                                                    .createScreenDropDownValue,
+                                                    .createScreenDropDownValueEn,
                                                 name: nameController.text,
                                                 description: description,
                                               ));
@@ -406,17 +398,17 @@ class CreateProductScreen extends StatelessWidget {
                                         else if(DashboardCubit.get(context)
                                             .listImage
                                             .isEmpty){
-                                          showToast(text: 'Please select Image', state: ToastStates.error);
+                                          showToast(text: LocaleKeys.sellerCreateProductScreen_pleaseSelectImage.tr(), state: ToastStates.error);
                                         }
                                         else if( DashboardCubit.get(context)
-                                            .createScreenDropDownValue ==
+                                            .createScreenDropDownValueEn ==
                                             'None'){
-                                          showToast(text: 'Category Should not be None', state: ToastStates.error);
+                                          showToast(text: LocaleKeys.sellerCreateProductScreen_categoryShouldNotBeNone.tr(), state: ToastStates.error);
                                         }
                                         else if(nameController.text.isEmpty){
-                                          showToast(text: 'Please enter Product Name', state: ToastStates.error);
+                                          showToast(text: LocaleKeys.sellerCreateProductScreen_pleaseEnterProductName.tr(), state: ToastStates.error);
                                         }else if(!isDescripted){
-                                          showToast(text: 'Please enter Description', state: ToastStates.error);
+                                          showToast(text: LocaleKeys.sellerCreateProductScreen_pleaseEnterDescription.tr(), state: ToastStates.error);
                                         }
 
                                       },

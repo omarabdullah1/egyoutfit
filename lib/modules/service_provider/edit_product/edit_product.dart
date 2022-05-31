@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder/conditional_builder.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../layout/dashboard_layout/cubit/cubit.dart';
@@ -67,7 +68,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
     nameController.text = widget.pName;
     // isDescripted = true;
 
-    DashboardCubit.get(context).createScreenDropDownValue = widget.pCategory;
+    EasyLocalization.of(context).locale.languageCode == 'en'
+        ? DashboardCubit.get(context).createScreenDropDownValueEn =
+            widget.pCategory
+        : DashboardCubit.get(context).createScreenDropDownValueAr =
+            widget.pCategory;
     widget.pDelivery.isNotEmpty
         ? DashboardCubit.get(context).deliveryToggle = true
         : false;
@@ -154,28 +159,21 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                         ),
                                         DropdownButton(
                                           value: DashboardCubit.get(context)
-                                              .createScreenDropDownValue,
+                                                  .createScreenDropDownValueEn,
                                           icon: const Icon(
                                               Icons.keyboard_arrow_down),
-                                          items: [
-                                            'None',
-                                            'Men',
-                                            'Women',
-                                            'Shoe',
-                                            'Children',
-                                            'Bags',
-                                            'Sports',
-                                            'Accessories'
-                                          ].map((String items) {
-                                            return DropdownMenuItem(
-                                              value: items,
-                                              child: Text(items),
-                                            );
-                                          }).toList(),
+                                          items: DashboardCubit.get(context)
+                                                  .createProductItemsEn
+                                                  .map((String items) {
+                                                  return DropdownMenuItem(
+                                                    value: items,
+                                                    child: Text(items),
+                                                  );
+                                                }).toList(),
                                           onChanged: (newValue) {
                                             DashboardCubit.get(context)
                                                 .changeEditProductDropButtonValue(
-                                                    newValue);
+                                                    newValue, context);
                                           },
                                         ),
                                       ],
@@ -490,69 +488,58 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                         text: "Submit",
                                         function: () async {
                                           if (formKey.currentState.validate() &&
-                                              DashboardCubit.get(context)
-                                                      .createScreenDropDownValue !=
-                                                  'None') {
-
-                                                DashboardCubit.get(context)
-                                                    .updateProduct(
-                                                  id: widget.pId,
-                                                  isDiscount:
-                                                  DashboardCubit.get(
-                                                      context)
+                                              (DashboardCubit.get(context)
+                                                          .createScreenDropDownValueEn ==
+                                                      'None' ||
+                                                  DashboardCubit.get(context)
+                                                          .createScreenDropDownValueAr ==
+                                                      'لا شيء')) {
+                                            DashboardCubit.get(context)
+                                                .updateProduct(
+                                              id: widget.pId,
+                                              isDiscount:
+                                                  DashboardCubit.get(context)
                                                       .discountToggle,
-                                                  category: DashboardCubit.get(context).createScreenDropDownValue,
-                                                  description:
-                                                  descriptionController
-                                                      .text,
-                                                  name: nameController.text,
-                                                  price: int.parse(
-                                                      priceController.text),
-                                                  oldPrice: 0,
-                                                  discount: double.parse(
-                                                      discountController
-                                                          .text),
-                                                  pbid: DashboardCubit.get(
-                                                      context)
-                                                      .createId(6),
-                                                  isS: DashboardCubit.get(
-                                                      context)
-                                                      .isS,
-                                                  isM: DashboardCubit.get(
-                                                      context)
-                                                      .isM,
-                                                  isL: DashboardCubit.get(
-                                                      context)
-                                                      .isL,
-                                                  isXL: DashboardCubit.get(
-                                                      context)
-                                                      .isXL,
-                                                  is2XL: DashboardCubit.get(
-                                                      context)
-                                                      .is2XL,
-                                                  is3XL: DashboardCubit.get(
-                                                      context)
-                                                      .is3XL,
-                                                  is4XL: DashboardCubit.get(
-                                                      context)
-                                                      .is4XL,
-                                                  is5XL: DashboardCubit.get(
-                                                      context)
-                                                      .is5XL,
-                                                  isShipping:
-                                                  DashboardCubit.get(
-                                                      context)
+                                              category: DashboardCubit.get(context)
+                                                      .createScreenDropDownValueEn,
+                                              description:
+                                                  descriptionController.text,
+                                              name: nameController.text,
+                                              price: int.parse(
+                                                  priceController.text),
+                                              oldPrice: 0,
+                                              discount: double.parse(
+                                                  discountController.text),
+                                              pbid: DashboardCubit.get(context)
+                                                  .createId(6),
+                                              isS: DashboardCubit.get(context)
+                                                  .isS,
+                                              isM: DashboardCubit.get(context)
+                                                  .isM,
+                                              isL: DashboardCubit.get(context)
+                                                  .isL,
+                                              isXL: DashboardCubit.get(context)
+                                                  .isXL,
+                                              is2XL: DashboardCubit.get(context)
+                                                  .is2XL,
+                                              is3XL: DashboardCubit.get(context)
+                                                  .is3XL,
+                                              is4XL: DashboardCubit.get(context)
+                                                  .is4XL,
+                                              is5XL: DashboardCubit.get(context)
+                                                  .is5XL,
+                                              isShipping:
+                                                  DashboardCubit.get(context)
                                                       .deliveryToggle,
-                                                  shippingPrice:
+                                              shippingPrice:
                                                   deliveryController.text,
-                                                  state: 'Pending',
-                                                );
-                                                DashboardCubit.get(context)
-                                                    .getAllProducts();
-                                                DashboardCubit.get(context)
-                                                    .getAllOrdered();
-                                                Navigator.pop(context);
-
+                                              state: 'Pending',
+                                            );
+                                            DashboardCubit.get(context)
+                                                .getAllProducts();
+                                            DashboardCubit.get(context)
+                                                .getAllOrdered(context);
+                                            Navigator.pop(context);
                                           }
                                           // log(DashboardCubit.get(context)
                                           //     .listImage.toString());
@@ -561,9 +548,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                         background: Colors.black,
                                       ),
                                       fallback: (context) => const Center(
-                                          child: CircularProgressIndicator(
-                                        color: Colors.black,
-                                      )),
+                                        child: CircularProgressIndicator(
+                                          color: Colors.black,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 )

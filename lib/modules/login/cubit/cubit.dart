@@ -17,6 +17,8 @@ class ShopLoginCubit extends Cubit<ShopLoginStates> {
 
   UserModel loginModel;
 
+  bool isEnglish=false;
+
   void userLogin({
     @required context,
     @required String email,
@@ -55,5 +57,10 @@ class ShopLoginCubit extends Cubit<ShopLoginStates> {
         isPassword ? Icons.visibility_outlined : Icons.visibility_off_outlined;
 
     emit(ShopChangePasswordVisibilityState());
+  }
+  changeLanguageValue(v, context) async {
+    isEnglish = v;
+    log(isEnglish.toString());
+    emit(AppChangeLanguageState());
   }
 }

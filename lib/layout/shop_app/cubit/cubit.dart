@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:egyoutfit/layout/shop_app/cubit/states.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ import '../../../modules/user/products/products_screen.dart';
 import '../../../modules/user/profile/user_profile.dart';
 import '../../../shared/components/components.dart';
 import '../../../shared/network/local/cache_helper.dart';
+import '../../../translations/locale_keys.g.dart';
 
 class ShopCubit extends Cubit<ShopStates> {
   ShopCubit() : super(ShopInitialState());
@@ -82,7 +84,7 @@ class ShopCubit extends Cubit<ShopStates> {
   bool is4XL = false;
   bool is5XL = false;
 
-  bool isEnglish = true;
+  bool isEnglish = false;
 
   List<Widget> bottomScreens = [
     const ProductsScreen(),
@@ -182,14 +184,15 @@ class ShopCubit extends Cubit<ShopStates> {
     emit(ShopChangeBottomNavState());
   }
 
-  var dropdownvalue = 'Shoes Fashion';
+  var dropdownvalueEn = 'Shoes Fashion';
+  var dropdownvalueAr = 'أحذية';
 
-  changeDropValue(value) {
-    dropdownvalue = value;
+  changeDropValue(value,context) {
+    EasyLocalization.of(context).locale.languageCode=='en'?dropdownvalueEn=value:dropdownvalueAr=value;
   }
 
-  changeDropButtonValue(String newValue) {
-    dropdownvalue = newValue;
+  changeDropButtonValue(String newValue,context) {
+    EasyLocalization.of(context).locale.languageCode=='en'?dropdownvalueEn=newValue:dropdownvalueAr=newValue;
     emit(ChangeDropState());
   }
 
@@ -551,7 +554,7 @@ class ShopCubit extends Cubit<ShopStates> {
       'orderImage': orderImage,
       'orderName': orderName,
     }).then((value) {
-      showToast(text: 'Order Created Successfully', state: ToastStates.success);
+      showToast(text: LocaleKeys.alerts_orderCreatedSuccessfully.tr(), state: ToastStates.success);
       removeCart(cart[orderIndex]);
       getCart();
       FirebaseFirestore.instance
@@ -567,7 +570,7 @@ class ShopCubit extends Cubit<ShopStates> {
       emit(CreateOrderSuccessState());
     }).catchError((error) {
       log(error);
-      showToast(text: 'Error Creating Order', state: ToastStates.error);
+      showToast(text: LocaleKeys.alerts_orderErrorCreatingOrder.tr(), state: ToastStates.error);
       emit(CreateOrderErrorState());
     });
   }
@@ -663,7 +666,6 @@ class ShopCubit extends Cubit<ShopStates> {
       'firstName': nameFirst,
       'secondName': nameSecond,
       'phone': phone,
-      'address': address,
     }).then((value) async {
       userLogin(
           context: context,
@@ -677,7 +679,7 @@ class ShopCubit extends Cubit<ShopStates> {
     });
   }
 
-  updateUserPassword(newPassword,context) async {
+  changeUserPassword(newPassword,context) async {
     emit(UpdateStateLoadingShopState());
     await FirebaseAuth.instance.currentUser.updatePassword(newPassword).then((
         value) {

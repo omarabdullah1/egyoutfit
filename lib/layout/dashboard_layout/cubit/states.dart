@@ -9,6 +9,8 @@ class DashboardChangeBottomNavState extends DashboardStates {}
 
 class ChangeDropDashboardState extends DashboardStates {}
 
+class ChangeDropRequestState extends DashboardStates {}
+
 class ChangeUpdateDashboardState extends DashboardStates {}
 
 class UpdateStateLoadingDashboardState extends DashboardStates {}
@@ -74,6 +76,8 @@ class ChangeSizedState extends DashboardStates {}
 class ChangeCarouselState extends DashboardStates {}
 
 class ChangeToggleValueState extends DashboardStates {}
+
+class ChangeLanguageState extends DashboardStates {}
 
 class GetOffersSuccessState extends DashboardStates {}
 

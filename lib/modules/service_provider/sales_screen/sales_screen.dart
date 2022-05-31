@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:egyoutfit/modules/service_provider/create_offer/create_offer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../layout/dashboard_layout/cubit/cubit.dart';
 import '../../../layout/dashboard_layout/cubit/states.dart';
 import '../../../shared/components/components.dart';
+import '../../../translations/locale_keys.g.dart';
 import '../create_offer/edit_offer.dart';
 
 class SalesScreen extends StatefulWidget {
@@ -97,7 +99,7 @@ class _SalesScreenState extends State<SalesScreen> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
-                                              const Text('Promo Code: '),
+                                              Text(LocaleKeys.promoCodesScreen_promoCode.tr()+':  '),
                                               Text(DashboardCubit.get(context)
                                                   .myPromoCodesList[index]),
                                             ],
@@ -106,7 +108,7 @@ class _SalesScreenState extends State<SalesScreen> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
-                                              const Text('Discount: '),
+                                              Text(LocaleKeys.promoCodesScreen_discount.tr()+':  '),
                                               Text(DashboardCubit.get(context)
                                                       .myDiscountList[index]
                                                       .toString() +
@@ -117,7 +119,7 @@ class _SalesScreenState extends State<SalesScreen> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
-                                              const Text('State: '),
+                                              Text(LocaleKeys.sellerAcountScreen_state.tr()+':  '),
                                               Text(DashboardCubit.get(context)
                                                   .myPromoCodesStateList[index]),
                                             ],

@@ -1,4 +1,6 @@
 import 'package:conditional_builder/conditional_builder.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:egyoutfit/translations/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../layout/shop_app/cubit/cubit.dart';
@@ -63,12 +65,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         type: TextInputType.name,
                         validate: (String value) {
                           if (value.isEmpty) {
-                            return 'firstname must not be empty';
+                            return LocaleKeys.userAccountScreen_firstNameMustNotBeEmpty.tr();
                           }
 
                           return null;
                         },
-                        label: 'First Name',
+                        label: LocaleKeys.userAccountScreen_firstName.tr(),
                         prefix: Icons.person,
                       ),
                       const SizedBox(
@@ -79,12 +81,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         type: TextInputType.name,
                         validate: (String value) {
                           if (value.isEmpty) {
-                            return 'second name must not be empty';
+                            return LocaleKeys.userAccountScreen_lastNameMustNotBeEmpty.tr();
                           }
 
                           return null;
                         },
-                        label: 'Second Name',
+                        label: LocaleKeys.userAccountScreen_lastName.tr(),
                         prefix: Icons.person,
                       ),
                       const SizedBox(
@@ -95,12 +97,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         type: TextInputType.text,
                         validate: (String value) {
                           if (value.isEmpty) {
-                            return 'address must not be empty';
+                            return LocaleKeys.userCartScreen_addressMustNotBeEmptyValidation.tr();
                           }
 
                           return null;
                         },
-                        label: 'Address',
+                        label: LocaleKeys.userAccountScreen_address.tr(),
                         prefix: Icons.email,
                       ),
                       const SizedBox(
@@ -111,12 +113,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         type: TextInputType.phone,
                         validate: (String value) {
                           if (value.isEmpty) {
-                            return 'phone must not be empty';
+                            return LocaleKeys.userCartScreen_phoneMustNotBeEmpty.tr();
                           }
 
                           return null;
                         },
-                        label: 'Phone',
+                        label: LocaleKeys.userAccountScreen_phone.tr(),
                         prefix: Icons.phone,
                       ),
                       const SizedBox(
@@ -138,7 +140,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           }
 
                         },
-                        text: 'update',
+                        text: LocaleKeys.userAccountScreen_update.tr(),
                       ),
                       
                     ],

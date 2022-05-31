@@ -1,9 +1,11 @@
 import 'dart:developer';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../layout/dashboard_layout/cubit/cubit.dart';
 import '../../../layout/dashboard_layout/cubit/states.dart';
 import '../../../shared/components/components.dart';
+import '../../../translations/locale_keys.g.dart';
 
 class CreateOfferScreen extends StatelessWidget {
   const CreateOfferScreen({Key key}) : super(key: key);
@@ -38,16 +40,21 @@ class CreateOfferScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(15.0),
                         child: Column(
                           children: [
-                            Row(children: const [
-                              Text('Promo Code'),
-                            ]),
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Row(children: [
+                                Text(
+                                    LocaleKeys.promoCodesScreen_promoCode.tr() +
+                                        ':  '),
+                              ]),
+                            ),
                             defaultFormField(
                               type: TextInputType.text,
                               prefix: Icons.local_offer_outlined,
                               isValidate: true,
                               validate: (value) {
                                 if (value.isEmpty) {
-                                  return 'please enter Promo Code ';
+                                  return LocaleKeys.sellerAcountScreen_pleaseEnterPromoCode.tr();
                                 }
                               },
                               onChange: (String v) {
@@ -62,16 +69,17 @@ class CreateOfferScreen extends StatelessWidget {
                               },
                               isPassword: false,
                               controller: promoController,
-                              label: "Promo Code",
+                              label: LocaleKeys.promoCodesScreen_promoCode.tr(),
                             ),
                             const SizedBox(
                               height: 15.0,
                             ),
                             Row(
                               children: [
-                                const Text(
-                                  'Discount:',
-                                  style: TextStyle(
+                                Text(
+                                  LocaleKeys.promoCodesScreen_discount.tr() +
+                                      ':  ',
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.w900,
                                       fontSize: 15.0,
                                       color: Colors.black45),
@@ -93,7 +101,7 @@ class CreateOfferScreen extends StatelessWidget {
                                 if (value.isEmpty) {
                                   if (DashboardCubit.get(context)
                                       .promoDiscountToggle) {
-                                    return 'please enter discount ';
+                                    return LocaleKeys.sellerAcountScreen_pleaseEnterDiscount.tr();
                                   }
                                 }
                               },
@@ -101,7 +109,8 @@ class CreateOfferScreen extends StatelessWidget {
                                   .promoDiscountToggle,
                               isPassword: false,
                               controller: discountController,
-                              label: "Discount %",
+                              label: LocaleKeys.promoCodesScreen_discount.tr() +
+                                  '%',
                             ),
                           ],
                         ),
@@ -123,14 +132,14 @@ class CreateOfferScreen extends StatelessWidget {
                             );
                             await DashboardCubit.get(context).getPromoCodes();
                             showToast(
-                                text: 'Promo Created',
+                                text: LocaleKeys.sellerAcountScreen_promoCodeCreated.tr(),
                                 state: ToastStates.success);
                             DashboardCubit.get(context)
                                 .changePromoDiscountValue(false);
                             Navigator.pop(context);
                           }
                         },
-                        text: 'Submit',
+                        text: LocaleKeys.promoCodesScreen_submit.tr(),
                         isUpperCase: true,
                         width: 300.0,
                         height: 50.0,

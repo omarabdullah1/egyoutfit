@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder/conditional_builder.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../layout/shop_app/cubit/cubit.dart';
@@ -10,6 +11,7 @@ import '../../../models/shop_app/products_model.dart';
 import '../../../shared/components/components.dart';
 import '../../../shared/styles/colors.dart';
 import '../../../shared/styles/icons.dart';
+import '../../../translations/locale_keys.g.dart';
 
 class HomeSelectedProductScreen extends StatefulWidget {
   const HomeSelectedProductScreen(
@@ -45,20 +47,20 @@ class _HomeSelectedProductScreenState extends State<HomeSelectedProductScreen> {
       listener: (context, state) {
         if (state is AddCartSuccessState) {
           showToast(
-              text: 'Product added to your cart', state: ToastStates.success);
+              text: LocaleKeys.alerts_productAddedToYourCart.tr(), state: ToastStates.success);
         } else if (state is UpdateCartSuccessState) {
           showToast(
-              text: 'Product added to your cart', state: ToastStates.success);
+              text:LocaleKeys.alerts_productAddedToYourCart.tr(), state: ToastStates.success);
         } else if (state is RemoveCartSuccessState) {
           showToast(
               text: 'Product removed from your cart', state: ToastStates.error);
         } else if (state is AddFavouritesSuccessState) {
           showToast(
-              text: 'Product added to your favourites',
+              text: LocaleKeys.alerts_productAddedToYourFavourites.tr(),
               state: ToastStates.success);
         } else if (state is RemoveFavouritesSuccessState) {
           showToast(
-              text: 'Product removed from your favourites',
+              text: LocaleKeys.alerts_productRemovedFromYourFavourites.tr(),
               state: ToastStates.error);
         }
       },
@@ -156,10 +158,10 @@ class _HomeSelectedProductScreenState extends State<HomeSelectedProductScreen> {
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 5.0,
                                 ),
-                                child: const Text(
-                                  'DISCOUNT',
-                                  style: TextStyle(
-                                    fontSize: 8.0,
+                                child: Text(
+                                  LocaleKeys.usersHomeScreen_productDiscount.tr(),
+                                  style: const TextStyle(
+                                    fontSize: 14.0,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -247,12 +249,12 @@ class _HomeSelectedProductScreenState extends State<HomeSelectedProductScreen> {
                               ),
                               Row(
                                 children: [
-                                  const Text('Delivery: '),
+                                  Text(LocaleKeys.usersHomeScreen_productDelivery.tr()+':  '),
                                   Text(widget.mmodel.isShipping?widget.mmodel.shippingPrice.toString()+' LE':'Not Available'),
                                 ],
                               ),
                               widget.mmodel.discount!=0?Text(
-                                'Discount: '+widget.mmodel.discount.toString()+' %',
+                                LocaleKeys.usersHomeScreen_productDiscount.tr()+':  '+widget.mmodel.discount.toString()+' %',
                                 style: const TextStyle(
                                   fontSize: 16.0,
                                   color: defaultColor,
@@ -508,7 +510,7 @@ class _HomeSelectedProductScreenState extends State<HomeSelectedProductScreen> {
                   ShopCubit.get(context).getCart();
                   // Navigator.pop(context);
                 },
-                text: 'Add To Cart',
+                text: LocaleKeys.usersHomeScreen_productAddToCart.tr(),
                 width: double.infinity,
                 radius: 14,
                 height: 60.0,

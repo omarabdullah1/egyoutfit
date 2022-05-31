@@ -1,10 +1,12 @@
 import 'dart:developer';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../layout/dashboard_layout/cubit/cubit.dart';
 import '../../../layout/dashboard_layout/cubit/states.dart';
 import '../../../shared/components/components.dart';
+import '../../../translations/locale_keys.g.dart';
 
 class EditOfferScreen extends StatelessWidget {
   const EditOfferScreen(
@@ -78,10 +80,13 @@ class EditOfferScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(15.0),
                         child: Column(
                           children: [
-                            Row(
-                              children: const [
-                                Text('Promo Code'),
-                              ],
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Row(
+                                children: [
+                                  Text(LocaleKeys.promoCodesScreen_promoCode.tr()),
+                                ],
+                              ),
                             ),
                             defaultFormField(
                               type: TextInputType.text,
@@ -99,16 +104,16 @@ class EditOfferScreen extends StatelessWidget {
                               },
                               isPassword: false,
                               controller: promoController,
-                              label: "Promo Code",
+                              label: LocaleKeys.promoCodesScreen_promoCode.tr(),
                             ),
                             const SizedBox(
                               height: 15.0,
                             ),
                             Row(
                               children: [
-                                const Text(
-                                  'Discount:',
-                                  style: TextStyle(
+                                Text(
+                                  LocaleKeys.promoCodesScreen_discount.tr()+':   ',
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.w900,
                                       fontSize: 15.0,
                                       color: Colors.black45),
@@ -139,7 +144,7 @@ class EditOfferScreen extends StatelessWidget {
                                   .promoDiscountToggle,
                               isPassword: false,
                               controller: discountController,
-                              label: "Discount %",
+                              label: LocaleKeys.promoCodesScreen_discount.tr()+'%',
                             ),
                           ],
                         ),
@@ -166,7 +171,7 @@ class EditOfferScreen extends StatelessWidget {
                           Navigator.pop(context);
                         }
                       },
-                      text: 'Submit',
+                      text: LocaleKeys.promoCodesScreen_submit.tr(),
                       isUpperCase: true,
                       width: 300.0,
                       height: 50.0,

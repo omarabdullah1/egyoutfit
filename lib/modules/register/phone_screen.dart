@@ -1,9 +1,12 @@
 import 'dart:developer';
+import 'package:conditional_builder/conditional_builder.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../shared/components/components.dart';
 import '../../shared/components/constants.dart';
 import '../../shared/network/local/cache_helper.dart';
+import '../../translations/locale_keys.g.dart';
 import 'cubit/cubit.dart';
 import 'cubit/states.dart';
 import 'otp_screen.dart';
@@ -39,6 +42,7 @@ class PhoneScreen extends StatefulWidget {
 class _PhoneScreenState extends State<PhoneScreen> {
   var phoneController = TextEditingController();
   var formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -48,7 +52,6 @@ class _PhoneScreenState extends State<PhoneScreen> {
           if (state is ShopCreateUserSuccessState) {
             log(state.userModel.firstName);
             log(state.userModel.uId);
-
             CacheHelper.saveData(
               key: 'token',
               value: state.userModel.uId,
@@ -62,7 +65,9 @@ class _PhoneScreenState extends State<PhoneScreen> {
             });
           }
           if (state is ShopRegisterErrorState) {
-            showToast(text: 'Error in registration', state: ToastStates.error);
+            showToast(
+                text: LocaleKeys.alerts_errorInRegistration.tr(),
+                state: ToastStates.error);
           }
         },
         builder: (context, state) {
@@ -96,9 +101,9 @@ class _PhoneScreenState extends State<PhoneScreen> {
                     const SizedBox(
                       height: 24,
                     ),
-                    const Text(
-                      'Enter your phone number',
-                      style: TextStyle(
+                    Text(
+                      LocaleKeys.signUpScreen_enterYourPhoneNumber.tr(),
+                      style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
                       ),
@@ -106,9 +111,9 @@ class _PhoneScreenState extends State<PhoneScreen> {
                     const SizedBox(
                       height: 10,
                     ),
-                    const Text(
-                      "we'll send you a verification code",
-                      style: TextStyle(
+                    Text(
+                      LocaleKeys.signUpScreen_wellSendYouAVerificationCode.tr(),
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: Colors.black38,
@@ -121,8 +126,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
                     Form(
                       key: formKey,
                       child: Container(
-                        padding:
-                        const EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                             horizontal: 60, vertical: 28.0),
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -130,90 +134,84 @@ class _PhoneScreenState extends State<PhoneScreen> {
                         ),
                         child: Column(
                           children: [
-                            TextFormField(
-                              validator: (String value) {
-                                if (value.isEmpty) {
-                                  return 'password is too short';
-                                }
-                              },
+                            defaultFormField(
                               controller: phoneController,
-                              keyboardType: TextInputType.number,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              onChanged: (v){
-                                if(v.length>11){
-                                  log('true');
-                                  phoneController.text = phoneController.text.substring(0, phoneController.text.length - 1);
-                                }
-                              },
-                              decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                        color: Colors.black26),
-                                    borderRadius: BorderRadius.circular(20)),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                        color: Colors.black, width: 2.0),
-                                    borderRadius: BorderRadius.circular(20)),
-                                errorBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                        color: Colors.red),
-                                    borderRadius: BorderRadius.circular(20)),
-                                focusedErrorBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                        color: Colors.red, width: 2.0),
-                                    borderRadius: BorderRadius.circular(20)),
-                                prefix: const Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 8),
-                                  child: Text(
-                                    '(+02)',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
+                              type: TextInputType.phone,
+                              label: LocaleKeys.signUpScreen_phoneNumber.tr(),
+                              isPrefixText: true,
+                              prefix:  Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Text(
+                                      '(+02)',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
-                                ),
+                                ],
                               ),
+                              isValidate: true,
+                              validate: (String value) {
+                                if (value.isEmpty) {
+                                  return LocaleKeys
+                                      .signUpScreen_enterYourPhoneNumber
+                                      .tr();
+                                }
+                                return null;
+                              },
+                              onChange: (v) {
+                                if (v.length > 11) {
+                                  log('true');
+                                  phoneController.text = phoneController.text
+                                      .substring(
+                                      0, phoneController.text.length - 1);
+                                }
+                              },
                             ),
                             const SizedBox(
                               height: 50,
                             ),
                             SizedBox(
-                              child: MaterialButton(
-                                height: 55,
-                                minWidth: 240,
-                                elevation: 5.0,
-                                onPressed: () {
-                                  if(formKey.currentState.validate()) {
-                                    log(phoneController.text);
-                                    ShopRegisterCubit.get(context).userRegister(
-                                        firstName: widget.firstName,
-                                        secondName:
-                                        widget.secondName,
-                                        email: widget.email,
-                                        password: widget.password,
-                                        address: widget.address,
-                                        phone: phoneController.text,
-                                        isSeller: widget.isSeller,
-                                      area: widget.area,
-                                      city: widget.city,
-                                        organization: widget.organization
-                                    );
-                                  }
-                                },
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: const Text(
-                                  'Next',
-                                  style: TextStyle(
+                              child: ConditionalBuilder(
+                                condition: state is! ShopRegisterLoadingState,
+                                fallback: (context)=>const CircularProgressIndicator(),
+                                builder:(context)=> MaterialButton(
+                                  height: 55,
+                                  minWidth: 240,
+                                  elevation: 5.0,
+                                  onPressed: () {
+                                    if (formKey.currentState.validate()) {
+                                      log(phoneController.text);
+                                      ShopRegisterCubit.get(context).userRegister(
+                                          firstName: widget.firstName,
+                                          secondName: widget.secondName,
+                                          email: widget.email,
+                                          password: widget.password,
+                                          address: widget.address,
+                                          phone: phoneController.text,
+                                          isSeller: widget.isSeller,
+                                          area: widget.area,
+                                          city: widget.city,
+                                          organization: widget.organization);
+                                    }
+                                  },
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Text(
+                                    LocaleKeys.signUpScreen_next.tr(),
+                                    style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.white),
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  color: Colors.black,
                                 ),
-                                color: Colors.black,
                               ),
                             ),
                           ],

@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../layout/dashboard_layout/dashboard_layout.dart';
 import '../../layout/shop_app/shop_layout.dart';
 import '../../models/user/user_model.dart';
 import '../../shared/components/components.dart';
+import '../../translations/locale_keys.g.dart';
 
 class OtpScreen extends StatefulWidget {
   final UserModel userModel;
@@ -18,17 +20,7 @@ class _OtpScreenState extends State<OtpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar:AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: IconButton(onPressed: () {
-          Navigator.pop(context);
-        },
-          icon: const Icon(Icons.arrow_back_ios_outlined,
-            color: Colors.black,),
-        ),
-      ),
-
+      appBar:AppBar(),
       body: SingleChildScrollView(
         child: Container(
           color: Colors.white,
@@ -47,9 +39,9 @@ class _OtpScreenState extends State<OtpScreen> {
                 const SizedBox(
                   height: 12,
                 ),
-                const Text(
-                  'Verification',
-                  style: TextStyle(
+                Text(
+                  LocaleKeys.signUpScreen_verification.tr(),
+                  style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                   ),
@@ -57,9 +49,9 @@ class _OtpScreenState extends State<OtpScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Text(
-                  "We sent an SMS code",
-                  style: TextStyle(
+                Text(
+                  LocaleKeys.signUpScreen_wellSendYouAVerificationCode.tr(),
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: Colors.black38,
@@ -107,10 +99,10 @@ class _OtpScreenState extends State<OtpScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: const Text(
-                            'Verify',
+                          child: Text(
+                            LocaleKeys.signUpScreen_verify.tr(),
                             style:
-                            TextStyle(fontSize: 20,
+                            const TextStyle(fontSize: 20,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white),
                           ),
@@ -123,9 +115,9 @@ class _OtpScreenState extends State<OtpScreen> {
                 const SizedBox(
                   height: 18,
                 ),
-                const Text(
-                  "Didn't you receive any code?",
-                  style: TextStyle(
+                Text(
+                  LocaleKeys.signUpScreen_didntYouReceiveAnyCode.tr(),
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: Colors.black38,
@@ -136,8 +128,8 @@ class _OtpScreenState extends State<OtpScreen> {
                   height: 18,
                 ),
                 TextButton(onPressed: () {},
-                  child: const Text("Resend",
-                    style: TextStyle(
+                  child: Text(LocaleKeys.signUpScreen_resend.tr(),
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,

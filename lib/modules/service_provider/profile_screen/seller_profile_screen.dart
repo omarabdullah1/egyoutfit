@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:conditional_builder/conditional_builder.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:egyoutfit/layout/dashboard_layout/cubit/cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,7 @@ import '../../../layout/dashboard_layout/cubit/states.dart';
 
 import '../../../models/shop_app/login_model.dart';
 import '../../../shared/components/components.dart';
+import '../../../translations/locale_keys.g.dart';
 
 class SellerProfileScreen extends StatefulWidget {
   const SellerProfileScreen({Key key, this.logModel}) : super(key: key);
@@ -113,7 +115,7 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                                               child: const Icon(
                                                 Icons.image,
                                               ),
-                                              label: 'Photos',
+                                              label: LocaleKeys.sellerAcountScreen_Photos.tr(),
                                               onTap: () {
                                                 DashboardCubit.get(context)
                                                     .getImage(false);
@@ -122,7 +124,7 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                                               child: const Icon(
                                                 Icons.camera_alt_outlined,
                                               ),
-                                              label: 'Camera',
+                                              label: LocaleKeys.sellerAcountScreen_Camera.tr(),
                                               onTap: () {
                                                 DashboardCubit.get(context)
                                                     .getImage(true);
@@ -142,12 +144,12 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                           type: TextInputType.name,
                           validate: (String value) {
                             if (value.isEmpty) {
-                              return 'name must not be empty';
+                              return LocaleKeys.sellerAcountScreen_nameMustNotBeEmpty.tr();
                             }
 
                             return null;
                           },
-                          label: 'Name',
+                          label: LocaleKeys.sellerAcountScreen_sellerName.tr(),
                           prefix: Icons.person,
                         ),
                         const SizedBox(
@@ -158,12 +160,12 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                           type: TextInputType.text,
                           validate: (String value) {
                             if (value.isEmpty) {
-                              return 'address must not be empty';
+                              return LocaleKeys.sellerAcountScreen_addressMustNotBeEmpty.tr();
                             }
 
                             return null;
                           },
-                          label: 'Address',
+                          label: LocaleKeys.sellerAcountScreen_sellerAddress.tr(),
                           prefix: Icons.location_on_rounded,
                         ),
                         const SizedBox(
@@ -174,12 +176,12 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                           type: TextInputType.text,
                           validate: (String value) {
                             if (value.isEmpty) {
-                              return 'Organization must not be empty';
+                              return LocaleKeys.sellerAcountScreen_shopNameMustNotBeEmpty.tr();
                             }
 
                             return null;
                           },
-                          label: 'Organization',
+                          label: LocaleKeys.sellerAcountScreen_sellerOrganization.tr(),
                           prefix: Icons.home_repair_service,
                         ),
                         const SizedBox(
@@ -190,12 +192,12 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                           type: TextInputType.phone,
                           validate: (String value) {
                             if (value.isEmpty) {
-                              return 'phone must not be empty';
+                              return LocaleKeys.sellerAcountScreen_phoneMustNotBeEmpty.tr();
                             }
 
                             return null;
                           },
-                          label: 'Phone',
+                          label: LocaleKeys.sellerAcountScreen_sellerPhone.tr(),
                           prefix: Icons.phone,
                         ),
                         const SizedBox(
@@ -231,7 +233,7 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                               }
                             }
                           },
-                          text: 'update',
+                          text: LocaleKeys.sellerAcountScreen_Update.tr(),
                         ),
                       ],
                     ),

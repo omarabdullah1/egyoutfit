@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../layout/shop_app/cubit/cubit.dart';
 import '../../../layout/shop_app/cubit/states.dart';
 import '../../../shared/components/components.dart';
+import '../../../translations/locale_keys.g.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({Key key}) : super(key: key);
@@ -20,7 +22,6 @@ class _CartState extends State<CartScreen> {
     ShopCubit.get(context).cartPriceList = [];
     ShopCubit.get(context).counters = [];
     ShopCubit.get(context).getCart();
-
 
     _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       ShopCubit.get(context).cartPriceList = [];
@@ -66,8 +67,8 @@ class _CartState extends State<CartScreen> {
       },
       builder: (context, state) {
         return ShopCubit.get(context).cart.isEmpty
-            ? const Center(
-                child: Text('No products added to cart'),
+            ? Center(
+                child: Text(LocaleKeys.userCartScreen_emptyCartMessage.tr()),
               )
             : SingleChildScrollView(
                 child: Column(
@@ -98,8 +99,11 @@ class _CartState extends State<CartScreen> {
                           padding:
                               const EdgeInsets.only(top: 20.0, bottom: 20.0),
                           child: Center(
-                            child: Text(
-                                'Total price:   ${ShopCubit.get(context).cartPrice.toString()} \$'),
+                            child: Text(LocaleKeys.userCartScreen_totalPrice
+                                    .tr() +
+                                ':' +
+                                ShopCubit.get(context).cartPrice.toString() +
+                                '\$'),
                           ),
                         ),
                       ],

@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../layout/shop_app/cubit/cubit.dart';
 import '../../../layout/shop_app/cubit/states.dart';
 import '../../../shared/components/components.dart';
+import '../../../translations/locale_keys.g.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key key}) : super(key: key);
@@ -43,17 +45,20 @@ class _SearchScreenState extends State<SearchScreen> {
                   searchFormField(
                     controller: searchController,
                     type: TextInputType.text,
+                    isValidate: true,
                     validate: (String value) {
                       if (value.isEmpty) {
-                        return 'enter text to search';
+                        return LocaleKeys.usersHomeScreen_enterTextToSearch.tr();
                       }
 
                       return null;
                     },
                     onSubmit: (String text) {
-                      ShopCubit.get(context).search(text);
+                      if(formKey.currentState.validate()){
+                        ShopCubit.get(context).search(text);
+                      }
                     },
-                    label: 'Search',
+                    label: LocaleKeys.usersHomeScreen_search.tr(),
                     prefix: Icons.search,
                   ),
                   const SizedBox(

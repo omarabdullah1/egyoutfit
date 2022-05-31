@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:egyoutfit/modules/service_provider/create_product/create_product1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +8,7 @@ import '../../../layout/dashboard_layout/cubit/cubit.dart';
 import '../../../layout/dashboard_layout/cubit/states.dart';
 import '../../../shared/components/components.dart';
 import '../../../shared/styles/colors.dart';
+import '../../../translations/locale_keys.g.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key key}) : super(key: key);
@@ -18,23 +20,23 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
-
     DashboardCubit.get(context).getAllProducts();
     Timer(const Duration(milliseconds: 500), () {
-      DashboardCubit.get(context).getAllOrdered();
+      DashboardCubit.get(context).getAllOrdered(context);
       DashboardCubit.get(context).getPromoCodes();
-      DashboardCubit.get(context).changeDropButtonValue(DashboardCubit.get(context).lastDropDownValue);
-
+      DashboardCubit.get(context).changeDropButtonValue(
+        EasyLocalization.of(context).locale.languageCode == 'en'
+            ? DashboardCubit.get(context).lastDropDownValueEn
+            : DashboardCubit.get(context).lastDropDownValueAr,
+        context,
+      );
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    var width = MediaQuery.of(context).size.width;
     // var height = MediaQuery.of(context).size.height;
     return BlocConsumer<DashboardCubit, DashboardStates>(
         listener: (context, states) {},
@@ -62,21 +64,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
               body: RefreshIndicator(
                 onRefresh: () {
                   DashboardCubit.get(context).getAllProducts();
-                  DashboardCubit.get(context).getAllOrdered();
+                  DashboardCubit.get(context).getAllOrdered(context);
                   DashboardCubit.get(context).getPromoCodes();
                   return;
                 },
                 child: Column(
                   children: [
-                    const TabBar(
+                    TabBar(
                       labelColor: Colors.black,
                       indicatorColor: defaultColor,
                       tabs: [
                         Tab(
-                          text: 'All Products',
+                          text: LocaleKeys.dashboardScreen_allProducts.tr(),
                         ),
                         Tab(
-                          text: 'Requests',
+                          text: LocaleKeys.dashboardScreen_requests.tr(),
                         ),
                       ],
                     ),
@@ -85,32 +87,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         children: [
                           BuildAllProducts(
                             screenWidth: width,
-                            model: DashboardCubit
-                                .get(context)
-                                .products,
-                            modelIDList: DashboardCubit
-                                .get(context)
-                                .productsID,
+                            model: DashboardCubit.get(context).products,
+                            modelIDList: DashboardCubit.get(context).productsID,
                           ),
-
                           buildRequests(
-                            context: context,
-                            width: width,
-                            ordersModel:
-                            DashboardCubit
-                                .get(context)
-                                .requestOrderModel,
-                            model:
-                            DashboardCubit
-                                .get(context)
-                                .requestModel,
-                            countList: DashboardCubit
-                                .get(context)
-                                .requestModelCountList,
-                            id: DashboardCubit
-                                .get(context)
-                                .requestedOrderedProductsID
-                          ),
+                              context: context,
+                              width: width,
+                              ordersModel:
+                                  DashboardCubit.get(context).requestOrderModel,
+                              model: DashboardCubit.get(context).requestModel,
+                              countList: DashboardCubit.get(context)
+                                  .requestModelCountList,
+                              id: DashboardCubit.get(context)
+                                  .requestedOrderedProductsID),
                         ],
                       ),
                     ),

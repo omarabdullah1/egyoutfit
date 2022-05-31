@@ -1,10 +1,12 @@
 import 'dart:developer';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../shared/components/components.dart';
 import '../../shared/components/constants.dart';
 import '../../shared/network/local/cache_helper.dart';
 import '../../shared/styles/colors.dart';
+import '../../translations/locale_keys.g.dart';
 import 'cubit/cubit.dart';
 import 'cubit/states.dart';
 
@@ -72,7 +74,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             });
           }
           if (state is ShopRegisterErrorState) {
-            showToast(text: 'Error in registration', state: ToastStates.error);
+            showToast(text: LocaleKeys.alerts_errorInRegistration.tr(), state: ToastStates.error);
           }
         },
         builder: (context, state) {
@@ -84,15 +86,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 // resizeToAvoidBottomInset: false,
                 body: Column(
                   children: [
-                    const TabBar(
+                    TabBar(
                       labelColor: Colors.black,
                       indicatorColor: defaultColor,
                       tabs: [
                         Tab(
-                          text: 'User',
+                          text: LocaleKeys.signUpScreen_user.tr(),
                         ),
                         Tab(
-                          text: 'Seller',
+                          text: LocaleKeys.signUpScreen_seller.tr(),
                         ),
                       ],
                     ),

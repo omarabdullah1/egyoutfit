@@ -1,12 +1,13 @@
 import 'dart:developer';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder/conditional_builder.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../layout/shop_app/cubit/cubit.dart';
 import '../../../layout/shop_app/cubit/states.dart';
 import '../../../shared/components/components.dart';
+import '../../../translations/locale_keys.g.dart';
 import '../home_selected_product/selected_prodct.dart';
 
 class ProductsScreen extends StatelessWidget {
@@ -16,16 +17,16 @@ class ProductsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<ShopCubit, ShopStates>(
       listener: (context, state) {
-        // if (state is ShopSuccessChangeFavoritesState) {
-        //   if (!state.model.status) {
-        //     showToast(
-        //       text: state.model.message,
-        //       state: ToastStates.ERROR,
-        //     );
-        //   }
-        // }
         if (state is ShopLoginSuccessState) {
           log(state.loginModel.firstName);
+        } else if (state is AddFavouritesSuccessState) {
+          showToast(
+              text: LocaleKeys.alerts_productAddedToYourFavourites.tr(),
+              state: ToastStates.success);
+        } else if (state is RemoveFavouritesSuccessState) {
+          showToast(
+              text: LocaleKeys.alerts_productRemovedFromYourFavourites.tr(),
+              state: ToastStates.error);
         }
       },
       builder: (context, state) {
@@ -115,111 +116,184 @@ class ProductsScreen extends StatelessWidget {
                             children: [
                               Expanded(
                                 flex: 21,
-                                child: categoryButton(
-                                  text: 'Men\'s',
-                                  iconPath: 'assets/images/mens.png',
-                                  color: Colors.deepOrangeAccent,
-                                  context: context,
-                                  mmodel: ShopCubit.get(context).menCategory,
-                                  mmodelID: ShopCubit.get(context).menCategoryID,
-                                  name: 'Men\'s',
-                                  // width: 28.0,
+                                child: SizedBox(
+                                  height: 45.0,
+                                  child: categoryButton(
+                                    text: LocaleKeys.usersHomeScreen_mens.tr(),
+                                    iconPath: 'assets/images/mens.png',
+                                    color: Colors.deepOrangeAccent,
+                                    context: context,
+                                    mmodel: ShopCubit.get(context).menCategory,
+                                    mmodelID:
+                                        ShopCubit.get(context).menCategoryID,
+                                    name: EasyLocalization.of(context)
+                                                .locale
+                                                .languageCode ==
+                                            'en'
+                                        ? 'Men\'s'
+                                        : 'أزياء رجالية',
+                                    // width: 28.0,
+                                  ),
                                 ),
                               ),
                               const Spacer(),
                               Expanded(
                                 flex: 21,
-                                child: categoryButton(
-                                  text: 'Women\'s',
-                                  iconPath: 'assets/images/women.png',
-                                  color: Colors.pink,
-                                  context: context,
-                                  mmodel: ShopCubit.get(context).womenCategory,
-                                  mmodelID: ShopCubit.get(context).womenCategoryID,
+                                child: SizedBox(
+                                  height: 45.0,
+                                  child: categoryButton(
+                                    text:
+                                        LocaleKeys.usersHomeScreen_womens.tr(),
+                                    iconPath: 'assets/images/women.png',
+                                    color: Colors.pink,
+                                    context: context,
+                                    mmodel:
+                                        ShopCubit.get(context).womenCategory,
+                                    mmodelID:
+                                        ShopCubit.get(context).womenCategoryID,
 
-                                  name: 'Women\'s',
-                                  // width: 28.0,
+                                    name: EasyLocalization.of(context)
+                                        .locale
+                                        .languageCode ==
+                                        'en'
+                                        ? 'Women\'s'
+                                        : 'الموضة النسائية',
+                                    // width: 28.0,
+                                  ),
                                 ),
                               ),
                             ],
+                          ),
+                          const SizedBox(
+                            height: 8.0,
                           ),
                           Row(
                             children: [
                               Expanded(
                                 flex: 21,
-                                child: categoryButton(
-                                  text: 'Shoes',
-                                  iconPath: 'assets/images/shoes.png',
-                                  color: Colors.deepPurple,
-                                  context: context,
-                                  mmodel: ShopCubit.get(context).shoeCategory,
-                                  mmodelID: ShopCubit.get(context).shoeCategoryID,
-
-                                  name: 'Shoes',
+                                child: SizedBox(
+                                  height: 45.0,
+                                  child: categoryButton(
+                                    text: LocaleKeys.usersHomeScreen_shoes.tr(),
+                                    iconPath: 'assets/images/shoes.png',
+                                    color: Colors.deepPurple,
+                                    context: context,
+                                    mmodel: ShopCubit.get(context).shoeCategory,
+                                    mmodelID:
+                                        ShopCubit.get(context).shoeCategoryID,
+                                    name: EasyLocalization.of(context)
+                                        .locale
+                                        .languageCode ==
+                                        'en'
+                                        ? 'Shoes'
+                                        : 'أحذية',
+                                  ),
                                 ),
                               ),
                               const Spacer(),
                               Expanded(
                                 flex: 21,
-                                child: categoryButton(
-                                  text: 'Bags',
-                                  iconPath: 'assets/images/bags.png',
-                                  color: Colors.teal,
-                                  context: context,
-                                  mmodel: ShopCubit.get(context).bagCategory,
-                                  mmodelID: ShopCubit.get(context).bagCategoryID,
-
-                                  name: 'Bags',
+                                child: SizedBox(
+                                  height: 45.0,
+                                  child: categoryButton(
+                                    text: LocaleKeys.usersHomeScreen_bags.tr(),
+                                    iconPath: 'assets/images/bags.png',
+                                    color: Colors.teal,
+                                    context: context,
+                                    mmodel: ShopCubit.get(context).bagCategory,
+                                    mmodelID:
+                                        ShopCubit.get(context).bagCategoryID,
+                                    name: EasyLocalization.of(context)
+                                        .locale
+                                        .languageCode ==
+                                        'en'
+                                        ? 'Bags'
+                                        : 'الحقائب',
+                                  ),
                                 ),
                               ),
                             ],
+                          ),
+                          const SizedBox(
+                            height: 8.0,
                           ),
                           Row(
                             children: [
                               Expanded(
                                 flex: 21,
-                                child: categoryButton(
-                                  color: Colors.green,
-                                  text: 'Sports',
-                                  iconPath: 'assets/images/sports.png',
-                                  context: context,
-                                  mmodel: ShopCubit.get(context).sportCategory,
-                                  mmodelID: ShopCubit.get(context).sportCategoryID,
-
-                                  name: 'Sports',
+                                child: SizedBox(
+                                  height: 45.0,
+                                  child: categoryButton(
+                                    color: Colors.green,
+                                    text:
+                                        LocaleKeys.usersHomeScreen_sports.tr(),
+                                    iconPath: 'assets/images/sports.png',
+                                    context: context,
+                                    mmodel:
+                                        ShopCubit.get(context).sportCategory,
+                                    mmodelID:
+                                        ShopCubit.get(context).sportCategoryID,
+                                    name: EasyLocalization.of(context)
+                                        .locale
+                                        .languageCode ==
+                                        'en'
+                                        ? 'Sports'
+                                        : 'الملابس الرياضية',
+                                  ),
                                 ),
                               ),
                               const Spacer(),
                               Expanded(
                                 flex: 21,
-                                child: categoryButton(
-                                  text: 'Children',
-                                  iconPath: 'assets/images/children.png',
-                                  color: Colors.lightBlue,
-                                  context: context,
-                                  mmodel:
-                                      ShopCubit.get(context).childrenCategory,
-                                  mmodelID: ShopCubit.get(context).childrenCategoryID,
-
-                                  name: 'Children',
+                                child: SizedBox(
+                                  height: 45.0,
+                                  child: categoryButton(
+                                    text: LocaleKeys.usersHomeScreen_children
+                                        .tr(),
+                                    iconPath: 'assets/images/children.png',
+                                    color: Colors.lightBlue,
+                                    context: context,
+                                    mmodel:
+                                        ShopCubit.get(context).childrenCategory,
+                                    mmodelID: ShopCubit.get(context)
+                                        .childrenCategoryID,
+                                    name: EasyLocalization.of(context)
+                                        .locale
+                                        .languageCode ==
+                                        'en'
+                                        ? 'Children'
+                                        : 'ملابس أطفال',
+                                  ),
                                 ),
                               ),
                             ],
+                          ),
+                          const SizedBox(
+                            height: 8.0,
                           ),
                           Row(
                             children: [
                               Expanded(
                                 flex: 21,
-                                child: categoryButton(
-                                  text: 'Accessories',
-                                  iconPath: 'assets/images/Accessories.png',
-                                  color: Colors.red[900],
-                                  context: context,
-                                  mmodel: ShopCubit.get(context)
-                                      .accessoriesCategory,
-                                  mmodelID: ShopCubit.get(context).accessoriesCategoryID,
-
-                                  name: 'Accessories',
+                                child: SizedBox(
+                                  height: 45.0,
+                                  child: categoryButton(
+                                    text: LocaleKeys.usersHomeScreen_accessories
+                                        .tr(),
+                                    iconPath: 'assets/images/Accessories.png',
+                                    color: Colors.red[900],
+                                    context: context,
+                                    mmodel: ShopCubit.get(context)
+                                        .accessoriesCategory,
+                                    mmodelID: ShopCubit.get(context)
+                                        .accessoriesCategoryID,
+                                    name: EasyLocalization.of(context)
+                                        .locale
+                                        .languageCode ==
+                                        'en'
+                                        ? 'Accessories'
+                                        : 'اكسسوارات',
+                                  ),
                                 ),
                               ),
                               const Spacer(),
@@ -235,9 +309,9 @@ class ProductsScreen extends StatelessWidget {
                     const SizedBox(
                       height: 20.0,
                     ),
-                    const Text(
-                      'Recommended for you',
-                      style: TextStyle(
+                    Text(
+                      LocaleKeys.usersHomeScreen_recomendedForYou.tr(),
+                      style: const TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.w800,
                       ),
@@ -245,11 +319,11 @@ class ProductsScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Men\'s Fashion:',
-                  style: TextStyle(
+                  LocaleKeys.usersHomeScreen_mens.tr() + ':',
+                  style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w800,
                     color: Colors.grey,
@@ -267,14 +341,14 @@ class ProductsScreen extends StatelessWidget {
                   itemBuilder: (context, index) => InkWell(
                     onTap: () {
                       navigateTo(
-                          context,
-                          HomeSelectedProductScreen(
-                            productIndex: index,
-                            mmodel: ShopCubit.get(context).menCategory[index],
-                            mmodelID: ShopCubit.get(context).menCategoryID,
-                            category: 'Men\'s',
-                            color: Colors.deepOrangeAccent,
-                          ),
+                        context,
+                        HomeSelectedProductScreen(
+                          productIndex: index,
+                          mmodel: ShopCubit.get(context).menCategory[index],
+                          mmodelID: ShopCubit.get(context).menCategoryID,
+                          category: 'Men\'s',
+                          color: Colors.deepOrangeAccent,
+                        ),
                       );
                       // print(ShopCubit.get(context).menCategoryID);
                     },
@@ -289,11 +363,11 @@ class ProductsScreen extends StatelessWidget {
                   itemCount: ShopCubit.get(context).menCategory.length,
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Women\'s Fashion:',
-                  style: TextStyle(
+                  LocaleKeys.usersHomeScreen_womens.tr() + ':',
+                  style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w800,
                     color: Colors.grey,
@@ -331,11 +405,11 @@ class ProductsScreen extends StatelessWidget {
                   itemCount: ShopCubit.get(context).womenCategory.length,
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Shoes Fashion:',
-                  style: TextStyle(
+                  LocaleKeys.usersHomeScreen_shoes.tr() + ':',
+                  style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w800,
                     color: Colors.grey,
@@ -373,11 +447,11 @@ class ProductsScreen extends StatelessWidget {
                   itemCount: ShopCubit.get(context).shoeCategory.length,
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Bags Fashion:',
-                  style: TextStyle(
+                  LocaleKeys.usersHomeScreen_bags.tr() + ':',
+                  style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w800,
                     color: Colors.grey,
@@ -415,11 +489,11 @@ class ProductsScreen extends StatelessWidget {
                   itemCount: ShopCubit.get(context).bagCategory.length,
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Sporting Fashion:',
-                  style: TextStyle(
+                  LocaleKeys.usersHomeScreen_sports.tr() + ':',
+                  style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w800,
                     color: Colors.grey,
@@ -457,11 +531,11 @@ class ProductsScreen extends StatelessWidget {
                   itemCount: ShopCubit.get(context).sportCategory.length,
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Children Fashion:',
-                  style: TextStyle(
+                  LocaleKeys.usersHomeScreen_children.tr() + ':',
+                  style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w800,
                     color: Colors.grey,
@@ -500,11 +574,11 @@ class ProductsScreen extends StatelessWidget {
                   itemCount: ShopCubit.get(context).childrenCategory.length,
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Accessories Fashion:',
-                  style: TextStyle(
+                  LocaleKeys.usersHomeScreen_accessories.tr() + ':',
+                  style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w800,
                     color: Colors.grey,
@@ -527,7 +601,8 @@ class ProductsScreen extends StatelessWidget {
                             productIndex: index,
                             mmodel: ShopCubit.get(context)
                                 .accessoriesCategory[index],
-                            mmodelID: ShopCubit.get(context).accessoriesCategoryID,
+                            mmodelID:
+                                ShopCubit.get(context).accessoriesCategoryID,
                             category: 'Accessories',
                             color: Colors.red,
                           ));

@@ -39,7 +39,7 @@ class ShopLoginModel
     isSeller = json['isSeller'];
     cart = json['cart'];
     favorites = json['favorites'];
-    image = json['image'];
+    image = json['userImage'];
     organization = json['organization'];
   }
   Map<String, dynamic> toMap() {
@@ -54,7 +54,7 @@ class ShopLoginModel
       'isSeller': isSeller,
       'cart': cart,
       'favorites': favorites,
-      'image': image,
+      'userImage': image,
       'organization': organization,
     };
   }

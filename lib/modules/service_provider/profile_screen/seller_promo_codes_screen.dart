@@ -1,10 +1,10 @@
-import 'package:egyoutfit/modules/service_provider/create_offer/create_offer.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../layout/dashboard_layout/cubit/cubit.dart';
 import '../../../layout/dashboard_layout/cubit/states.dart';
 import '../../../shared/components/components.dart';
-import '../create_offer/edit_offer.dart';
+import '../../../translations/locale_keys.g.dart';
 
 class PromoCodesScreen extends StatefulWidget {
   const PromoCodesScreen({Key key}) : super(key: key);
@@ -42,10 +42,10 @@ class _PromoCodesScreenState extends State<PromoCodesScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Expanded(
+                   Expanded(
                     child: Text(
-                      'My Promo Codes: ',
-                      style: TextStyle(fontSize: 18.0),
+                      LocaleKeys.sellerAcountScreen_myPromoCodes.tr()+':  ',
+                      style: const TextStyle(fontSize: 18.0),
                     ),
                   ),
                   Expanded(
@@ -82,7 +82,7 @@ class _PromoCodesScreenState extends State<PromoCodesScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            const Text('Promo Code: '),
+                                            Text(LocaleKeys.sellerAcountScreen_promoCode.tr()+':  '),
                                             Text(DashboardCubit.get(context)
                                                 .myPromoCodesList[index]),
                                           ],
@@ -91,7 +91,7 @@ class _PromoCodesScreenState extends State<PromoCodesScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            const Text('Discount: '),
+                                            Text(LocaleKeys.sellerAcountScreen_discount.tr()+':  '),
                                             Text(DashboardCubit.get(context)
                                                     .myDiscountList[index]
                                                     .toString() +
@@ -102,7 +102,7 @@ class _PromoCodesScreenState extends State<PromoCodesScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            const Text('State: '),
+                                            Text(LocaleKeys.sellerAcountScreen_state.tr()+':  '),
                                             Text(DashboardCubit.get(context)
                                                 .myPromoCodesStateList[index]),
                                           ],

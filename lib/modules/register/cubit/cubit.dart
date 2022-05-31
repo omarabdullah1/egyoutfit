@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:egyoutfit/modules/register/cubit/states.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,10 +15,12 @@ class ShopRegisterCubit extends Cubit<ShopRegisterStates> {
   static ShopRegisterCubit get(context) => BlocProvider.of(context);
 
   ShopLoginModel loginModel;
-  String userRegisterDropdownValue;
-  String sellerRegisterDropdownValue;
+  String userRegisterDropdownValueEn;
+  String userRegisterDropdownValueAr;
+  String sellerRegisterDropdownValueEn;
+  String sellerRegisterDropdownValueAr;
   UserModel model;
-  List items = <String>[
+  List itemsEn = <String>[
     'Cairo',
     'Alexandria',
     'Giza',
@@ -46,6 +49,36 @@ class ShopRegisterCubit extends Cubit<ShopRegisterStates> {
     'Dakahlya',
     'Red Sea',
     'Beheira',
+  ];
+  List itemsAr = <String>[
+    "القاهرة",
+    'الإسكندرية',
+    'الجيزة',
+    'مطروح',
+    'بورسعيد',
+    'حلوان',
+    'بورسعيد'
+        'المحلة الكبرى',
+    "طنطا",
+    "السويس",
+    "أسيوط",
+    "الفيوم",
+    'الإسماعيلية',
+    'دمياط',
+    'المنيا',
+    "الأقصر",
+    'قمة',
+    'سوهاج',
+    "بني سويف",
+    'الشرقية',
+    'الغربية',
+    'سيناء',
+    'الوادي الجديد',
+    'المنوفية',
+    'القليوبية',
+    'الدقهلية',
+    'البحر الاحمر',
+    "البحيرة",
   ];
 
   void userRegister({
@@ -114,6 +147,8 @@ class ShopRegisterCubit extends Cubit<ShopRegisterStates> {
       area: area,
       city: city,
       organization: organization,
+      image:
+          'https://play-lh.googleusercontent.com/pkDx7qzmaH0F8LF6Q8W2JX0OCYxrIkoNyGI3QQ7ozwJ19ncR6HuZuBP5MuYcuWL_cQ',
     );
     FirebaseFirestore.instance
         .collection('users')
@@ -138,43 +173,53 @@ class ShopRegisterCubit extends Cubit<ShopRegisterStates> {
 
   void userChangePasswordVisibility() {
     userRegisterIsPassword = !userRegisterIsPassword;
-    userSuffix =
-    userRegisterIsPassword ? Icons.visibility_outlined : Icons.visibility_off_outlined;
+    userSuffix = userRegisterIsPassword
+        ? Icons.visibility_outlined
+        : Icons.visibility_off_outlined;
 
     emit(ShopRegisterChangePasswordVisibilityState());
   }
+
   void userChangeConfirmPasswordVisibility() {
     userRegisterIsPassword2 = !userRegisterIsPassword2;
-    userSuffix2 =
-    userRegisterIsPassword2 ? Icons.visibility_outlined : Icons.visibility_off_outlined;
+    userSuffix2 = userRegisterIsPassword2
+        ? Icons.visibility_outlined
+        : Icons.visibility_off_outlined;
 
     emit(ShopRegisterChangePasswordVisibilityState());
   }
 
   void sellerChangePasswordVisibility() {
     sellerRegisterIsPassword = !sellerRegisterIsPassword;
-    sellerSuffix =
-    sellerRegisterIsPassword ? Icons.visibility_outlined : Icons.visibility_off_outlined;
+    sellerSuffix = sellerRegisterIsPassword
+        ? Icons.visibility_outlined
+        : Icons.visibility_off_outlined;
 
     emit(ShopRegisterChangePasswordVisibilityState());
   }
 
   void sellerChangeConfirmPasswordVisibility() {
     sellerRegisterIsPassword2 = !sellerRegisterIsPassword2;
-    sellerSuffix2 =
-    sellerRegisterIsPassword2 ? Icons.visibility_outlined : Icons.visibility_off_outlined;
+    sellerSuffix2 = sellerRegisterIsPassword2
+        ? Icons.visibility_outlined
+        : Icons.visibility_off_outlined;
 
     emit(ShopRegisterChangePasswordVisibilityState());
   }
 
-  userChangeDropValue(value){
-    userRegisterDropdownValue = value;
+  userChangeDropValue(value, context) {
+    EasyLocalization.of(context).locale.languageCode == 'en'
+        ? userRegisterDropdownValueEn = value
+        : userRegisterDropdownValueAr = value;
     emit(ShopRegisterChangeDropValueState());
   }
-  sellerChangeDropValue(value){
-    sellerRegisterDropdownValue = value;
+
+  sellerChangeDropValue(value, context) {
+    EasyLocalization.of(context).locale.languageCode == 'en'
+        ? sellerRegisterDropdownValueEn = value
+        : sellerRegisterDropdownValueAr = value;
     emit(ShopRegisterChangeDropValueState());
   }
-  //Determin wheather the sentiment of text is positive use web service
+//Determin wheather the sentiment of text is positive use web service
 
 }

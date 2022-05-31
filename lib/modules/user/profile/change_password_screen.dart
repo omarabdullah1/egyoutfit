@@ -30,18 +30,20 @@ class ChangePasswordScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     defaultFormField(
-                        controller: newPasswordController,
-                        type: TextInputType.visiblePassword,
-                        label: 'New Password',
-                        prefix: Icons.lock,
+                      controller: newPasswordController,
+                      type: TextInputType.visiblePassword,
+                      label: 'New Password',
+                      prefix: Icons.lock,
                     ),
-                    defaultButton(function: () async {
-                      await ShopCubit.get(context).updateUserPassword(newPasswordController.text,context);
-                    }, text: 'Update',
+                    defaultButton(
+                        function: () async {
+                          await ShopCubit.get(context).changeUserPassword(
+                              newPasswordController.text, context);
+                        },
+                        text: 'Update',
                         height: 50.0,
                         width: 300,
-                      isUpperCase: true
-                    )
+                        isUpperCase: true)
                   ],
                 )),
           ),
@@ -50,3 +52,55 @@ class ChangePasswordScreen extends StatelessWidget {
     );
   }
 }
+
+//                           ),
+//                           defaultFormField(
+//                             controller: secondNameController,
+//                             type: TextInputType.text,
+//                             label: 'Second Name',
+//                             prefix: Icons.person,
+//                           ),
+//                           defaultFormField(
+//                             controller: addressController,
+//                             type: TextInputType.text,
+//                             label: 'Address',
+//                             prefix: Icons.location_on,
+//                           ),
+//                           defaultFormField(
+//                             controller: phoneController,
+//                             type: TextInputType.number,
+//                             label: 'Phone',
+//                             prefix: Icons.phone,
+//                           ),
+//                           defaultButton(
+//                               function: () async {
+//                                 await ShopCubit.get(context).updateUser(
+//                                     firstNameController.text,
+//                                     secondNameController.text,
+//                                     addressController.text,
+//                                     phoneController.text,
+//                                     context);
+//                               },
+//                               text: 'Update',
+//                               height: 50.0,
+//                               width: 300,
+//                               isUpperCase: true),
+//                         ],
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//           );
+//         }
+//         return Scaffold(
+//           appBar: AppBar(),
+//           body: Center(
+//             child: Text('Please login to see your profile'),
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }

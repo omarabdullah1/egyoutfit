@@ -60,7 +60,7 @@ class SellerProduct extends StatelessWidget {
                                   .get(context)
                                   .productsID[index]);
                           DashboardCubit.get(context).getAllProducts();
-                          DashboardCubit.get(context).getAllOrdered();
+                          DashboardCubit.get(context).getAllOrdered(context);
                           Navigator.pop(context);
                           // Navigator.of(context).pop();
                         },

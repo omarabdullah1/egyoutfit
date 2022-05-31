@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:egyoutfit/translations/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../layout/dashboard_layout/cubit/cubit.dart';
@@ -38,11 +40,24 @@ class SellerRequest extends StatelessWidget {
     priceController.text = models.price.toString();
     oldPriceController.text = models.oldPrice.toString();
     discountController.text = models.discount.toString();
-    DashboardCubit.get(context).requestDropDownValue = state;
-    DashboardCubit.get(context)
-        .changeRequestDropButtonValue(state, id);
+    DashboardCubit.get(context).requestDropDownValueEn = state;
+    DashboardCubit.get(context).changeRequestColor(
+      state,
+    );
+    DashboardCubit.get(context).changeDropButtonValue(
+      dropValue,
+      context,
+    );
+    EasyLocalization.of(context).locale.languageCode == 'en'
+        ? DashboardCubit.get(context).lastDropDownValueEn = dropValue
+        : DashboardCubit.get(context).lastDropDownValueAr = dropValue;
+
+    // DashboardCubit.get(context).requestDropDownValueEn = state;
+    // DashboardCubit.get(context)
+    //     .changeRequestDropButtonValue(state, id,context);
     log(id);
     log(dropValue);
+    log(state);
 
     return SafeArea(
       child: BlocConsumer<DashboardCubit, DashboardStates>(
@@ -50,22 +65,24 @@ class SellerRequest extends StatelessWidget {
         builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Request'),
+              title: Text(LocaleKeys.sellerRequestScreen_request.tr()),
               leading: !DashboardCubit.get(context).stateChanged
                   ? IconButton(
                       onPressed: () {
                         DashboardCubit.get(context)
-                            .changeDropButtonValue(dropValue);
-                        DashboardCubit.get(context).lastDropDownValue =
-                            dropValue;
+                            .changeDropButtonValue(dropValue, context);
+                        EasyLocalization.of(context).locale.languageCode == 'en'
+                            ? DashboardCubit.get(context).lastDropDownValueEn =
+                                dropValue
+                            : DashboardCubit.get(context).lastDropDownValueAr =
+                                dropValue;
                         Navigator.of(context).pop();
                       },
                       icon: const Icon(Icons.arrow_back_ios_outlined))
                   : IconButton(
                       onPressed: () {
-                        DashboardCubit.get(context).changeState(
+                        DashboardCubit.get(context).changeRequestState(
                           false,
-                          state: state,
                         );
                       },
                       icon: const Icon(
@@ -78,9 +95,10 @@ class SellerRequest extends StatelessWidget {
                     ? IconButton(
                         onPressed: () async {
                           await DashboardCubit.get(context).changeOrderState(
-                            DashboardCubit.get(context).requestDropDownValue,
+                            DashboardCubit.get(context).requestDropDownValueEn,
                             id,
                             dropValue,
+                            context,
                           );
                         },
                         icon: const Icon(
@@ -90,10 +108,10 @@ class SellerRequest extends StatelessWidget {
                     : const SizedBox(),
               ],
             ),
-            body: Column(
-              children: [
-                SingleChildScrollView(
-                  child: Padding(
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,15 +140,12 @@ class SellerRequest extends StatelessWidget {
                                       ),
                                       child: DropdownButton(
                                         value: DashboardCubit.get(context)
-                                            .requestDropDownValue,
+                                            .requestDropDownValueEn,
                                         icon: const Icon(
                                             Icons.keyboard_arrow_down),
-                                        items: [
-                                          'Pending',
-                                          'Scheduled',
-                                          'Completed',
-                                          'Cancelled',
-                                        ].map((String items) {
+                                        items: DashboardCubit.get(context)
+                                            .requestProductItemsEn
+                                            .map((String items) {
                                           return DropdownMenuItem(
                                             value: items,
                                             child: Text(items),
@@ -141,9 +156,16 @@ class SellerRequest extends StatelessWidget {
                                               .changeRequestDropButtonValue(
                                             newValue,
                                             id,
+                                            context,
                                           );
                                           DashboardCubit.get(context)
-                                              .changeState(true);
+                                              .changeRequestColor(
+                                            newValue,
+                                          );
+                                          DashboardCubit.get(context)
+                                              .changeRequestState(
+                                            true,
+                                          );
                                         },
                                       ),
                                     ),
@@ -204,26 +226,41 @@ class SellerRequest extends StatelessWidget {
                           children: [
                             Row(
                               children: [
-                                const Text('Product Name: '),
+                                Text(
+                                  LocaleKeys.sellerRequestScreen_productName
+                                          .tr() +
+                                      ':  ',
+                                ),
                                 Text(models.name),
                               ],
                             ),
                             Row(
                               children: [
-                                const Text(
-                                  'Pieces: ',
+                                Text(
+                                  LocaleKeys.sellerRequestScreen_pieces.tr() +
+                                      ':  ',
                                 ),
                                 Text(
-                                  orderModel.orderedProductsCount
-                                      .toString(),
+                                  orderModel.orderedProductsCount.toString(),
                                 ),
                               ],
                             ),
                             orderModel.orderPromoDiscount.isEmpty
-                                ? const Text('Discount: No Discount')
+                                ? Text(
+                                    LocaleKeys.sellerRequestScreen_discount
+                                            .tr() +
+                                        ':  ' +
+                                        LocaleKeys
+                                            .sellerRequestScreen_noDiscount
+                                            .tr(),
+                                  )
                                 : Row(
                                     children: [
-                                      const Text('Discount: '),
+                                      Text(
+                                        LocaleKeys.sellerRequestScreen_discount
+                                                .tr() +
+                                            ':  ',
+                                      ),
                                       Row(
                                         children: orderModel.orderPromoDiscount
                                             .map((e) =>
@@ -234,22 +271,29 @@ class SellerRequest extends StatelessWidget {
                                   ),
                             Row(
                               children: [
-                                const Text('Size: '),
+                                Text(
+                                  LocaleKeys.sellerRequestScreen_size.tr() +
+                                      ':  ',
+                                ),
                                 Text(orderModel.orderSize.toString()),
                               ],
                             ),
                             Row(
                               children: [
-                                const Text('Price: '),
-                                Text(orderModel.orderCost.toString() +
-                                    ' LE'),
+                                Text(
+                                  LocaleKeys.sellerRequestScreen_price.tr() +
+                                      ':  ',
+                                ),
+                                Text(orderModel.orderCost.toString() + ' LE'),
                               ],
                             ),
                             orderModel.orderPromoDiscount.isNotEmpty
                                 ? Row(
                                     children: [
-                                      const Text(
-                                        'Promo Code: ',
+                                      Text(
+                                        LocaleKeys.sellerRequestScreen_promoCode
+                                                .tr() +
+                                            ':  ',
                                       ),
                                       Row(
                                         children: orderModel.orderPromo
@@ -260,25 +304,31 @@ class SellerRequest extends StatelessWidget {
                                     ],
                                   )
                                 : Row(
-                                    children: const [
+                                    children: [
                                       Text(
-                                        'Promo Code: ',
+                                        LocaleKeys.sellerRequestScreen_promoCode
+                                                .tr() +
+                                            ':  ',
                                       ),
-                                      Text('No promo'),
+                                      Text(LocaleKeys
+                                          .sellerRequestScreen_noPromo
+                                          .tr()),
                                     ],
                                   ),
                             Row(
                               children: [
-                                const Text(
-                                  'Customer: ',
+                                Text(
+                                  LocaleKeys.sellerRequestScreen_customer.tr() +
+                                      ':  ',
                                 ),
                                 Text(orderModel.firstName),
                               ],
                             ),
                             Row(
                               children: [
-                                const Text(
-                                  'Address: ',
+                                Text(
+                                  LocaleKeys.sellerRequestScreen_address.tr() +
+                                      ':  ',
                                 ),
                                 Text(
                                   orderModel.address,
@@ -287,8 +337,9 @@ class SellerRequest extends StatelessWidget {
                             ),
                             Row(
                               children: [
-                                const Text(
-                                  'Phone: ',
+                                Text(
+                                  LocaleKeys.sellerRequestScreen_phone.tr() +
+                                      ':  ',
                                 ),
                                 Text(
                                   orderModel.phoneNumber,
@@ -297,8 +348,10 @@ class SellerRequest extends StatelessWidget {
                             ),
                             Row(
                               children: [
-                                const Text(
-                                  'Other Phone: ',
+                                Text(
+                                  LocaleKeys.sellerRequestScreen_otherPhone
+                                          .tr() +
+                                      ':  ',
                                 ),
                                 Text(
                                   orderModel.otherPhoneNumber,
@@ -324,7 +377,9 @@ class SellerRequest extends StatelessWidget {
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(
                                             orderModel.orderComment == ''
-                                                ? 'No Comment'
+                                                ? LocaleKeys
+                                                    .sellerRequestScreen_noComment
+                                                    .tr()
                                                 : orderModel.orderComment,
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
@@ -341,21 +396,21 @@ class SellerRequest extends StatelessWidget {
                       ],
                     ),
                   ),
-                ),
-                const Expanded(child: SizedBox()),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: defaultButton(
-                    function: () {},
-                    text: 'Send Message',
-                    icon: Icons.email_outlined,
-                    isIcon: true,
-                    height: 50.0,
-                    width: 300.0,
-                    radius: 14.0,
+                  // const Expanded(child: SizedBox()),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: defaultButton(
+                      function: () {},
+                      text: LocaleKeys.sellerRequestScreen_sendMessage.tr(),
+                      icon: Icons.email_outlined,
+                      isIcon: true,
+                      height: 50.0,
+                      width: 300.0,
+                      radius: 14.0,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },

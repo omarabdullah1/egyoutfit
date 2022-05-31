@@ -1,11 +1,13 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:conditional_builder/conditional_builder.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../layout/dashboard_layout/cubit/cubit.dart';
 import '../../../layout/dashboard_layout/cubit/states.dart';
 import '../../../layout/dashboard_layout/dashboard_layout.dart';
 import '../../../shared/components/components.dart';
+import '../../../translations/locale_keys.g.dart';
 
 class CreateProductScreen2 extends StatelessWidget {
   const CreateProductScreen2(
@@ -22,7 +24,7 @@ class CreateProductScreen2 extends StatelessWidget {
     var priceController = TextEditingController();
     var costController = TextEditingController();
     var discountController = TextEditingController();
-    DashboardCubit.get(context).isS=false;
+    DashboardCubit.get(context).isS = false;
     DashboardCubit.get(context).isS = false;
     DashboardCubit.get(context).isM = false;
     DashboardCubit.get(context).isL = false;
@@ -31,7 +33,7 @@ class CreateProductScreen2 extends StatelessWidget {
     DashboardCubit.get(context).is3XL = false;
     DashboardCubit.get(context).is4XL = false;
     DashboardCubit.get(context).is5XL = false;
-    DashboardCubit.get(context).createScreenDropDownValue = 'None';
+    DashboardCubit.get(context).createScreenDropDownValueEn = 'None';
     DashboardCubit.get(context).discountToggle = false;
     DashboardCubit.get(context).deliveryToggle = false;
 
@@ -42,9 +44,10 @@ class CreateProductScreen2 extends StatelessWidget {
             context: context,
             dialogType: DialogType.SUCCES,
             animType: AnimType.BOTTOMSLIDE,
-            title: 'Success',
-            desc:
-                'Your Product has been submitted it will be reviewed by admins and added soon.',
+            title: LocaleKeys.sellerCreateProductScreen_success.tr(),
+            desc: LocaleKeys
+                .sellerCreateProductScreen_yourProductHasBeenSubmitted
+                .tr(),
             btnOkOnPress: () {
               navigateAndFinish(context, const DashboardLayout());
               // Navigator.of(context).pop();
@@ -84,9 +87,10 @@ class CreateProductScreen2 extends StatelessWidget {
                               const SizedBox(
                                 height: 30,
                               ),
-                              const Text(
-                                'Size:',
-                                style: TextStyle(
+                              Text(
+                                LocaleKeys.sellerCreateProductScreen_size.tr() +
+                                    ':  ',
+                                style: const TextStyle(
                                     fontWeight: FontWeight.w900,
                                     fontSize: 20.0,
                                     color: Colors.black45),
@@ -98,8 +102,8 @@ class CreateProductScreen2 extends StatelessWidget {
                                   GestureDetector(
                                       child: buildSizeCircle(
                                           size: 'S',
-                                          state: DashboardCubit.get(context)
-                                              .isS),
+                                          state:
+                                              DashboardCubit.get(context).isS),
                                       onTap: () {
                                         DashboardCubit.get(context)
                                             .changeSize('isS');
@@ -110,8 +114,8 @@ class CreateProductScreen2 extends StatelessWidget {
                                   GestureDetector(
                                       child: buildSizeCircle(
                                           size: 'M',
-                                          state: DashboardCubit.get(context)
-                                              .isM),
+                                          state:
+                                              DashboardCubit.get(context).isM),
                                       onTap: () {
                                         DashboardCubit.get(context)
                                             .changeSize('isM');
@@ -122,8 +126,7 @@ class CreateProductScreen2 extends StatelessWidget {
                                   GestureDetector(
                                     child: buildSizeCircle(
                                         size: 'L',
-                                        state:
-                                            DashboardCubit.get(context).isL),
+                                        state: DashboardCubit.get(context).isL),
                                     onTap: () {
                                       DashboardCubit.get(context)
                                           .changeSize('isL');
@@ -154,8 +157,8 @@ class CreateProductScreen2 extends StatelessWidget {
                                   GestureDetector(
                                     child: buildSizeCircle(
                                         size: '2XL',
-                                        state: DashboardCubit.get(context)
-                                            .is2XL),
+                                        state:
+                                            DashboardCubit.get(context).is2XL),
                                     onTap: () {
                                       DashboardCubit.get(context)
                                           .changeSize('is2XL');
@@ -167,8 +170,8 @@ class CreateProductScreen2 extends StatelessWidget {
                                   GestureDetector(
                                     child: buildSizeCircle(
                                         size: '3XL',
-                                        state: DashboardCubit.get(context)
-                                            .is3XL),
+                                        state:
+                                            DashboardCubit.get(context).is3XL),
                                     onTap: () {
                                       DashboardCubit.get(context)
                                           .changeSize('is3XL');
@@ -180,8 +183,8 @@ class CreateProductScreen2 extends StatelessWidget {
                                   GestureDetector(
                                     child: buildSizeCircle(
                                         size: '4XL',
-                                        state: DashboardCubit.get(context)
-                                            .is4XL),
+                                        state:
+                                            DashboardCubit.get(context).is4XL),
                                     onTap: () {
                                       DashboardCubit.get(context)
                                           .changeSize('is4XL');
@@ -193,8 +196,8 @@ class CreateProductScreen2 extends StatelessWidget {
                                   GestureDetector(
                                     child: buildSizeCircle(
                                         size: '5XL',
-                                        state: DashboardCubit.get(context)
-                                            .is5XL),
+                                        state:
+                                            DashboardCubit.get(context).is5XL),
                                     onTap: () {
                                       DashboardCubit.get(context)
                                           .changeSize('is5XL');
@@ -205,9 +208,10 @@ class CreateProductScreen2 extends StatelessWidget {
                               const SizedBox(
                                 height: 15,
                               ),
-                              const Text(
-                                'Price & Offers:',
-                                style: TextStyle(
+                              Text(
+                                LocaleKeys.sellerCreateProductScreen_priceOffers
+                                    .tr(),
+                                style: const TextStyle(
                                     fontWeight: FontWeight.w900,
                                     fontSize: 20.0,
                                     color: Colors.black45),
@@ -224,27 +228,34 @@ class CreateProductScreen2 extends StatelessWidget {
                                       isValidate: true,
                                       validate: (value) {
                                         if (value.isEmpty) {
-                                          return "Please Enter Price!";
+                                          return LocaleKeys
+                                              .sellerCreateProductScreen_PleaseEnterPrice
+                                              .tr();
                                         }
                                       },
                                       isPassword: false,
                                       controller: priceController,
-                                      label: "Price",
+                                      label: LocaleKeys
+                                          .sellerCreateProductScreen_price
+                                          .tr(),
                                     ),
                                   ),
                                 ],
                               ),
                               Row(
                                 children: [
-                                  const Text(
-                                    'Discount:',
-                                    style: TextStyle(
+                                  Text(
+                                    LocaleKeys
+                                            .sellerCreateProductScreen_discount
+                                            .tr() +
+                                        ' : ',
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.w900,
                                         fontSize: 15.0,
                                         color: Colors.black45),
                                   ),
                                   Switch(
-                                    activeColor: Colors.black,
+                                      activeColor: Colors.black,
                                       activeTrackColor: Colors.black54,
                                       value: DashboardCubit.get(context)
                                           .discountToggle,
@@ -260,23 +271,31 @@ class CreateProductScreen2 extends StatelessWidget {
                                 isValidate: true,
                                 validate: (value) {
                                   if (value.isEmpty) {
-                                    return 'please enter discount ';
+                                    return LocaleKeys
+                                        .sellerCreateProductScreen_pleaseEnterDiscount
+                                        .tr();
                                   }
                                 },
-                                isClickable: DashboardCubit.get(context)
-                                    .discountToggle,
+                                isClickable:
+                                    DashboardCubit.get(context).discountToggle,
                                 isPassword: false,
                                 controller: discountController,
-                                label: "discount %",
+                                label: LocaleKeys
+                                        .sellerCreateProductScreen_discount
+                                        .tr() +
+                                    ' %',
                               ),
                               const SizedBox(
                                 height: 20,
                               ),
                               Row(
                                 children: [
-                                  const Text(
-                                    'Delivery:',
-                                    style: TextStyle(
+                                  Text(
+                                    LocaleKeys
+                                            .sellerCreateProductScreen_delivery
+                                            .tr() +
+                                        ':  ',
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.w900,
                                         fontSize: 15.0,
                                         color: Colors.black45),
@@ -296,39 +315,41 @@ class CreateProductScreen2 extends StatelessWidget {
                                 isValidate: true,
                                 validate: (value) {
                                   if (value.isEmpty) {
-                                  if( DashboardCubit.get(context)
-                                      .deliveryToggle){
-                                    return ' please enter delivery cost';
-                                  }
+                                    if (DashboardCubit.get(context)
+                                        .deliveryToggle) {
+                                      return LocaleKeys
+                                          .sellerCreateProductScreen_pleaseEnterDeliveryCost
+                                          .tr();
+                                    }
                                   }
                                 },
-                                isClickable: DashboardCubit.get(context)
-                                    .deliveryToggle,
+                                isClickable:
+                                    DashboardCubit.get(context).deliveryToggle,
                                 isPassword: false,
                                 controller: costController,
-                                label: "Cost",
+                                label: LocaleKeys.sellerCreateProductScreen_cost
+                                    .tr(),
                               ),
                               const SizedBox(
                                 height: 30,
                               ),
                               ConditionalBuilder(
-                                condition:
-                                    state is! CreateProductLoadingState,
+                                condition: state is! CreateProductLoadingState,
                                 builder: (context) => defaultButton(
                                   width: MediaQuery.of(context).size.width,
                                   radius: 20.0,
                                   height: 50.0,
-                                  text: "Submit",
+                                  text: LocaleKeys
+                                      .sellerCreateProductScreen_submit
+                                      .tr(),
                                   function: () {
                                     if (formKey.currentState.validate()) {
-                                      DashboardCubit.get(context)
-                                          .createProduct(
+                                      DashboardCubit.get(context).createProduct(
                                         image: images,
                                         category: category,
                                         description: description,
                                         name: name,
-                                        price:
-                                            int.parse(priceController.text),
+                                        price: int.parse(priceController.text),
                                         oldPrice: 0,
                                         discount: double.parse(
                                             discountController.text),
@@ -338,8 +359,7 @@ class CreateProductScreen2 extends StatelessWidget {
                                         isS: DashboardCubit.get(context).isS,
                                         isM: DashboardCubit.get(context).isM,
                                         isL: DashboardCubit.get(context).isL,
-                                        isXL:
-                                            DashboardCubit.get(context).isXL,
+                                        isXL: DashboardCubit.get(context).isXL,
                                         is2XL:
                                             DashboardCubit.get(context).is2XL,
                                         is3XL:
@@ -348,12 +368,10 @@ class CreateProductScreen2 extends StatelessWidget {
                                             DashboardCubit.get(context).is4XL,
                                         is5XL:
                                             DashboardCubit.get(context).is5XL,
-                                        isShipping:
-                                            DashboardCubit.get(context)
-                                                .deliveryToggle,
-                                        isDiscount:
-                                            DashboardCubit.get(context)
-                                                .discountToggle,
+                                        isShipping: DashboardCubit.get(context)
+                                            .deliveryToggle,
+                                        isDiscount: DashboardCubit.get(context)
+                                            .discountToggle,
                                         shippingPrice: costController.text,
                                         state: 'Pending',
                                       );

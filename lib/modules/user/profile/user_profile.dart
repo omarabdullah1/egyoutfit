@@ -44,9 +44,9 @@ class UserProfile extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                LocaleKeys.welcome_text.tr(),
+                                LocaleKeys.userAccountScreen_account.tr(),
                                 // 'Account',
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.black, fontSize: 30),
                               ),
                             ],
@@ -55,7 +55,10 @@ class UserProfile extends StatelessWidget {
                             height: 10.0,
                           ),
                           Text(
-                            'Welcome ${model.firstName ?? ''} !',
+                            LocaleKeys.userAccountScreen_welcome.tr() +
+                                ' ' +
+                                (model.firstName ?? '') +
+                                '!',
                             style: const TextStyle(
                                 color: Colors.orange, fontSize: 20),
                           ),
@@ -75,10 +78,10 @@ class UserProfile extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10.0, vertical: 8),
                       child: Row(
-                        children: const [
+                        children: [
                           Text(
-                            'My EgyOutFit Store Account',
-                            style: TextStyle(color: Colors.black54),
+                            LocaleKeys.userAccountScreen_myEgyOutFitStoreAccount.tr(),
+                            style: const TextStyle(color: Colors.black54),
                           )
                         ],
                       ),
@@ -94,20 +97,20 @@ class UserProfile extends StatelessWidget {
                             navigateTo(context, const OrdersScreen());
                           },
                           child: Row(
-                            children: const [
-                              Icon(
+                            children: [
+                              const Icon(
                                 Icons.shop,
                                 color: Colors.black,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 15,
                               ),
                               Text(
-                                'Orders',
-                                style: TextStyle(color: Colors.black),
+                                LocaleKeys.userAccountScreen_orders.tr(),
+                                style: const TextStyle(color: Colors.black),
                               ),
-                              Spacer(),
-                              Icon(
+                              const Spacer(),
+                              const Icon(
                                 Icons.navigate_next,
                                 color: Colors.black,
                               ),
@@ -124,10 +127,10 @@ class UserProfile extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10.0, vertical: 8),
                       child: Row(
-                        children: const [
+                        children: [
                           Text(
-                            'My Settings',
-                            style: TextStyle(color: Colors.black54),
+                            LocaleKeys.userAccountScreen_mySettings.tr(),
+                            style: const TextStyle(color: Colors.black54),
                           )
                         ],
                       ),
@@ -138,18 +141,18 @@ class UserProfile extends StatelessWidget {
                         horizontal: 10.0, vertical: 8),
                     child: Column(
                       children: [
-                        GestureDetector(
+                        InkWell(
                           onTap: () {
                             navigateTo(context, const SettingsScreen());
                           },
                           child: Row(
-                            children: const [
+                            children: [
                               Text(
-                                'Details',
-                                style: TextStyle(color: Colors.black),
+                                LocaleKeys.userAccountScreen_details.tr(),
+                                style: const TextStyle(color: Colors.black),
                               ),
-                              Spacer(),
-                              Icon(
+                              const Spacer(),
+                              const Icon(
                                 Icons.navigate_next,
                                 color: Colors.black,
                               ),
@@ -165,13 +168,13 @@ class UserProfile extends StatelessWidget {
                             navigateTo(context, const ChangePasswordScreen());
                           },
                           child: Row(
-                            children: const [
+                            children: [
                               Text(
-                                'Change Password',
-                                style: TextStyle(color: Colors.black),
+                                LocaleKeys.userAccountScreen_changePassword.tr(),
+                                style: const TextStyle(color: Colors.black),
                               ),
-                              Spacer(),
-                              Icon(
+                              const Spacer(),
+                              const Icon(
                                 Icons.navigate_next,
                                 color: Colors.black,
                               ),
@@ -184,17 +187,11 @@ class UserProfile extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            const Text(
-                              'Change Language',
-                              style: TextStyle(color: Colors.black),
+                             Text(
+                              LocaleKeys.userAccountScreen_changeLanguage.tr(),
+                              style: const TextStyle(color: Colors.black),
                             ),
                             const Spacer(),
-                            // ElevatedButton(onPressed: () async {
-                            //   await context.setLocale(const Locale('ar'));
-                            // }, child: const Text('arab')),
-                            // ElevatedButton(onPressed: () async {
-                            //   await context.setLocale(const Locale('en'));
-                            // }, child: const Text('eng')),
                             Switch(
                               value: ShopCubit.get(context).isEnglish,
                               onChanged: (v) {
@@ -220,7 +217,7 @@ class UserProfile extends StatelessWidget {
                       function: () {
                         ShopCubit.get(context).signOut(context);
                       },
-                      text: 'Logout',
+                      text: LocaleKeys.userAccountScreen_logout.tr(),
                     ),
                   ),
                 ],

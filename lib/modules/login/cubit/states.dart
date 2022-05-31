@@ -22,4 +22,7 @@ class ShopLoginErrorState extends ShopLoginStates
 }
 
 class ShopChangePasswordVisibilityState extends ShopLoginStates {}
+
 class AppChangeModeState extends ShopLoginStates {}
+
+class AppChangeLanguageState extends ShopLoginStates {}

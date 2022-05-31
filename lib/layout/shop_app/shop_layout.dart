@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../modules/user/search/search_screen.dart';
 import '../../shared/components/components.dart';
 import '../../shared/styles/icons.dart';
+import '../../translations/locale_keys.g.dart';
 import 'cubit/cubit.dart';
 import 'cubit/states.dart';
 
@@ -50,14 +52,14 @@ class _ShopLayoutState extends State<ShopLayout> {
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Icon(
+                              children: [
+                                const Icon(
                                   Icons.search,
                                   color: Colors.grey,
                                 ),
                                 Text(
-                                  'Search in Egy Outfit',
-                                  style: TextStyle(color: Colors.grey),
+                                  LocaleKeys.usersHomeScreen_searchInEgyOutfit.tr(),
+                                  style: const TextStyle(color: Colors.grey),
                                 ),
                               ],
                             ),

@@ -22,6 +22,7 @@ void main() async {
   Bloc.observer = MyBlocObserver();
   await EasyLocalization.ensureInitialized();
   Firebase.initializeApp(
+    name: 'egyoutfit',
     options: const FirebaseOptions(
       apiKey: "AIzaSyAcSAZkDsjBYGXuN1545nN5hzT_LaHBQS4",
       appId: "1:817925315934:web:45ea71c445b14607d203cf",

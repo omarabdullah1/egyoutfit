@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:egyoutfit/layout/dashboard_layout/cubit/states.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -106,7 +106,42 @@ class DashboardCubit extends Cubit<DashboardStates> {
   List discountList = [];
 
   List myDiscountList = [];
-
+  var itemsEn = [
+    'All Requests',
+    'Pending',
+    'Scheduled',
+    'Completed',
+    'Cancelled',
+  ];
+  var itemsAr = [
+    'كل الطلبات',
+    'قيد الانتظار',
+    'مجدول',
+    'مكتمل',
+    'ملغي',
+  ];
+  var createProductItemsEn = [
+    'None',
+    'Men',
+    'Women',
+    'Shoe',
+    'Children',
+    'Bags',
+    'Sports',
+    'Accessories'
+  ];
+  var requestProductItemsEn = [
+    'Pending',
+    'Scheduled',
+    'Completed',
+    'Cancelled',
+  ];
+  var requestProductItemsAr = [
+    'قيد الانتظار',
+    'مجدول',
+    'مكتمل',
+    'ملغي',
+  ];
   bool isS = false;
   bool isM = false;
   bool isL = false;
@@ -122,6 +157,7 @@ class DashboardCubit extends Cubit<DashboardStates> {
   bool stateChanged = false;
   bool isUpdate = false;
   bool isDialOpen = false;
+  bool isEnglish = true;
 
   List<Widget> bottomScreens = [
     const DashboardScreen(),
@@ -134,10 +170,14 @@ class DashboardCubit extends Cubit<DashboardStates> {
     emit(DashboardChangeBottomNavState());
   }
 
-  var dropDownValue = 'All Requests';
-  var lastDropDownValue = 'All Requests';
-  var requestDropDownValue = 'Pending';
-  var createScreenDropDownValue = 'None';
+  var dropDownValueEn = 'All Requests';
+  var dropDownValueAr = 'كل الطلبات';
+  var lastDropDownValueEn = 'All Requests';
+  var lastDropDownValueAr = 'كل الطلبات';
+  var requestDropDownValueEn = 'Pending';
+  var requestDropDownValueAr = 'قيد الانتظار';
+  var createScreenDropDownValueEn = 'None';
+  var createScreenDropDownValueAr = 'لا شيء';
   Color dropDownValueColor = Colors.white;
   Color requesdtDropDownValueColor = Colors.white;
 
@@ -258,25 +298,27 @@ class DashboardCubit extends Cubit<DashboardStates> {
     });
   }
 
-  changeDropButtonValue(String newValue) {
-    dropDownValue = newValue;
-    if (newValue == 'Completed') {
-      dropDownValueColor = Colors.green;
-      requestModel = completedOrderedProducts;
-      requestOrderModel = completedOrderedProductsList;
-      requestModelCountList = completedOrderedProductsCountList;
-      requestModelStateList = completedOrderedProductsStateList;
-      requestedOrderedProductsID = completedOrderedProductsID;
-      log('completed from');
-    } else if (newValue == 'Scheduled') {
-      dropDownValueColor = Colors.blue;
+  changeDropButtonValue(String newValue, context) {
+    EasyLocalization.of(context).locale.languageCode=='en'?
+      dropDownValueEn = newValue:
+      dropDownValueAr = newValue;
+      if (newValue == 'Completed'||newValue == 'مكتمل') {
+        dropDownValueColor = Colors.green;
+        requestModel = completedOrderedProducts;
+        requestOrderModel = completedOrderedProductsList;
+        requestModelCountList = completedOrderedProductsCountList;
+        requestModelStateList = completedOrderedProductsStateList;
+        requestedOrderedProductsID = completedOrderedProductsID;
+        log('completed from');
+      } else if (newValue == 'Scheduled'||newValue == 'مجدول') {
+        dropDownValueColor = Colors.blue;
       requestModel = scheduledOrderedProducts;
       requestOrderModel = scheduledOrderedProductsList;
       requestModelCountList = scheduledOrderedProductsCountList;
       requestModelStateList = scheduledOrderedProductsStateList;
       requestedOrderedProductsID = scheduledOrderedProductsID;
       log('Scheduled from');
-    } else if (newValue == 'Cancelled') {
+    } else if (newValue == 'Cancelled'||newValue == 'ملغي') {
       dropDownValueColor = Colors.red;
       requestModel = canceledOrderedProducts;
       requestOrderModel = canceledOrderedProductsList;
@@ -284,7 +326,7 @@ class DashboardCubit extends Cubit<DashboardStates> {
       requestModelStateList = canceledOrderedProductsStateList;
       requestedOrderedProductsID = canceledOrderedProductsID;
       log('Cancelled from');
-    } else if (newValue == 'Pending') {
+    } else if (newValue == 'Pending'||newValue == 'قيد الانتظار') {
       dropDownValueColor = Colors.orange;
       requestModel = pendingOrderedProducts;
       requestOrderModel = pendingOrderedProductsList;
@@ -292,7 +334,7 @@ class DashboardCubit extends Cubit<DashboardStates> {
       requestModelStateList = pendingOrderedProductsStateList;
       requestedOrderedProductsID = pendingOrderedProductsID;
       log('Pending from');
-    } else if (newValue == 'All Requests') {
+    } else if (newValue == 'All Requests'||newValue == 'كل الطلبات') {
       dropDownValueColor = Colors.white;
       requestModel = myOrderedProducts;
       requestOrderModel = orderedProducts;
@@ -305,9 +347,11 @@ class DashboardCubit extends Cubit<DashboardStates> {
     emit(ChangeDropDashboardState());
   }
 
-  changeRequestDropButtonValue(String newValue, String id) {
-    requestDropDownValue = newValue;
-    if (newValue == 'Completed') {
+  changeRequestDropButtonValue(String newValue, String id, context) {
+    requestDropDownValueEn = newValue;
+    log(requestDropDownValueAr);
+    log(requestDropDownValueEn);
+    if (newValue == 'Completed' ) {
       requesdtDropDownValueColor = Colors.green;
     } else if (newValue == 'Scheduled') {
       requesdtDropDownValueColor = Colors.blue;
@@ -318,24 +362,26 @@ class DashboardCubit extends Cubit<DashboardStates> {
     } else if (newValue == 'All Requests') {
       requesdtDropDownValueColor = Colors.white;
     }
-    emit(ChangeDropDashboardState());
+    emit(ChangeDropRequestState());
   }
 
-  changeOrderState(value, id, dropVal) {
+  changeOrderState(value, id, dropVal, context) {
     emit(UpdateStateLoadingDashboardState());
     FirebaseFirestore.instance.collection('orders').doc(id).update({
       'pState': value,
     }).then((val) {
       log(value.toString());
       log('updated');
-      changeState(
+      changeRequestState(
         false,
-        state: requestDropDownValue,
       );
-      getAllOrdered();
+      changeRequestColor(
+        requestDropDownValueEn,
+      );
+      getAllOrdered(context);
       // DashboardCubit.get(context).dropDownValue=widget.dropValue;
-      changeDropButtonValue(dropVal);
-      lastDropDownValue = dropVal;
+      changeDropButtonValue(dropVal,context);
+      lastDropDownValueEn = dropVal;
       emit(UpdateStateSuccessDashboardState());
     }).catchError((error) {
       log('error in updated');
@@ -343,32 +389,33 @@ class DashboardCubit extends Cubit<DashboardStates> {
     });
   }
 
-  changeState(bool value, {state}) {
+  changeRequestState(bool value) {
     stateChanged = value;
-    if (!value) {
-      requestDropDownValue = state;
-      if (state == 'Completed') {
-        requesdtDropDownValueColor = Colors.green;
-      } else if (state == 'Scheduled') {
-        requesdtDropDownValueColor = Colors.blue;
-      } else if (state == 'Cancelled') {
-        requesdtDropDownValueColor = Colors.red;
-      } else if (state == 'Pending') {
-        requesdtDropDownValueColor = Colors.orange;
-      } else if (state == 'All Requests') {
-        requesdtDropDownValueColor = Colors.white;
-      }
+    emit(ChangeStateDashboardState());
+  }
+  changeRequestColor(state) {
+    requestDropDownValueEn = state;
+    if (state == 'Completed') {
+      requesdtDropDownValueColor = Colors.green;
+    } else if (state == 'Scheduled') {
+      requesdtDropDownValueColor = Colors.blue;
+    } else if (state == 'Cancelled') {
+      requesdtDropDownValueColor = Colors.red;
+    } else if (state == 'Pending') {
+      requesdtDropDownValueColor = Colors.orange;
+    } else if (state == 'All Requests') {
+      requesdtDropDownValueColor = Colors.white;
     }
     emit(ChangeStateDashboardState());
   }
 
   changeCreateProductDropButtonValue(String newValue) {
-    createScreenDropDownValue = newValue;
+     createScreenDropDownValueEn = newValue;
     emit(ChangeCreateProductDropDashboardState());
   }
 
-  changeEditProductDropButtonValue(String newValue) {
-    createScreenDropDownValue = newValue;
+  changeEditProductDropButtonValue(String newValue,context) {
+    createScreenDropDownValueEn = newValue;
     emit(ChangeCreateProductDropDashboardState());
   }
 
@@ -637,14 +684,15 @@ class DashboardCubit extends Cubit<DashboardStates> {
                 images: firebaseLinkEdit + pListImage,
               ).whenComplete(() {
                 getAllProducts();
-                getAllOrdered();
+                getAllOrdered(context);
                 Navigator.pop(context);
                 Navigator.pop(context);
               });
             })
             .whenComplete(
               () => emit(SuccessUploadImageState()),
-            ).catchError((err) {
+            )
+            .catchError((err) {
               log(err.toString());
               emit(ErrorUploadImageState());
             });
@@ -734,7 +782,7 @@ class DashboardCubit extends Cubit<DashboardStates> {
     //   Navigator.pop(context);
   }
 
-  getAllOrdered() {
+  getAllOrdered(context) {
     orderedProducts.clear();
     orderedProductsIDList.clear();
     allOrderedProductsID.clear();
@@ -767,7 +815,7 @@ class DashboardCubit extends Cubit<DashboardStates> {
     canceledOrderedProductsCountList.clear();
     canceledOrderedProductsStateList.clear();
 
-    dropDownValue = 'All Requests';
+     dropDownValueEn = 'All Requests';
     dropDownValueColor = Colors.white;
     requestModel.clear();
     requestOrderModel.clear();
@@ -928,7 +976,7 @@ class DashboardCubit extends Cubit<DashboardStates> {
     }).catchError((err) {
       log(err.toString());
       emit(GetPromoCodesErrorState());
-      return err;
+      return [];
     });
   }
 
@@ -1118,5 +1166,11 @@ class DashboardCubit extends Cubit<DashboardStates> {
         length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
     emit(ChangeToggleValueState());
     return id;
+  }
+
+  changeLanguageValue(v, context) async {
+    isEnglish = v;
+    log(isEnglish.toString());
+    emit(ChangeLanguageState());
   }
 }

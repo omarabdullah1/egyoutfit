@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:conditional_builder/conditional_builder.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../layout/shop_app/cubit/cubit.dart';
@@ -6,6 +9,7 @@ import '../../../layout/shop_app/cubit/states.dart';
 import '../../../models/shop_app/products_model.dart';
 import '../../../shared/components/components.dart';
 import '../../../shared/styles/icons.dart';
+import '../../../translations/locale_keys.g.dart';
 import '../search/search_screen.dart';
 
 class SelectedCategoryScreen extends StatefulWidget {
@@ -21,7 +25,7 @@ class SelectedCategoryScreen extends StatefulWidget {
 }
 
 class _SelectedCategoryScreenState extends State<SelectedCategoryScreen> {
-  var items = [
+  var itemsEn = [
     'Men\'s',
     'Women\'s',
     'Shoes',
@@ -30,16 +34,26 @@ class _SelectedCategoryScreenState extends State<SelectedCategoryScreen> {
     'Sports',
     'Accessories',
   ];
+  var itemsAr = [
+    'أزياء رجالية',
+    'الموضة النسائية',
+    'أحذية',
+    'الحقائب',
+    'ملابس أطفال',
+    'الملابس الرياضية',
+    'اكسسوارات',
+  ];
 
   @override
   Widget build(BuildContext context) {
     var widthQuarter = MediaQuery.of(context).size.width / 4;
     var width = MediaQuery.of(context).size.width;
-    ShopCubit.get(context).changeDropValue(widget.nameOfCategory);
+    ShopCubit.get(context).changeDropValue(widget.nameOfCategory, context);
     List<ShopProductsModel> _mmodel = widget.mmodel;
     List _mmodelID = widget.mmodelID;
     String _nameOfCategory = widget.nameOfCategory;
     // Initial Selected Value
+    log(EasyLocalization.of(context).locale.languageCode);
     return BlocConsumer<ShopCubit, ShopStates>(
       listener: (context, state) {},
       builder: (context, state) {
@@ -72,7 +86,10 @@ class _SelectedCategoryScreenState extends State<SelectedCategoryScreen> {
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(
-                          top: 10.0, bottom: 10.0, right: 10.0),
+                        top: 10.0,
+                        bottom: 10.0,
+                        right: 10.0,
+                      ),
                       child: Container(
                         width: width - widthQuarter,
                         decoration: BoxDecoration(
@@ -81,14 +98,14 @@ class _SelectedCategoryScreenState extends State<SelectedCategoryScreen> {
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(
+                          children: [
+                            const Icon(
                               Icons.search,
                               color: Colors.grey,
                             ),
                             Text(
-                              'Search in Egy Outfit',
-                              style: TextStyle(color: Colors.grey),
+                              LocaleKeys.usersHomeScreen_searchInEgyOutfit.tr(),
+                              style: const TextStyle(color: Colors.grey),
                             ),
                           ],
                         ),
@@ -112,7 +129,10 @@ class _SelectedCategoryScreenState extends State<SelectedCategoryScreen> {
                     height: 25.0,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 25.0),
+                    padding: const EdgeInsets.only(
+                      left: 25.0,
+                      right: 25.0,
+                    ),
                     child: Row(
                       children: [
                         Text(
@@ -123,49 +143,71 @@ class _SelectedCategoryScreenState extends State<SelectedCategoryScreen> {
                         const Spacer(),
                         SizedBox(
                           child: DropdownButton(
-                            value: ShopCubit.get(context).dropdownvalue,
+                            value: EasyLocalization.of(context)
+                                        .locale
+                                        .languageCode ==
+                                    'en'
+                                ? ShopCubit.get(context).dropdownvalueEn
+                                : ShopCubit.get(context).dropdownvalueAr,
                             icon: const Icon(Icons.keyboard_arrow_down),
-                            items: items.map((String items) {
-                              return DropdownMenuItem(
-                                value: items,
-                                child: Text(items),
-                              );
-                            }).toList(),
+                            items: EasyLocalization.of(context)
+                                        .locale
+                                        .languageCode ==
+                                    'en'
+                                ? itemsEn.map((String items) {
+                                    return DropdownMenuItem(
+                                      value: items,
+                                      child: Text(items),
+                                    );
+                                  }).toList()
+                                : itemsAr.map((String items) {
+                                    return DropdownMenuItem(
+                                      value: items,
+                                      child: Text(items),
+                                    );
+                                  }).toList(),
                             onChanged: (newValue) {
                               ShopCubit.get(context)
-                                  .changeDropButtonValue(newValue);
-                              if (newValue == 'Men\'s') {
+                                  .changeDropButtonValue(newValue,context);
+                              if (newValue == 'Men\'s' ||
+                                  newValue == 'أزياء رجالية') {
                                 _mmodel = ShopCubit.get(context).menCategory;
                                 _mmodelID =
                                     ShopCubit.get(context).menCategoryID;
                                 _nameOfCategory = newValue;
-                              } else if (newValue == 'Women\'s') {
+                              } else if (newValue == 'Women\'s' ||
+                                  newValue == 'الموضة النسائية') {
                                 _mmodel = ShopCubit.get(context).womenCategory;
                                 _mmodelID =
                                     ShopCubit.get(context).womenCategoryID;
                                 _nameOfCategory = newValue;
-                              } else if (newValue == 'Shoes') {
+                              } else if (newValue == 'Shoes' ||
+                                  newValue == 'أحذية') {
                                 _mmodel = ShopCubit.get(context).shoeCategory;
                                 _mmodelID =
                                     ShopCubit.get(context).shoeCategoryID;
                                 _nameOfCategory = newValue;
-                              } else if (newValue == 'Bags') {
+                              } else if (newValue == 'Bags' ||
+                                  newValue == 'الحقائب') {
                                 _mmodel = ShopCubit.get(context).bagCategory;
                                 _mmodelID =
                                     ShopCubit.get(context).bagCategoryID;
                                 _nameOfCategory = newValue;
-                              } else if (newValue == 'Children') {
+                              } else if (newValue == 'Children' ||
+                                  newValue == 'ملابس أطفال') {
                                 _mmodel =
                                     ShopCubit.get(context).childrenCategory;
                                 _mmodelID =
                                     ShopCubit.get(context).childrenCategoryID;
                                 _nameOfCategory = newValue;
-                              } else if (newValue == 'Sports') {
+                              } else if (newValue == 'Sports' ||
+                                  newValue == 'الملابس الرياضية') {
                                 _mmodel = ShopCubit.get(context).sportCategory;
                                 _mmodelID =
                                     ShopCubit.get(context).sportCategoryID;
                                 _nameOfCategory = newValue;
-                              } else if (newValue == 'Accessories') {
+                              } else if (newValue == 'Accessories' ||
+                                  newValue == 'اكسسوارات') {
                                 _mmodel =
                                     ShopCubit.get(context).accessoriesCategory;
                                 _mmodelID = ShopCubit.get(context)

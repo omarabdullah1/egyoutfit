@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:conditional_builder/conditional_builder.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -7,6 +8,7 @@ import '../../../layout/shop_app/cubit/cubit.dart';
 import '../../../layout/shop_app/cubit/states.dart';
 import '../../../models/shop_app/products_model.dart';
 import '../../../shared/components/components.dart';
+import '../../../translations/locale_keys.g.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final String id;
@@ -84,12 +86,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             padding: const EdgeInsets.all(8.0),
                             child: defaultFormField(
                                 prefix: Icons.location_on,
-                                label: 'Address',
+                                label: LocaleKeys.userCartScreen_address.tr(),
                                 controller: addressController,
+                                isValidate: true,
                                 type: TextInputType.text,
                                 validate: (value) {
                                   if (value.isEmpty) {
-                                    return "Address  must not be empty";
+                                    return LocaleKeys
+                                        .userCartScreen_addressMustNotBeEmptyValidation
+                                        .tr();
                                   }
                                 }),
                           ),
@@ -100,15 +105,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             padding: const EdgeInsets.all(8.0),
                             child: defaultFormField(
                                 prefix: Icons.phone,
-                                label: 'Phone',
+                                label: LocaleKeys.userCartScreen_phone.tr(),
                                 controller: phoneController,
                                 type: TextInputType.text,
+                                isValidate: true,
                                 validate: (value) {
                                   if (value.isEmpty) {
-                                    return "Phone  must not be empty";
+                                    return LocaleKeys
+                                        .userCartScreen_phoneMustNotBeEmpty
+                                        .tr();
                                   } else if (value.toString().length > 11 ||
                                       value.toString().length < 11) {
-                                    return 'Wrong phone number';
+                                    return LocaleKeys
+                                        .userCartScreen_wrongPhoneNumber
+                                        .tr();
                                   }
                                 }),
                           ),
@@ -118,11 +128,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: defaultFormField(
-                                prefix: Icons.phone,
-                                label: 'Other Phone',
-                                controller: otherPhoneController,
-                                type: TextInputType.text,
-                                validate: (value) {}),
+                              prefix: Icons.phone,
+                              label: LocaleKeys.userCartScreen_otherPhone.tr(),
+                              controller: otherPhoneController,
+                              type: TextInputType.phone,
+                              isValidate: true,
+                              validate: (value) {
+                                if (value.toString().length > 11 ||
+                                    value.toString().length < 11) {
+                                  return LocaleKeys
+                                      .userCartScreen_wrongPhoneNumber
+                                      .tr();
+                                }
+                              },
+                            ),
                           ),
                           const SizedBox(
                             height: 8,
@@ -131,10 +150,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             padding: const EdgeInsets.all(8.0),
                             child: defaultFormField(
                               prefix: Icons.mode_comment,
-                              label: 'Comment',
+                              label: LocaleKeys.userCartScreen_comment.tr(),
                               controller: commentController,
                               type: TextInputType.text,
-                              validate: (v) {},
+                              isValidate: true,
+                              validate: (value) {},
                             ),
                           ),
                           const SizedBox(
@@ -149,9 +169,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   padding: const EdgeInsets.only(left: 8.0),
                                   child: defaultFormField(
                                     prefix: Icons.local_offer,
-                                    label: 'Promo Code',
+                                    label: LocaleKeys.userCartScreen_promoCode
+                                        .tr(),
                                     controller: promoCodeController,
                                     type: TextInputType.text,
+                                    isValidate: true,
                                     validate: (v) {},
                                   ),
                                 ),
@@ -193,13 +215,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                             flag = true;
                                           } else {
                                             showToast(
-                                                text: 'Not Active promo code',
+                                                text: LocaleKeys
+                                                    .alerts_checkoutNotActivePromoCode
+                                                    .tr(),
                                                 state: ToastStates.error);
                                           }
                                         } else {
                                           showToast(
-                                              text:
-                                                  'The Promo Code Not Activated with this product',
+                                              text: LocaleKeys
+                                                  .alerts_checkoutThePromoCodeNotActivatedWithThisProduct
+                                                  .tr(),
                                               state: ToastStates.error);
                                         }
                                       } else {
@@ -209,7 +234,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       if (flag) {
                                         log('message');
                                         showToast(
-                                            text: 'Activated promo code',
+                                            text: LocaleKeys
+                                                .alerts_checkoutActivatedPromoCode
+                                                .tr(),
                                             state: ToastStates.success);
                                         int x = ShopCubit.get(context)
                                             .discountList[ShopCubit.get(
@@ -230,11 +257,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       if (!promo
                                           .contains(promoCodeController.text)) {
                                         showToast(
-                                            text: 'Wrong promo code',
+                                            text: LocaleKeys
+                                                .alerts_checkoutWrongPromoCode
+                                                .tr(),
                                             state: ToastStates.error);
                                       } else {
                                         showToast(
-                                            text: 'Repeated promo code',
+                                            text: LocaleKeys
+                                                .alerts_checkoutRepeatedPromoCode
+                                                .tr(),
                                             state: ToastStates.error);
                                       }
                                     }
@@ -247,7 +278,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                         .toString());
                                     log(widget.model.uid.toString());
                                   },
-                                  text: 'Apply',
+                                  text: LocaleKeys.userCartScreen_apply.tr(),
                                   width: MediaQuery.of(context).size.width / 3,
                                   height: 40.0,
                                   radius: 12)
@@ -255,26 +286,35 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 8.0),
-                            child: Text('Price: ${screenPrice}LE'),
+                            child: Text(LocaleKeys.userCartScreen_price.tr() +
+                                ':' +
+                                (screenPrice.toString()) +
+                                'LE'),
                           ),
                           widget.model.isShipping
-                              ? const Padding(
-                                  padding: EdgeInsets.only(top: 8.0),
+                              ? Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
                                   child: Text(
-                                    '*Price includes delivery',
-                                    style: TextStyle(
+                                    '*' +
+                                        LocaleKeys
+                                            .userCartScreen_priceIncludesDelivery
+                                            .tr(),
+                                    style: const TextStyle(
                                         color: Colors.red, fontSize: 14.0),
                                   ),
                                 )
                               : const SizedBox(),
                         ],
                       ),
-                      Text('Payment',
+                      Text(LocaleKeys.userCartScreen_payment.tr(),
                           style: Theme.of(context)
                               .textTheme
                               .headline3
                               .copyWith(fontSize: 23)),
-                      Text('All transaction are secure and encrypted',
+                      Text(
+                          LocaleKeys
+                              .userCartScreen_allTransactionAreSecureAndEncrypted
+                              .tr(),
                           style: Theme.of(context)
                               .textTheme
                               .headline3
@@ -287,9 +327,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               onChanged: (T) {
                                 ShopCubit.get(context).changePaymentMethod(1);
                               }),
-                          const Text(
-                            'Cash (On Delivery)',
-                            style: TextStyle(fontSize: 20),
+                          Text(
+                            LocaleKeys.userCartScreen_cashOnDelivery.tr(),
+                            style: const TextStyle(fontSize: 20),
                           )
                         ],
                       ),
@@ -301,9 +341,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               onChanged: (T) {
                                 ShopCubit.get(context).changePaymentMethod(2);
                               }),
-                          const Text(
-                            'Cards, Net Banking, Wallets',
-                            style: TextStyle(fontSize: 20),
+                          Text(
+                            LocaleKeys.userCartScreen_cardsNetBankingWallets
+                                .tr(),
+                            style: const TextStyle(fontSize: 20),
                           )
                         ],
                       ),
@@ -514,23 +555,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             //     .get(context)
                             //     .currentIndex = 0;
                             Navigator.pop(context);
-                          } else {
-                            if (addressController.text.isEmpty) {
-                              showToast(
-                                  text: 'Please enter address',
-                                  state: ToastStates.error);
-                            } else if (phoneController.text.isEmpty) {
-                              showToast(
-                                  text: 'Please enter phone',
-                                  state: ToastStates.error);
-                            } else if (phoneController.text.length != 11) {
-                              showToast(
-                                  text: 'Wrong phone number',
-                                  state: ToastStates.error);
-                            }
                           }
                         },
-                        text: 'Complete Order',
+                        text: LocaleKeys.userCartScreen_completeOrder.tr(),
                       ),
                     ],
                   ),

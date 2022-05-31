@@ -1,8 +1,8 @@
 import 'dart:developer' as dev;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:egyoutfit/modules/service_provider/seller_request/seller_request.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../layout/dashboard_layout/cubit/cubit.dart';
@@ -15,6 +15,7 @@ import '../../modules/service_provider/seller_product/seller_product.dart';
 import '../../modules/user/check_out/check_out.dart';
 import '../../modules/user/home_selected_product/selected_prodct.dart';
 import '../../modules/user/selected_category_screen/selected_category_screen.dart';
+import '../../translations/locale_keys.g.dart';
 import '../styles/colors.dart';
 
 Widget defaultButton({
@@ -138,9 +139,10 @@ Widget defaultFormField({
   Function onTap,
   bool isPassword = false,
   bool isValidate = false,
+  bool isPrefixText = false,
   Function validate,
   @required String label,
-  @required IconData prefix,
+  @required prefix,
   IconData suffix,
   Function suffixPressed,
   bool isClickable = true,
@@ -181,9 +183,11 @@ Widget defaultFormField({
         ),
         labelText: label,
         labelStyle: TextStyle(fontSize: fontSize),
-        prefixIcon: Icon(
-          prefix,
-        ),
+        prefixIcon: isPrefixText
+            ? prefix
+            : Icon(
+                prefix,
+              ),
         suffixIcon: suffix != null
             ? IconButton(
                 onPressed: suffixPressed,
@@ -216,6 +220,7 @@ Widget searchFormField({
   Function onChange,
   Function onTap,
   bool isPassword = false,
+  bool isValidate = false,
   @required Function validate,
   @required String label,
   @required IconData prefix,
@@ -223,32 +228,29 @@ Widget searchFormField({
   Function suffixPressed,
   bool isClickable = true,
 }) =>
-    SizedBox(
-      height: 50.0,
-      child: TextFormField(
-        controller: controller,
-        keyboardType: type,
-        obscureText: isPassword,
-        enabled: isClickable,
-        onFieldSubmitted: onSubmit,
-        onChanged: onChange,
-        onTap: onTap,
-        validator: validate,
-        decoration: InputDecoration(
-          labelText: label,
-          prefixIcon: Icon(
-            prefix,
-          ),
-          suffixIcon: suffix != null
-              ? IconButton(
-                  onPressed: suffixPressed,
-                  icon: Icon(
-                    suffix,
-                  ),
-                )
-              : null,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(40.0)),
+    TextFormField(
+      controller: controller,
+      keyboardType: type,
+      obscureText: isPassword,
+      enabled: isClickable,
+      onFieldSubmitted: onSubmit,
+      onChanged: onChange,
+      onTap: onTap,
+      validator: isValidate ? validate : null,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(
+          prefix,
         ),
+        suffixIcon: suffix != null
+            ? IconButton(
+                onPressed: suffixPressed,
+                icon: Icon(
+                  suffix,
+                ),
+              )
+            : null,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(40.0)),
       ),
     );
 
@@ -257,7 +259,7 @@ Widget categoryButton({
   @required text,
   @required iconPath,
   @required context,
-  width = 30.0,
+  width = 26.0,
   @required mmodel,
   @required mmodelID,
   @required name,
@@ -281,7 +283,7 @@ Widget categoryButton({
           Text(
             text,
             style: const TextStyle(
-                fontSize: 12.0,
+                fontSize: 15.0,
                 fontWeight: FontWeight.bold,
                 color: Colors.white),
           ),
@@ -427,9 +429,9 @@ Widget buildListProduct({
                     padding: const EdgeInsets.symmetric(
                       horizontal: 5.0,
                     ),
-                    child: const Text(
-                      'DISCOUNT',
-                      style: TextStyle(
+                    child: Text(
+                      LocaleKeys.userAccountScreen_orderDiscount.tr() + ':',
+                      style: const TextStyle(
                         fontSize: 8.0,
                         color: Colors.white,
                       ),
@@ -510,7 +512,7 @@ Widget buildListProduct({
   );
 }
 
-Widget buildOrdersListProduct({
+buildOrdersListProduct({
   @required List<OrdersModel> model,
   @required index,
   @required context,
@@ -520,12 +522,27 @@ Widget buildOrdersListProduct({
     child: Column(
       children: [
         // const SizedBox(height: 15.0,),
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [],
-          ),
+        const Padding(
+          padding: EdgeInsets.all(12.0),
+          // child: Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     Text(
+          //       'Order #${model[index].id}',
+          //       style: const TextStyle(
+          //         fontSize: 14.0,
+          //         fontWeight: FontWeight.bold,
+          //       ),
+          //     ),
+          //     Text(
+          //       '${model[index].status}',
+          //       style: const TextStyle(
+          //         fontSize: 14.0,
+          //         fontWeight: FontWeight.bold,
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ),
         model.isNotEmpty
             ? Padding(
@@ -600,7 +617,8 @@ Widget buildOrdersListProduct({
                           right: MediaQuery.of(context).size.width / 20,
                         ),
                         Positioned(
-                          child: Text('${model[index].orderedProductsCount ?? ''}'),
+                          child: Text(
+                              '${model[index].orderedProductsCount ?? ''}'),
                           top: MediaQuery.of(context).size.height / 8,
                           right: MediaQuery.of(context).size.width / 20,
                         ),
@@ -617,8 +635,7 @@ Widget buildOrdersListProduct({
                                         'Completed'
                                     ? Colors.green
                                     : DashboardCubit.get(context)
-                                                    .requestModelStateList[
-                                                index] ==
+                                                .requestModelStateList[index] ==
                                             'Scheduled'
                                         ? Colors.blue
                                         : DashboardCubit.get(context)
@@ -776,7 +793,7 @@ class _BuildListProduct2State extends State<BuildListProduct2> {
                                   model: widget.model,
                                 ));
                           },
-                          text: 'checkout',
+                          text: LocaleKeys.userCartScreen_checkout.tr(),
                           width: 120.0,
                           height: 30.0,
                           radius: 12.0,
@@ -1141,13 +1158,12 @@ class _BuildAllProductsState extends State<BuildAllProducts> {
                           color: Colors.white,
                           border: Border.all(width: 2.0, color: Colors.black),
                         ),
-                        child: Stack(
+                        child: Row(
                           children: [
                             const SizedBox(
                               width: 10.0,
                             ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            Stack(
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -1230,42 +1246,69 @@ class _BuildAllProductsState extends State<BuildAllProducts> {
                                 ),
                               ],
                             ),
-                            Positioned(
-                              child: Text(widget.model[index].name),
-                              top: MediaQuery.of(context).size.height / 15,
-                              right: MediaQuery.of(context).size.width / 10,
+                            const SizedBox(
+                              width: 20.0,
                             ),
-                            Positioned(
-                              child: Text('\$ ${widget.model[index].price}'),
-                              top: MediaQuery.of(context).size.height / 10,
-                              right: MediaQuery.of(context).size.width / 10,
-                            ),
-                            Positioned(
-                              top: 10.0,
-                              right: 10.0,
-                              child: Container(
-                                height: 30.0,
-                                width: 80.0,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  color: widget.model[index].state == 'Approved'
-                                      ? Colors.green
-                                      : widget.model[index].state == 'Pending'
-                                          ? Colors.orange
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 30.0,
+                                    width: 80.0,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      color: widget.model[index].state ==
+                                              'Approved'
+                                          ? Colors.green
                                           : widget.model[index].state ==
-                                                  'Cancelled'
-                                              ? Colors.red
-                                              : Colors.white,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    widget.model[index].state,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      color: Colors.white,
+                                                  'Pending'
+                                              ? Colors.orange
+                                              : widget.model[index].state ==
+                                                      'Cancelled'
+                                                  ? Colors.red
+                                                  : Colors.white,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        widget.model[index].state == 'Approved'
+                                            ? EasyLocalization.of(context)
+                                                        .locale
+                                                        .languageCode ==
+                                                    'en'
+                                                ? 'Approved'
+                                                : 'تم التأكد'
+                                            : widget.model[index].state ==
+                                                    'Pending'
+                                                ? EasyLocalization.of(context)
+                                                            .locale
+                                                            .languageCode ==
+                                                        'en'
+                                                    ? 'Pending'
+                                                    : 'قيد الانتظار'
+                                                : widget.model[index].state ==
+                                                        'Cancelled'
+                                                    ? EasyLocalization.of(
+                                                                    context)
+                                                                .locale
+                                                                .languageCode ==
+                                                            'en'
+                                                        ? 'Cancelled'
+                                                        : 'ملغي'
+                                                    : Colors.white,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
+                                  Text(widget.model[index].name),
+                                  Text('\$ ${widget.model[index].price}'),
+                                ],
                               ),
                             ),
                           ],
@@ -1281,8 +1324,8 @@ class _BuildAllProductsState extends State<BuildAllProducts> {
               ),
             ),
           )
-        : const Center(
-            child: Text('No Products Yet'),
+        : Center(
+            child: Text(LocaleKeys.dashboardScreen_noProductsError.tr()),
           );
   }
 }
@@ -1298,7 +1341,7 @@ Widget buildRequests({
     RefreshIndicator(
       onRefresh: () {
         return Future.delayed(const Duration(seconds: 2), () async {
-          await DashboardCubit.get(context).getAllOrdered();
+          await DashboardCubit.get(context).getAllOrdered(context);
         });
       },
       child: SingleChildScrollView(
@@ -1310,42 +1353,116 @@ Widget buildRequests({
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                          backgroundColor:
-                              DashboardCubit.get(context).dropDownValueColor,
-                          radius: 5.0),
-                      const SizedBox(
-                        width: 5.0,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15.0),
-                          shape: BoxShape.rectangle,
-                        ),
-                        child: DropdownButton(
-                          value: DashboardCubit.get(context).dropDownValue,
-                          icon: const Icon(Icons.keyboard_arrow_down),
-                          items: [
-                            'All Requests',
-                            'Pending',
-                            'Scheduled',
-                            'Completed',
-                            'Cancelled',
-                          ].map((String items) {
-                            return DropdownMenuItem(
-                              value: items,
-                              child: Text(items),
-                            );
-                          }).toList(),
-                          onChanged: (newValue) {
+                  Expanded(
+                    child: SizedBox(
+                      height: 73.0,
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton2(
+                          isExpanded: true,
+                          hint: Row(
+                            children: [
+                              const Icon(
+                                Icons.list,
+                                size: 30,
+                                color: Colors.black,
+                              ),
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  LocaleKeys.signUpScreen_select_City.tr(),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                          items: EasyLocalization.of(context)
+                                      .locale
+                                      .languageCode ==
+                                  'en'
+                              ? DashboardCubit.get(context)
+                                  .itemsEn
+                                  .map((item) => DropdownMenuItem<String>(
+                                        value: item,
+                                        child: Text(
+                                          item,
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ))
+                                  .toList()
+                              : DashboardCubit.get(context)
+                                  .itemsAr
+                                  .map((item) => DropdownMenuItem<String>(
+                                        value: item,
+                                        child: Text(
+                                          item,
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ))
+                                  .toList(),
+                          value: EasyLocalization.of(context)
+                                      .locale
+                                      .languageCode ==
+                                  'en'
+                              ? DashboardCubit.get(context).dropDownValueEn
+                              : DashboardCubit.get(context).dropDownValueAr,
+                          onChanged: (value) {
                             DashboardCubit.get(context)
-                                .changeDropButtonValue(newValue);
+                                .changeDropButtonValue(value, context);
+                            // selectedValue = value as String;
                           },
+                          icon: const Icon(
+                            Icons.keyboard_arrow_down_sharp,
+                            size: 20.0,
+                          ),
+                          iconSize: 14,
+                          iconEnabledColor: Colors.black,
+                          iconDisabledColor: Colors.grey,
+                          buttonHeight: 50,
+                          buttonWidth: 160,
+                          buttonPadding:
+                              const EdgeInsets.only(left: 14, right: 14),
+                          buttonDecoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              width: 2.5,
+                              color: Colors.black26,
+                            ),
+                            color: Colors.white,
+                          ),
+                          itemHeight: 40,
+                          itemPadding:
+                              const EdgeInsets.only(left: 14, right: 14),
+                          dropdownMaxHeight: 200,
+                          dropdownWidth: 200,
+                          dropdownPadding: null,
+                          dropdownDecoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            color: Colors.white,
+                          ),
+                          scrollbarRadius: const Radius.circular(40),
+                          scrollbarThickness: 6,
+                          scrollbarAlwaysShow: true,
+                          offset: const Offset(0, 0),
                         ),
                       ),
-                    ],
+                    ),
                   ),
                 ],
               ),
@@ -1361,17 +1478,22 @@ Widget buildRequests({
                         onTap: () {
                           DashboardCubit.get(context).productCaroIndex = 0;
                           navigateTo(
-                              context,
-                              SellerRequest(
-                                models: model[index],
-                                orderModel: ordersModel[index],
-                                state: DashboardCubit.get(context)
-                                    .requestModelStateList[index],
-                                index: index,
-                                id: id[index],
-                                dropValue:
-                                    DashboardCubit.get(context).dropDownValue,
-                              ));
+                            context,
+                            SellerRequest(
+                              models: model[index],
+                              orderModel: ordersModel[index],
+                              state: DashboardCubit.get(context)
+                                  .requestModelStateList[index],
+                              index: index,
+                              id: id[index],
+                              dropValue: EasyLocalization.of(context)
+                                          .locale
+                                          .languageCode ==
+                                      'en'
+                                  ? DashboardCubit.get(context).dropDownValueEn
+                                  : DashboardCubit.get(context).dropDownValueAr,
+                            ),
+                          );
                         },
                         child: Container(
                           height: 160.0,
@@ -1383,13 +1505,13 @@ Widget buildRequests({
                               color: Colors.black,
                             ),
                           ),
-                          child: Stack(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const SizedBox(
                                 width: 10.0,
                               ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              Stack(
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -1403,15 +1525,6 @@ Widget buildRequests({
                                               width: 2.0, color: Colors.black)),
                                       child: Stack(
                                         children: [
-                                          Positioned(
-                                            child: const Icon(
-                                                Icons.arrow_back_ios),
-                                            left: 0.0,
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height /
-                                                7.0,
-                                          ),
                                           CarouselSlider(
                                             items: model[index].image.isEmpty
                                                 ? const [Icon(Icons.image)]
@@ -1440,13 +1553,37 @@ Widget buildRequests({
                                             // carouselController: caroController,
                                           ),
                                           Positioned(
-                                            child: const Icon(
-                                                Icons.arrow_forward_ios),
-                                            right: 0.0,
-                                            height: MediaQuery.of(context)
+                                            top: MediaQuery.of(context)
                                                     .size
                                                     .height /
-                                                7.0,
+                                                16.0,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                2.52,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                right: 1.0,
+                                                left: 2.0,
+                                              ),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: const [
+                                                  Icon(
+                                                    Icons.arrow_back_ios,
+                                                    color: Colors.black,
+                                                    size: 30.0,
+                                                  ),
+                                                  Icon(
+                                                    Icons.arrow_forward_ios,
+                                                    color: Colors.black,
+                                                    size: 30.0,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -1454,58 +1591,91 @@ Widget buildRequests({
                                   ),
                                 ],
                               ),
-                              Positioned(
-                                child: Text(model[index].name),
-                                top: MediaQuery.of(context).size.height / 15,
-                                right: MediaQuery.of(context).size.width / 20,
-                              ),
-                              Positioned(
-                                child: Text('\$ ${model[index].price}'),
-                                top: MediaQuery.of(context).size.height / 10,
-                                right: MediaQuery.of(context).size.width / 20,
-                              ),
-                              Positioned(
-                                child: Text('${countList[index] ?? ''}'),
-                                top: MediaQuery.of(context).size.height / 8,
-                                right: MediaQuery.of(context).size.width / 20,
-                              ),
-                              Positioned(
-                                top: 10.0,
-                                right: 10.0,
-                                child: Container(
-                                  height: 30.0,
-                                  width: 100.0,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      color: DashboardCubit.get(context)
-                                                      .requestModelStateList[
-                                                  index] ==
-                                              'Completed'
-                                          ? Colors.green
-                                          : DashboardCubit.get(context)
+                              const Spacer(),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      height: 30.0,
+                                      width: 100.0,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          color: DashboardCubit.get(context)
                                                           .requestModelStateList[
                                                       index] ==
-                                                  'Scheduled'
-                                              ? Colors.blue
+                                                  'Completed'
+                                              ? Colors.green
                                               : DashboardCubit.get(context)
                                                               .requestModelStateList[
                                                           index] ==
-                                                      'Pending'
-                                                  ? Colors.orange
+                                                      'Scheduled'
+                                                  ? Colors.blue
                                                   : DashboardCubit.get(context)
                                                                   .requestModelStateList[
                                                               index] ==
-                                                          'Cancelled'
-                                                      ? Colors.red
-                                                      : Colors.white),
-                                  child: Center(
-                                      child: Text(
+                                                          'Pending'
+                                                      ? Colors.orange
+                                                      : DashboardCubit.get(
+                                                                          context)
+                                                                      .requestModelStateList[
+                                                                  index] ==
+                                                              'Cancelled'
+                                                          ? Colors.red
+                                                          : Colors.white),
+                                      child: Center(
+                                        child: Text(
                                           DashboardCubit.get(context)
-                                              .requestModelStateList[index],
+                                                          .requestModelStateList[
+                                                      index] ==
+                                                  'Completed'
+                                              ? EasyLocalization.of(context)
+                                                          .locale
+                                                          .languageCode ==
+                                                      'en'
+                                                  ? 'Completed'
+                                                  : 'مكتمل'
+                                              : DashboardCubit.get(context)
+                                                              .requestModelStateList[
+                                                          index] ==
+                                                      'Scheduled'
+                                                  ? EasyLocalization.of(context)
+                                                              .locale
+                                                              .languageCode ==
+                                                          'en'
+                                                      ? 'Scheduled'
+                                                      : 'مجدول'
+                                                  : DashboardCubit.get(context)
+                                                                  .requestModelStateList[
+                                                              index] ==
+                                                          'Pending'
+                                                      ? EasyLocalization.of(context)
+                                                                  .locale
+                                                                  .languageCode ==
+                                                              'en'
+                                                          ? 'Pending'
+                                                          : 'معلق'
+                                                      : DashboardCubit.get(context)
+                                                                  .requestModelStateList[index] ==
+                                                              'Cancelled'
+                                                          ? EasyLocalization.of(context).locale.languageCode == 'en'
+                                                              ? 'Cancelled'
+                                                              : 'ملغي'
+                                                          : null,
                                           overflow: TextOverflow.ellipsis,
                                           style: const TextStyle(
                                             color: Colors.white,
-                                          ))),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Text(model[index].name),
+                                    Text('\$ ${model[index].price}'),
+                                    Text('${countList[index] ?? ''}'),
+                                  ],
                                 ),
                               ),
                             ],
@@ -1684,10 +1854,12 @@ Widget buildUserRegister({
                           isValidate: true,
                           validate: (String value) {
                             if (value.isEmpty) {
-                              return 'please enter your first name';
+                              return LocaleKeys
+                                  .signUpScreen_pleaseEnterYourFirstName
+                                  .tr();
                             }
                           },
-                          label: 'First Name',
+                          label: LocaleKeys.signUpScreen_firstName.tr(),
                           prefix: Icons.drive_file_rename_outline,
                         ),
                       ),
@@ -1701,10 +1873,12 @@ Widget buildUserRegister({
                           type: TextInputType.name,
                           validate: (String value) {
                             if (value.isEmpty) {
-                              return 'please enter your second name';
+                              return LocaleKeys
+                                  .signUpScreen_pleaseEnterYourSecondName
+                                  .tr();
                             }
                           },
-                          label: 'Second Name',
+                          label: LocaleKeys.signUpScreen_lastName.tr(),
                           prefix: Icons.drive_file_rename_outline,
                         ),
                       ),
@@ -1719,10 +1893,12 @@ Widget buildUserRegister({
                     isValidate: true,
                     validate: (String value) {
                       if (value.isEmpty) {
-                        return 'please enter your email address';
+                        return LocaleKeys
+                            .signUpScreen_pleaseEnterYourEmailAddress
+                            .tr();
                       }
                     },
-                    label: 'Email Address',
+                    label: LocaleKeys.signUpScreen_emailAddress.tr(),
                     prefix: Icons.email_outlined,
                   ),
                   const SizedBox(
@@ -1742,10 +1918,10 @@ Widget buildUserRegister({
                     },
                     validate: (String value) {
                       if (value.isEmpty) {
-                        return 'password is too short';
+                        return LocaleKeys.signUpScreen_passwordIsTooShort.tr();
                       }
                     },
-                    label: 'Password',
+                    label: LocaleKeys.signUpScreen_password.tr(),
                     prefix: Icons.lock_outline,
                   ),
                   const SizedBox(
@@ -1765,12 +1941,12 @@ Widget buildUserRegister({
                     isValidate: true,
                     validate: (String value) {
                       if (value.isEmpty) {
-                        return 'password is too short';
+                        return LocaleKeys.signUpScreen_passwordIsTooShort.tr();
                       } else if (value != userPasswordController.text) {
-                        return 'password not matching';
+                        return LocaleKeys.signUpScreen_passwordNotMatching.tr();
                       }
                     },
-                    label: 'Confirm Password',
+                    label: LocaleKeys.signUpScreen_confirmPassword.tr(),
                     prefix: Icons.lock_outline,
                   ),
                   const SizedBox(
@@ -1786,19 +1962,19 @@ Widget buildUserRegister({
                             child: DropdownButton2(
                               isExpanded: true,
                               hint: Row(
-                                children: const [
-                                  Icon(
+                                children: [
+                                  const Icon(
                                     Icons.list,
                                     size: 30,
                                     color: Colors.black,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 4,
                                   ),
                                   Expanded(
                                     child: Text(
-                                      'Select City',
-                                      style: TextStyle(
+                                      LocaleKeys.signUpScreen_select_City.tr(),
+                                      style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black,
@@ -1808,26 +1984,51 @@ Widget buildUserRegister({
                                   ),
                                 ],
                               ),
-                              items: ShopRegisterCubit.get(context)
-                                  .items
-                                  .map((item) => DropdownMenuItem<String>(
-                                        value: item,
-                                        child: Text(
-                                          item,
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ))
-                                  .toList(),
-                              value: ShopRegisterCubit.get(context)
-                                  .userRegisterDropdownValue,
+                              items: EasyLocalization.of(context)
+                                          .locale
+                                          .languageCode ==
+                                      'en'
+                                  ? ShopRegisterCubit.get(context)
+                                      .itemsEn
+                                      .map((item) => DropdownMenuItem<String>(
+                                            value: item,
+                                            child: Text(
+                                              item,
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ))
+                                      .toList()
+                                  : ShopRegisterCubit.get(context)
+                                      .itemsAr
+                                      .map((item) => DropdownMenuItem<String>(
+                                            value: item,
+                                            child: Text(
+                                              item,
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ))
+                                      .toList(),
+                              value: EasyLocalization.of(context)
+                                          .locale
+                                          .languageCode ==
+                                      'en'
+                                  ? ShopRegisterCubit.get(context)
+                                      .userRegisterDropdownValueEn
+                                  : ShopRegisterCubit.get(context)
+                                      .userRegisterDropdownValueAr,
                               onChanged: (value) {
                                 ShopRegisterCubit.get(context)
-                                    .userChangeDropValue(value);
+                                    .userChangeDropValue(value, context);
                                 // selectedValue = value as String;
                               },
                               icon: const Icon(
@@ -1878,10 +2079,11 @@ Widget buildUserRegister({
                           isValidate: true,
                           validate: (String value) {
                             if (value.isEmpty) {
-                              return 'Area must not be empty';
+                              return LocaleKeys.signUpScreen_areaMustNotBeEmpty
+                                  .tr();
                             }
                           },
-                          label: 'Area',
+                          label: LocaleKeys.signUpScreen_area.tr(),
                           prefix: Icons.map_outlined,
                         ),
                       ),
@@ -1897,10 +2099,11 @@ Widget buildUserRegister({
                     isValidate: true,
                     validate: (String value) {
                       if (value.isEmpty) {
-                        return 'Address is must not be empty';
+                        return LocaleKeys.signUpScreen_addressIsMustNotBeEmpty
+                            .tr();
                       }
                     },
-                    label: 'Address',
+                    label: LocaleKeys.signUpScreen_address.tr(),
                     prefix: Icons.home_outlined,
                   ),
                   const SizedBox(
@@ -1916,9 +2119,12 @@ Widget buildUserRegister({
                           borderRadius: BorderRadius.circular(20)),
                       onPressed: () {
                         if (userFormKey.currentState.validate() &&
-                            DashboardCubit.get(context)
-                                .dropDownValue
-                                .isNotEmpty &&
+                            (DashboardCubit.get(context)
+                                    .dropDownValueEn
+                                    .isNotEmpty ||
+                                DashboardCubit.get(context)
+                                    .dropDownValueAr
+                                    .isNotEmpty) &&
                             userConfirmPasswordController.text ==
                                 userPasswordController.text) {
                           navigateTo(
@@ -1929,16 +2135,22 @@ Widget buildUserRegister({
                                 email: userEmailController.text,
                                 password: userPasswordController.text,
                                 address: userStreetController.text,
-                                city: ShopRegisterCubit.get(context)
-                                    .userRegisterDropdownValue,
+                                city: EasyLocalization.of(context)
+                                            .locale
+                                            .languageCode ==
+                                        'en'
+                                    ? ShopRegisterCubit.get(context)
+                                        .userRegisterDropdownValueEn
+                                    : ShopRegisterCubit.get(context)
+                                        .userRegisterDropdownValueAr,
                                 isSeller: false,
                                 area: userAreaController.text,
                               ));
                         }
                       },
-                      child: const Text(
-                        "Sign Up",
-                        style: TextStyle(
+                      child: Text(
+                        LocaleKeys.signUpScreen_sign_Up.tr(),
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -1953,9 +2165,9 @@ Widget buildUserRegister({
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        'Already have account ?',
-                        style: TextStyle(
+                      Text(
+                        LocaleKeys.signUpScreen_alreadyHaveAccount.tr(),
+                        style: const TextStyle(
                           color: Colors.black,
                         ),
                       ),
@@ -1963,10 +2175,12 @@ Widget buildUserRegister({
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: const Text('Sign In',
-                            style: TextStyle(
-                                color: Colors.deepOrange,
-                                fontWeight: FontWeight.bold)),
+                        child: Text(
+                          LocaleKeys.signUpScreen_sign_In.tr(),
+                          style: const TextStyle(
+                              color: Colors.deepOrange,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ],
                   ),
@@ -2019,10 +2233,12 @@ Widget buildSellerRegister({
                           isValidate: true,
                           validate: (String value) {
                             if (value.isEmpty) {
-                              return 'please enter your first name';
+                              return LocaleKeys
+                                  .signUpScreen_pleaseEnterYourFirstName
+                                  .tr();
                             }
                           },
-                          label: 'First Name',
+                          label: LocaleKeys.signUpScreen_firstName.tr(),
                           prefix: Icons.drive_file_rename_outline,
                         ),
                       ),
@@ -2037,10 +2253,12 @@ Widget buildSellerRegister({
                           isValidate: true,
                           validate: (String value) {
                             if (value.isEmpty) {
-                              return 'please enter your second name';
+                              return LocaleKeys
+                                  .signUpScreen_pleaseEnterYourSecondName
+                                  .tr();
                             }
                           },
-                          label: 'Second Name',
+                          label: LocaleKeys.signUpScreen_lastName.tr(),
                           prefix: Icons.drive_file_rename_outline,
                         ),
                       ),
@@ -2056,10 +2274,12 @@ Widget buildSellerRegister({
                     isValidate: true,
                     validate: (String value) {
                       if (value.isEmpty) {
-                        return 'please enter your organization name';
+                        return LocaleKeys
+                            .signUpScreen_pleaseEnterOrganizationName
+                            .tr();
                       }
                     },
-                    label: 'Organization Name',
+                    label: LocaleKeys.signUpScreen_organizationName.tr(),
                     prefix: Icons.home_repair_service,
                   ),
                   const SizedBox(
@@ -2075,19 +2295,19 @@ Widget buildSellerRegister({
                             child: DropdownButton2(
                               isExpanded: true,
                               hint: Row(
-                                children: const [
-                                  Icon(
+                                children: [
+                                  const Icon(
                                     Icons.list,
                                     size: 30,
                                     color: Colors.black,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 4,
                                   ),
                                   Expanded(
                                     child: Text(
-                                      'Select City',
-                                      style: TextStyle(
+                                      LocaleKeys.signUpScreen_select_City.tr(),
+                                      style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black,
@@ -2097,26 +2317,51 @@ Widget buildSellerRegister({
                                   ),
                                 ],
                               ),
-                              items: ShopRegisterCubit.get(context)
-                                  .items
-                                  .map((item) => DropdownMenuItem<String>(
-                                        value: item,
-                                        child: Text(
-                                          item,
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ))
-                                  .toList(),
-                              value: ShopRegisterCubit.get(context)
-                                  .sellerRegisterDropdownValue,
+                              items: EasyLocalization.of(context)
+                                          .locale
+                                          .languageCode ==
+                                      'en'
+                                  ? ShopRegisterCubit.get(context)
+                                      .itemsEn
+                                      .map((item) => DropdownMenuItem<String>(
+                                            value: item,
+                                            child: Text(
+                                              item,
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ))
+                                      .toList()
+                                  : ShopRegisterCubit.get(context)
+                                      .itemsAr
+                                      .map((item) => DropdownMenuItem<String>(
+                                            value: item,
+                                            child: Text(
+                                              item,
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ))
+                                      .toList(),
+                              value: EasyLocalization.of(context)
+                                          .locale
+                                          .languageCode ==
+                                      'en'
+                                  ? ShopRegisterCubit.get(context)
+                                      .sellerRegisterDropdownValueEn
+                                  : ShopRegisterCubit.get(context)
+                                      .sellerRegisterDropdownValueAr,
                               onChanged: (value) {
                                 ShopRegisterCubit.get(context)
-                                    .sellerChangeDropValue(value);
+                                    .sellerChangeDropValue(value, context);
                                 // selectedValue = value as String;
                               },
                               icon: const Icon(
@@ -2167,10 +2412,11 @@ Widget buildSellerRegister({
                           onSubmit: (value) {},
                           validate: (String value) {
                             if (value.isEmpty) {
-                              return 'Area is must not be empty';
+                              return LocaleKeys.signUpScreen_areaMustNotBeEmpty
+                                  .tr();
                             }
                           },
-                          label: 'Area',
+                          label: LocaleKeys.signUpScreen_area.tr(),
                           prefix: Icons.map_outlined,
                         ),
                       ),
@@ -2187,10 +2433,11 @@ Widget buildSellerRegister({
                     isValidate: true,
                     validate: (String value) {
                       if (value.isEmpty) {
-                        return 'Street is must not be empty';
+                        return LocaleKeys.signUpScreen_addressIsMustNotBeEmpty
+                            .tr();
                       }
                     },
-                    label: 'Street',
+                    label: LocaleKeys.signUpScreen_address.tr(),
                     prefix: Icons.home_outlined,
                   ),
                   const SizedBox(
@@ -2203,10 +2450,12 @@ Widget buildSellerRegister({
                     isValidate: true,
                     validate: (String value) {
                       if (value.isEmpty) {
-                        return 'please enter your email address';
+                        return LocaleKeys
+                            .signUpScreen_pleaseEnterYourEmailAddress
+                            .tr();
                       }
                     },
-                    label: 'Email Address',
+                    label: LocaleKeys.signUpScreen_emailAddress.tr(),
                     prefix: Icons.email_outlined,
                   ),
                   const SizedBox(
@@ -2227,10 +2476,10 @@ Widget buildSellerRegister({
                     isValidate: true,
                     validate: (String value) {
                       if (value.isEmpty) {
-                        return 'password is too short';
+                        return LocaleKeys.signUpScreen_passwordIsTooShort.tr();
                       }
                     },
-                    label: 'Password',
+                    label: LocaleKeys.signUpScreen_password.tr(),
                     prefix: Icons.lock_outline,
                   ),
                   const SizedBox(
@@ -2251,12 +2500,12 @@ Widget buildSellerRegister({
                     isValidate: true,
                     validate: (String value) {
                       if (value.isEmpty) {
-                        return 'password is too short';
+                        return LocaleKeys.signUpScreen_passwordIsTooShort.tr();
                       } else if (value != sellerPasswordController.text) {
-                        return 'password not matching';
+                        return LocaleKeys.signUpScreen_passwordNotMatching.tr();
                       }
                     },
-                    label: 'Confirm Password',
+                    label: LocaleKeys.signUpScreen_confirmPassword.tr(),
                     prefix: Icons.lock_outline,
                   ),
                   const SizedBox(
@@ -2281,8 +2530,14 @@ Widget buildSellerRegister({
                                 password: sellerPasswordController.text,
                                 address: sellerStreetController.text,
                                 isSeller: true,
-                                city: ShopRegisterCubit.get(context)
-                                    .sellerRegisterDropdownValue,
+                                city: EasyLocalization.of(context)
+                                            .locale
+                                            .languageCode ==
+                                        'en'
+                                    ? ShopRegisterCubit.get(context)
+                                        .sellerRegisterDropdownValueEn
+                                    : ShopRegisterCubit.get(context)
+                                        .sellerRegisterDropdownValueAr,
                                 area: sellerAreaController.text,
                                 organization:
                                     sellerOrganizationNameController.text,
@@ -2290,9 +2545,9 @@ Widget buildSellerRegister({
                           // dev.log(sellerOrganizationNameController.text.toString());
                         }
                       },
-                      child: const Text(
-                        "Sign Up",
-                        style: TextStyle(
+                      child: Text(
+                        LocaleKeys.signUpScreen_sign_Up.tr(),
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -2307,9 +2562,9 @@ Widget buildSellerRegister({
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        'Already have account ?',
-                        style: TextStyle(
+                      Text(
+                        LocaleKeys.signUpScreen_alreadyHaveAccount.tr(),
+                        style: const TextStyle(
                           color: Colors.black,
                         ),
                       ),
@@ -2317,10 +2572,12 @@ Widget buildSellerRegister({
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: const Text('Sign In',
-                            style: TextStyle(
-                                color: Colors.deepOrange,
-                                fontWeight: FontWeight.bold)),
+                        child: Text(
+                          LocaleKeys.signUpScreen_sign_In.tr(),
+                          style: const TextStyle(
+                              color: Colors.deepOrange,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ],
                   ),
