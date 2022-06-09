@@ -79,7 +79,6 @@ void main() async {
   token = await CacheHelper.getData(key: 'token');
   bool isSeller = await CacheHelper.getData(key: 'isSeller');
   token != null ? log(token) : null;
-  if (onBoarding != null) {
     if (token != null) {
       if (isSeller != null) {
         isSeller
@@ -89,9 +88,7 @@ void main() async {
     } else {
       widget = const LoginScreen();
     }
-  } else {
-    widget = const OnBoardingScreen();
-  }
+
   // widget = const OtpScreen();
   runApp(EasyLocalization(
     supportedLocales: const [Locale('en'), Locale('ar')],
