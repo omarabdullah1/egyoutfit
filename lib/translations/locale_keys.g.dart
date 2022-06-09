@@ -128,6 +128,12 @@ abstract class  LocaleKeys {
   static const alerts_orderErrorCreatingOrder = 'alerts.orderErrorCreatingOrder';
   static const alerts_loginSuccessfully = 'alerts.loginSuccessfully';
   static const alerts_errorInRegistration = 'alerts.errorInRegistration';
+  static const alerts_yourProductWillBeDeleted = 'alerts.yourProductWillBeDeleted';
+  static const alerts_warning = 'alerts.warning';
+  static const alerts_cancel = 'alerts.cancel';
+  static const alerts_ok = 'alerts.ok';
+  static const alerts_yourOfferWillBeDeleted = 'alerts.yourOfferWillBeDeleted';
+  static const alerts_openOrdersToSee = 'alerts.openOrdersToSee';
   static const alerts = 'alerts';
   static const sellerAcountScreen_account = 'sellerAcountScreen.account';
   static const sellerAcountScreen_welcome = 'sellerAcountScreen.welcome';
@@ -201,5 +207,11 @@ abstract class  LocaleKeys {
   static const sellerCreateProductScreen_cost = 'sellerCreateProductScreen.cost';
   static const sellerCreateProductScreen_submit = 'sellerCreateProductScreen.submit';
   static const sellerCreateProductScreen = 'sellerCreateProductScreen';
+  static const chatScreen_typeMessageHere = 'chatScreen.typeMessageHere';
+  static const chatScreen_noMessagesYet = 'chatScreen.noMessagesYet';
+  static const chatScreen = 'chatScreen';
+  static const forgetPasswordScreen_pleaseEnterEmail = 'forgetPasswordScreen.pleaseEnterEmail';
+  static const forgetPasswordScreen_resetPassword = 'forgetPasswordScreen.resetPassword';
+  static const forgetPasswordScreen = 'forgetPasswordScreen';
 
 }

@@ -134,11 +134,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               type: TextInputType.phone,
                               isValidate: true,
                               validate: (value) {
+                                if(value.isNotEmpty){
                                 if (value.toString().length > 11 ||
                                     value.toString().length < 11) {
                                   return LocaleKeys
                                       .userCartScreen_wrongPhoneNumber
                                       .tr();
+                                }
                                 }
                               },
                             ),

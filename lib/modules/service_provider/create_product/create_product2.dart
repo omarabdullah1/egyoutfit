@@ -271,9 +271,12 @@ class CreateProductScreen2 extends StatelessWidget {
                                 isValidate: true,
                                 validate: (value) {
                                   if (value.isEmpty) {
-                                    return LocaleKeys
+                                    if(DashboardCubit.get(context)
+                                        .discountToggle) {
+                                      return LocaleKeys
                                         .sellerCreateProductScreen_pleaseEnterDiscount
                                         .tr();
+                                    }
                                   }
                                 },
                                 isClickable:
@@ -310,7 +313,7 @@ class CreateProductScreen2 extends StatelessWidget {
                                 ],
                               ),
                               defaultFormField(
-                                type: TextInputType.text,
+                                type: TextInputType.number,
                                 prefix: Icons.monetization_on_outlined,
                                 isValidate: true,
                                 validate: (value) {
@@ -351,8 +354,8 @@ class CreateProductScreen2 extends StatelessWidget {
                                         name: name,
                                         price: int.parse(priceController.text),
                                         oldPrice: 0,
-                                        discount: double.parse(
-                                            discountController.text),
+                                        discount: discountController.text.isNotEmpty?double.parse(
+                                            discountController.text):0.0,
                                         // image: images,
                                         pbid: DashboardCubit.get(context)
                                             .createId(6),
@@ -372,7 +375,7 @@ class CreateProductScreen2 extends StatelessWidget {
                                             .deliveryToggle,
                                         isDiscount: DashboardCubit.get(context)
                                             .discountToggle,
-                                        shippingPrice: costController.text,
+                                        shippingPrice: costController.text??'0',
                                         state: 'Pending',
                                       );
                                     }

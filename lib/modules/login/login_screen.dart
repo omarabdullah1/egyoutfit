@@ -12,6 +12,7 @@ import '../../translations/locale_keys.g.dart';
 import '../register/register_screen.dart';
 import 'cubit/cubit.dart';
 import 'cubit/states.dart';
+import 'forget_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key key}) : super(key: key);
@@ -30,7 +31,15 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ShopLoginCubit(),
+      create: (context) => ShopLoginCubit()
+        ..changeLanguageValue(
+          CacheHelper.getData(key: 'lang') != null
+              ? CacheHelper.getData(key: 'lang') == 'en'
+                  ? true
+                  : false
+              : true,
+          context,
+        ),
       child: BlocConsumer<ShopLoginCubit, ShopLoginStates>(
         listener: (context, state) async {
           if (ShopLoginCubit.get(context).isEnglish) {
@@ -82,7 +91,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Icon(Icons.language),
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: SizedBox(child: Text('Ar',style: TextStyle(color: Colors.black),),),
+                    child: SizedBox(
+                      child: Text(
+                        'Ar',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
                   ),
                   Switch(
                     value: ShopLoginCubit.get(context).isEnglish,
@@ -93,7 +107,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: SizedBox(child: Text('En',style: TextStyle(color: Colors.black),),),
+                    child: SizedBox(
+                      child: Text(
+                        'En',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -188,7 +207,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   fontSize: 13,
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                navigateTo(
+                                    context, const ForgetPasswordScreen());
+                              },
                               child: Text(
                                 LocaleKeys.loginScreen_forgetPassword.tr(),
                                 style:

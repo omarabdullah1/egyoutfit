@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:egyoutfit/modules/service_provider/seller_request/seller_user_chat.dart';
 import 'package:egyoutfit/translations/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -400,7 +401,9 @@ class SellerRequest extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: defaultButton(
-                      function: () {},
+                      function: () {
+                        navigateTo(context, SellerUserChat(orderModel: orderModel,));
+                      },
                       text: LocaleKeys.sellerRequestScreen_sendMessage.tr(),
                       icon: Icons.email_outlined,
                       isIcon: true,

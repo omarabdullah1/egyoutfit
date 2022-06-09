@@ -1,11 +1,13 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:egyoutfit/layout/shop_app/cubit/states.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+import '../../../models/message/MessageModel.dart';
 import '../../../models/orders/orders_model.dart';
 import '../../../models/promo/promo_model.dart';
 import '../../../models/shop_app/login_model.dart';
@@ -19,6 +21,7 @@ import '../../../modules/user/profile/user_profile.dart';
 import '../../../shared/components/components.dart';
 import '../../../shared/network/local/cache_helper.dart';
 import '../../../translations/locale_keys.g.dart';
+
 
 class ShopCubit extends Cubit<ShopStates> {
   ShopCubit() : super(ShopInitialState());
@@ -83,8 +86,16 @@ class ShopCubit extends Cubit<ShopStates> {
   bool is3XL = false;
   bool is4XL = false;
   bool is5XL = false;
+  bool isEnglish = CacheHelper.getData(key: 'lang') == 'en' ? true : false;
 
-  bool isEnglish = false;
+
+  bool isSaturday = false;
+  bool isSunday = false;
+  bool isMonday = false;
+  bool isTuesday = false;
+  bool isWednesday = false;
+  bool isThursday = false;
+  bool isFriday = false;
 
   List<Widget> bottomScreens = [
     const ProductsScreen(),
@@ -187,12 +198,20 @@ class ShopCubit extends Cubit<ShopStates> {
   var dropdownvalueEn = 'Shoes Fashion';
   var dropdownvalueAr = 'أحذية';
 
-  changeDropValue(value,context) {
-    EasyLocalization.of(context).locale.languageCode=='en'?dropdownvalueEn=value:dropdownvalueAr=value;
+  changeDropValue(value, context) {
+    EasyLocalization
+        .of(context)
+        .locale
+        .languageCode == 'en' ? dropdownvalueEn = value : dropdownvalueAr =
+        value;
   }
 
-  changeDropButtonValue(String newValue,context) {
-    EasyLocalization.of(context).locale.languageCode=='en'?dropdownvalueEn=newValue:dropdownvalueAr=newValue;
+  changeDropButtonValue(String newValue, context) {
+    EasyLocalization
+        .of(context)
+        .locale
+        .languageCode == 'en' ? dropdownvalueEn = newValue : dropdownvalueAr =
+        newValue;
     emit(ChangeDropState());
   }
 
@@ -554,7 +573,8 @@ class ShopCubit extends Cubit<ShopStates> {
       'orderImage': orderImage,
       'orderName': orderName,
     }).then((value) {
-      showToast(text: LocaleKeys.alerts_orderCreatedSuccessfully.tr(), state: ToastStates.success);
+      showToast(text: LocaleKeys.alerts_orderCreatedSuccessfully.tr(),
+          state: ToastStates.success);
       removeCart(cart[orderIndex]);
       getCart();
       FirebaseFirestore.instance
@@ -570,7 +590,8 @@ class ShopCubit extends Cubit<ShopStates> {
       emit(CreateOrderSuccessState());
     }).catchError((error) {
       log(error);
-      showToast(text: LocaleKeys.alerts_orderErrorCreatingOrder.tr(), state: ToastStates.error);
+      showToast(text: LocaleKeys.alerts_orderErrorCreatingOrder.tr(),
+          state: ToastStates.error);
       emit(CreateOrderErrorState());
     });
   }
@@ -679,7 +700,7 @@ class ShopCubit extends Cubit<ShopStates> {
     });
   }
 
-  changeUserPassword(newPassword,context) async {
+  changeUserPassword(newPassword, context) async {
     emit(UpdateStateLoadingShopState());
     await FirebaseAuth.instance.currentUser.updatePassword(newPassword).then((
         value) {
@@ -733,6 +754,227 @@ class ShopCubit extends Cubit<ShopStates> {
   changeLanguageValue(v, context) async {
     isEnglish = v;
     log(isEnglish.toString());
+    CacheHelper.putBoolean(key: 'lang', value: isEnglish);
     emit(ChangeLanguageState());
+  }
+
+  void sendMessages({
+    @required String receiverId,
+    @required String dateTime,
+    @required String text
+  }) {
+    MessageModel model = MessageModel(
+        senderId: loginModel.uId,
+        receiverId: receiverId,
+        dateTime: dateTime,
+        text: text
+    );
+
+    FirebaseFirestore.instance.
+    collection("users").
+    doc(loginModel.uId).
+    collection("chats").
+    doc(model.receiverId).
+    collection("messages").
+    add(model.toMap()).then((value) {
+      emit(ShopSendMessagesSuccessState());
+    }).catchError((error) {
+      emit(ShopSendMessagesErrorState());
+    });
+
+    FirebaseFirestore.instance.
+    collection("users").
+    doc(receiverId).
+    collection("chats").
+    doc(loginModel.uId).
+    collection("messages").
+    add(model.toMap()).then((value) {
+      emit(ShopSendMessagesSuccessState());
+    }).catchError((error) {
+      emit(ShopSendMessagesErrorState());
+    });
+  }
+
+  List<MessageModel> messages = [];
+
+  void getMessages({
+    @required String receiverId
+  }) {
+    FirebaseFirestore.instance.
+    collection("users").
+    doc(loginModel.uId).
+    collection("chats").
+    doc(receiverId).
+    collection("messages").orderBy('dateTime').
+    snapshots().
+    listen((event) {
+      messages = [];
+      for (var element in event.docs) {
+        messages.add(MessageModel.fromJson(element.data()));
+      }
+      emit(ShopGetAllMessagesSuccessState());
+    });
+  }
+
+  ProductSellerModel smodel;
+  MSellerModel mmodel;
+
+  getProductUid(String productId) {
+    var uid;
+    for (var element in productsID) {
+      if (element == productId) {
+        uid = products[productsID.indexOf(element)].uid;
+      }
+    }
+    FirebaseFirestore.instance.collection('users').doc(uid).get().then((value) {
+      smodel = ProductSellerModel.fromJson(value.data());
+      // log(uid.toString());
+      // log(value.data().toString());
+      // log(value.data()['uId'].toString());
+    });
+  }
+
+  getProductSellerModel(uid) async {
+    emit(GetSellerIDLoadingState());
+    await FirebaseFirestore.instance.collection('users').doc(uid).get().then((value) {
+      mmodel = MSellerModel.fromJson(value.data());
+      isSaturday = value.data()['sat'];
+      isSunday = value.data()['sun'];
+      isMonday = value.data()['mon'];
+      isTuesday = value.data()['tus'];
+      isWednesday = value.data()['wed'];
+      isThursday = value.data()['thu'];
+      isFriday = value.data()['fri'];
+    });
+    emit(GetSellerIDSuccessState());
+  }
+  Future<Position> getGeoLocationPosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      await Geolocator.openLocationSettings();
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+
+        return Future.error('Location permissions are denied');
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  }
+  var Address='';
+  Placemark place;
+  Future<void> GetAddressFromLatLong(Position position)async {
+    List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+    print(placemarks);
+    place = placemarks[0];
+    Address = '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
+    log(Address);
+  }
+
+}
+
+class ProductSellerModel {
+  String organization;
+  String uId;
+  String image;
+
+
+  ProductSellerModel({
+    @required this.uId,
+    @required this.organization,
+    @required this.image,
+  });
+
+  ProductSellerModel.fromJson(Map<String, dynamic> json) {
+    uId = json['uId'];
+    organization = json['organization'];
+    image = json['userImage'];
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'uId': uId,
+      'organization': organization,
+      'userImage': image,
+    };
+  }
+}
+
+class MSellerModel {
+  String firstName;
+  String secondName;
+  String area;
+  String city;
+  String organization;
+  String uId;
+  String image;
+  String address;
+  String posStreet;
+  String phone;
+  num lat;
+  num long;
+
+  MSellerModel({
+    @required this.uId,
+    @required this.organization,
+    @required this.image,
+    @required this.firstName,
+    @required this.secondName,
+    @required this.area,
+    @required this.city,
+    @required this.address,
+    @required this.posStreet,
+    @required this.lat,
+    @required this.long,
+    @required this.phone,
+  });
+
+  MSellerModel.fromJson(Map<String, dynamic> json) {
+    uId = json['uId'];
+    organization = json['organization'];
+    image = json['userImage'];
+    firstName = json['firstName'];
+    secondName = json['secondName'];
+    area = json['area'];
+    city = json['city'];
+    address = json['address'];
+    posStreet = json['posStreet'];
+    lat = json['latitude'];
+    long = json['longitude'];
+    phone = json['phone'];
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'uId': uId,
+      'organization': organization,
+      'userImage': image,
+      'firstName': firstName,
+      'secondName': secondName,
+      'area': area,
+      'city': city,
+      'address': address,
+      'posStreet': posStreet,
+      'latitude': lat,
+      'longitude': long,
+      'phone': phone,
+    };
   }
 }

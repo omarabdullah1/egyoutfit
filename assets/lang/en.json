@@ -132,7 +132,13 @@
     "orderCreatedSuccessfully": "Order Created Successfully",
     "orderErrorCreatingOrder": "Error Creating Order",
     "loginSuccessfully": "Login Successfully",
-    "errorInRegistration": "Error in registration(check if email repeated)"
+    "errorInRegistration": "Error in registration(check if email repeated)",
+    "yourProductWillBeDeleted": "Your Product will be deleted if you want to continue press ok.",
+    "warning": "Warning",
+    "cancel": " Cancel",
+    "ok": "OK",
+    "yourOfferWillBeDeleted": "Your Offer will be deleted if you want to continue press ok.",
+    "openOrdersToSee": "Open Orders to see your orders and chat with product sellers."
   },
   "sellerAcountScreen": {
     "account": "Account",
@@ -210,5 +216,13 @@
     "pleaseEnterDeliveryCost": "please enter delivery cost",
     "cost": "Cost",
     "submit": "Submit"
+  },
+  "chatScreen": {
+    "typeMessageHere": "type message here...",
+    "noMessagesYet": "No Messages Yet"
+  },
+  "forgetPasswordScreen": {
+    "pleaseEnterEmail": "Receive an email to reset your password.",
+    "resetPassword": "Reset Password"
   }
 }

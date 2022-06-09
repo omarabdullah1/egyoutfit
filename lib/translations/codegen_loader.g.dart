@@ -148,7 +148,13 @@ class CodegenLoader extends AssetLoader{
     "orderCreatedSuccessfully": "تم إنشاء الطلب بنجاح",
     "orderErrorCreatingOrder": "خطأ في إنشاء الطلب",
     "loginSuccessfully": "تم تسجيل الدخول بنجاح",
-    "errorInRegistration": "خطأ في التسجيل (تحقق من تكرار البريد الإلكتروني)"
+    "errorInRegistration": "خطأ في التسجيل (تحقق من تكرار البريد الإلكتروني)",
+    "yourProductWillBeDeleted": "سيتم حذف منتجك إذا كنت تريد الاستمرار بالضغط على موافق.",
+    "warning": "تحذير",
+    "cancel": "إلغاء",
+    "ok": "موافق",
+    "yourOfferWillBeDeleted": "سيتم حذف التخفيض إذا كنت تريد الاستمرار بالضغط على موافق.",
+    "openOrdersToSee": "افتح \"الطلبات\" لرؤية طلباتك والدردشة مع بائعي المنتجات"
   },
   "sellerAcountScreen": {
     "account": "الحساب",
@@ -226,6 +232,14 @@ class CodegenLoader extends AssetLoader{
     "pleaseEnterDeliveryCost": "الرجاء إدخال تكلفة التوصيل",
     "cost": "التكلفه",
     "submit": "إرسال"
+  },
+  "chatScreen": {
+    "typeMessageHere": "اكتب الرسالة هنا ...",
+    "noMessagesYet": "لا رسائل بعد"
+  },
+  "forgetPasswordScreen": {
+    "pleaseEnterEmail": "تلقي بريد إلكتروني لإعادة تعيين كلمة المرور الخاصة بك.",
+    "resetPassword": "إعادة تعيين كلمة المرور"
   }
 };
 static const Map<String,dynamic> en = {
@@ -362,7 +376,13 @@ static const Map<String,dynamic> en = {
     "orderCreatedSuccessfully": "Order Created Successfully",
     "orderErrorCreatingOrder": "Error Creating Order",
     "loginSuccessfully": "Login Successfully",
-    "errorInRegistration": "Error in registration(check if email repeated)"
+    "errorInRegistration": "Error in registration(check if email repeated)",
+    "yourProductWillBeDeleted": "Your Product will be deleted if you want to continue press ok.",
+    "warning": "Warning",
+    "cancel": " Cancel",
+    "ok": "OK",
+    "yourOfferWillBeDeleted": "Your Offer will be deleted if you want to continue press ok.",
+    "openOrdersToSee": "Open Orders to see your orders and chat with product sellers."
   },
   "sellerAcountScreen": {
     "account": "Account",
@@ -440,6 +460,14 @@ static const Map<String,dynamic> en = {
     "pleaseEnterDeliveryCost": "please enter delivery cost",
     "cost": "Cost",
     "submit": "Submit"
+  },
+  "chatScreen": {
+    "typeMessageHere": "type message here...",
+    "noMessagesYet": "No Messages Yet"
+  },
+  "forgetPasswordScreen": {
+    "pleaseEnterEmail": "Receive an email to reset your password.",
+    "resetPassword": "Reset Password"
   }
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ar": ar, "en": en};

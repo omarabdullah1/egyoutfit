@@ -175,10 +175,7 @@ class SellerSettingScreen extends StatelessWidget {
                                 onTap: () {
                                   navigateTo(
                                       context,
-                                      SellerProfileScreen(
-                                        logModel: DashboardCubit.get(context)
-                                            .loginModel,
-                                      ));
+                                      const SellerProfileScreen());
                                 },
                                 child: Container(
                                   height: 30,

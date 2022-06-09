@@ -26,3 +26,9 @@ class ShopChangePasswordVisibilityState extends ShopLoginStates {}
 class AppChangeModeState extends ShopLoginStates {}
 
 class AppChangeLanguageState extends ShopLoginStates {}
+
+class ResetPasswordLoadingState extends ShopLoginStates {}
+
+class ResetPasswordSuccessState extends ShopLoginStates {}
+
+class ResetPasswordErrorState extends ShopLoginStates {}

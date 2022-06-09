@@ -2,14 +2,19 @@ import 'package:conditional_builder/conditional_builder.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:egyoutfit/layout/shop_app/cubit/states.dart';
 import 'package:egyoutfit/modules/user/profile/user_orders_screen.dart';
+import 'package:egyoutfit/shared/network/local/cache_helper.dart';
 import 'package:egyoutfit/translations/locale_keys.g.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '../../../layout/shop_app/cubit/cubit.dart';
 import '../../../shared/components/components.dart';
 import 'change_password_screen.dart';
 import 'user_settings_screen.dart';
+
+var one = GlobalKey();
 
 class UserProfile extends StatelessWidget {
   const UserProfile({Key key}) : super(key: key);
@@ -17,7 +22,6 @@ class UserProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var model = ShopCubit.get(context).loginModel;
-
     return BlocConsumer<ShopCubit, ShopStates>(
       listener: (context, state) async {
         if (ShopCubit.get(context).isEnglish) {
@@ -27,6 +31,13 @@ class UserProfile extends StatelessWidget {
         }
       },
       builder: (context, state) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (CacheHelper.getData(key: 'showCase') == null ||
+              CacheHelper.getData(key: 'showCase') == false) {
+            ShowCaseWidget.of(context).startShowCase([one]);
+          }
+        });
+
         return ConditionalBuilder(
           condition: model.firstName != null,
           builder: (context) => SafeArea(
@@ -80,46 +91,99 @@ class UserProfile extends StatelessWidget {
                       child: Row(
                         children: [
                           Text(
-                            LocaleKeys.userAccountScreen_myEgyOutFitStoreAccount.tr(),
+                            LocaleKeys.userAccountScreen_myEgyOutFitStoreAccount
+                                .tr(),
                             style: const TextStyle(color: Colors.black54),
                           )
                         ],
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10.0, vertical: 8),
-                    child: Column(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            navigateTo(context, const OrdersScreen());
+                  (CacheHelper.getData(key: 'showCase') == null ||
+                          CacheHelper.getData(key: 'showCase') == false)
+                      ? Showcase(
+                          key: one,
+                          description: LocaleKeys.alerts_openOrdersToSee.tr(),
+                          disposeOnTap: true,
+                          onTargetClick: () {
+                            CacheHelper.putBoolean(
+                                key: 'showCase', value: true);
                           },
-                          child: Row(
+                          onToolTipClick: () {
+                            CacheHelper.putBoolean(
+                                key: 'showCase', value: true);
+                          },
+                          animationDuration: const Duration(milliseconds: 500),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 8),
+                            child: Column(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    navigateTo(context, const OrdersScreen());
+                                  },
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.shop,
+                                        color: Colors.black,
+                                      ),
+                                      const SizedBox(
+                                        width: 15,
+                                      ),
+                                      Text(
+                                        LocaleKeys.userAccountScreen_orders
+                                            .tr(),
+                                        style: const TextStyle(
+                                            color: Colors.black),
+                                      ),
+                                      const Spacer(),
+                                      const Icon(
+                                        Icons.navigate_next,
+                                        color: Colors.black,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 8),
+                          child: Column(
                             children: [
-                              const Icon(
-                                Icons.shop,
-                                color: Colors.black,
-                              ),
-                              const SizedBox(
-                                width: 15,
-                              ),
-                              Text(
-                                LocaleKeys.userAccountScreen_orders.tr(),
-                                style: const TextStyle(color: Colors.black),
-                              ),
-                              const Spacer(),
-                              const Icon(
-                                Icons.navigate_next,
-                                color: Colors.black,
+                              InkWell(
+                                onTap: () {
+                                  navigateTo(context, const OrdersScreen());
+                                },
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.shop,
+                                      color: Colors.black,
+                                    ),
+                                    const SizedBox(
+                                      width: 15,
+                                    ),
+                                    Text(
+                                      LocaleKeys.userAccountScreen_orders.tr(),
+                                      style:
+                                          const TextStyle(color: Colors.black),
+                                    ),
+                                    const Spacer(),
+                                    const Icon(
+                                      Icons.navigate_next,
+                                      color: Colors.black,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
                   Container(
                     color: Colors.grey[400],
                     // height: 30,
@@ -170,7 +234,8 @@ class UserProfile extends StatelessWidget {
                           child: Row(
                             children: [
                               Text(
-                                LocaleKeys.userAccountScreen_changePassword.tr(),
+                                LocaleKeys.userAccountScreen_changePassword
+                                    .tr(),
                                 style: const TextStyle(color: Colors.black),
                               ),
                               const Spacer(),
@@ -187,7 +252,7 @@ class UserProfile extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                             Text(
+                            Text(
                               LocaleKeys.userAccountScreen_changeLanguage.tr(),
                               style: const TextStyle(color: Colors.black),
                             ),

@@ -19,6 +19,12 @@ class UpdateStateSuccessDashboardState extends DashboardStates {}
 
 class UpdateStateErrorDashboardState extends DashboardStates {}
 
+class UpdateLocationLoadingDashboardState extends DashboardStates {}
+
+class UpdateLocationSuccessDashboardState extends DashboardStates {}
+
+class UpdateLocationErrorDashboardState extends DashboardStates {}
+
 class ChangeStateDashboardState extends DashboardStates {}
 
 class ChangeCreateProductDropDashboardState extends DashboardStates {}
@@ -73,6 +79,8 @@ class DashboardLogoutState extends DashboardStates {}
 
 class ChangeSizedState extends DashboardStates {}
 
+class ChangeDayState extends DashboardStates {}
+
 class ChangeCarouselState extends DashboardStates {}
 
 class ChangeToggleValueState extends DashboardStates {}
@@ -92,6 +100,12 @@ class GetPromoCodesLoadingState extends DashboardStates {}
 class GetPromoCodesSuccessState extends DashboardStates {}
 
 class GetPromoCodesErrorState extends DashboardStates {}
+
+class SellerSendMessagesSuccessState extends DashboardStates {}
+
+class SellerSendMessagesErrorState extends DashboardStates {}
+
+class SellerGetAllMessagesSuccessState extends DashboardStates {}
 
 
 class LoadingState extends DashboardStates {}

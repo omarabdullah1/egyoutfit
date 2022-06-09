@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:egyoutfit/translations/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../layout/dashboard_layout/cubit/cubit.dart';
@@ -48,26 +50,24 @@ class SellerProduct extends StatelessWidget {
                 IconButton(
                     onPressed: () {
                       AwesomeDialog(
-                        context: context,
-                        dialogType: DialogType.WARNING,
-                        animType: AnimType.BOTTOMSLIDE,
-                        title: 'Warning',
-                        desc:
-                        'Your Product will be deleted if you want to continue press ok.',
-                        btnOkOnPress: () {
-                          DashboardCubit.get(context).removeProduct(
-                              DashboardCubit
-                                  .get(context)
-                                  .productsID[index]);
-                          DashboardCubit.get(context).getAllProducts();
-                          DashboardCubit.get(context).getAllOrdered(context);
-                          Navigator.pop(context);
-                          // Navigator.of(context).pop();
-                        },
-                        btnCancelOnPress: (){
-                          Navigator.pop(context);
-                        }
-                      ).show();
+                          context: context,
+                          dialogType: DialogType.WARNING,
+                          animType: AnimType.BOTTOMSLIDE,
+                          title: LocaleKeys.alerts_warning.tr(),
+                          desc: LocaleKeys.alerts_yourProductWillBeDeleted.tr(),
+                          btnOkOnPress: () {
+                            DashboardCubit.get(context).removeProduct(
+                                DashboardCubit.get(context).productsID[index]);
+                            DashboardCubit.get(context).getAllProducts();
+                            DashboardCubit.get(context).getAllOrdered(context);
+                            Navigator.pop(context);
+                            // Navigator.of(context).pop();
+                          },
+                          btnCancelText: LocaleKeys.alerts_cancel.tr(),
+                          btnOkText: LocaleKeys.alerts_ok.tr(),
+                          btnCancelOnPress: () {
+                            Navigator.pop(context);
+                          }).show();
                     },
                     icon: const Icon(Icons.delete)),
                 IconButton(
@@ -89,7 +89,6 @@ class SellerProduct extends StatelessWidget {
                             pIs3XL: models.is3XL,
                             pIs4XL: models.is4XL,
                             pIs5XL: models.is5XL,
-                            // pIs5XL: models.,
                             pId: modelId,
                             pDiscount: models.discount,
                           ));
@@ -103,10 +102,7 @@ class SellerProduct extends StatelessWidget {
                 child: Column(
                   children: [
                     Container(
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width - 20.0,
+                      width: MediaQuery.of(context).size.width - 20.0,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15.0),
                           border: Border.all(width: 2.0, color: Colors.black)),
@@ -116,8 +112,8 @@ class SellerProduct extends StatelessWidget {
                             items: models.image.isEmpty
                                 ? const [Icon(Icons.image)]
                                 : models.image
-                                .map((e) => Image.network(e))
-                                .toList(),
+                                    .map((e) => Image.network(e))
+                                    .toList(),
                             options: CarouselOptions(
                               onPageChanged: (index, reason) {
                                 DashboardCubit.get(context)
@@ -133,7 +129,7 @@ class SellerProduct extends StatelessWidget {
                               autoPlay: false,
                               autoPlayInterval: const Duration(seconds: 3),
                               autoPlayAnimationDuration:
-                              const Duration(seconds: 1),
+                                  const Duration(seconds: 1),
                               autoPlayCurve: Curves.fastOutSlowIn,
                               scrollDirection: Axis.horizontal,
                             ),
@@ -150,13 +146,17 @@ class SellerProduct extends StatelessWidget {
                                     child: FloatingActionButton(
                                       heroTag: 'uniqueTa',
                                       onPressed: () {
-                                        navigateTo(context,
-                                             EditProductImageScreen(
+                                        navigateTo(
+                                            context,
+                                            EditProductImageScreen(
                                               pId: modelId,
                                               pListImage: models.image,
                                             ));
                                       },
-                                      child: const Icon(Icons.edit,size: 20.0,),
+                                      child: const Icon(
+                                        Icons.edit,
+                                        size: 20.0,
+                                      ),
                                     )),
                               )),
                         ],
@@ -164,8 +164,7 @@ class SellerProduct extends StatelessWidget {
                     ),
                     DotsIndicator(
                       dotsCount: models.image.length,
-                      position: DashboardCubit
-                          .get(context)
+                      position: DashboardCubit.get(context)
                           .productCaroIndex
                           .toDouble(),
                       decorator: DotsDecorator(
@@ -225,7 +224,7 @@ class SellerProduct extends StatelessWidget {
                               height: 30.0,
                               child: Center(
                                   child:
-                                  Text('Discount: % ${models.discount}')))
+                                      Text('Discount: % ${models.discount}')))
                         ],
                       ),
                     ),
@@ -241,15 +240,15 @@ class SellerProduct extends StatelessWidget {
                     ),
                     models.isShipping
                         ? Padding(
-                      padding: const EdgeInsets.only(
-                          top: 8.0, right: 8.0, left: 8.0),
-                      child: Row(
-                        children: [
-                          const Text('Delivery:  '),
-                          Text(models.shippingPrice + ' LE'),
-                        ],
-                      ),
-                    )
+                            padding: const EdgeInsets.only(
+                                top: 8.0, right: 8.0, left: 8.0),
+                            child: Row(
+                              children: [
+                                const Text('Delivery:  '),
+                                Text(models.shippingPrice + ' LE'),
+                              ],
+                            ),
+                          )
                         : const SizedBox(),
                     Padding(
                       padding: const EdgeInsets.only(

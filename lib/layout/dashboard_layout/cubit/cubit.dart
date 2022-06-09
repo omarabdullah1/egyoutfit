@@ -8,7 +8,10 @@ import 'package:egyoutfit/layout/dashboard_layout/cubit/states.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../models/message/MessageModel.dart';
 import '../../../models/orders/orders_model.dart';
 import '../../../models/promo/promo_model.dart';
 import '../../../models/shop_app/login_model.dart';
@@ -150,6 +153,15 @@ class DashboardCubit extends Cubit<DashboardStates> {
   bool is3XL = false;
   bool is4XL = false;
   bool is5XL = false;
+
+  bool isSaturday = false;
+  bool isSunday = false;
+  bool isMonday = false;
+  bool isTuesday = false;
+  bool isWednesday = false;
+  bool isThursday = false;
+  bool isFriday = false;
+
   bool promoToggle = false;
   bool discountToggle = false;
   bool deliveryToggle = false;
@@ -157,7 +169,7 @@ class DashboardCubit extends Cubit<DashboardStates> {
   bool stateChanged = false;
   bool isUpdate = false;
   bool isDialOpen = false;
-  bool isEnglish = true;
+  bool isEnglish = CacheHelper.getData(key: 'lang') == 'en'? true : false;
 
   List<Widget> bottomScreens = [
     const DashboardScreen(),
@@ -198,6 +210,13 @@ class DashboardCubit extends Cubit<DashboardStates> {
           .get()
           .then((value) async {
         loginModel = ShopLoginModel.fromJson(value.data());
+        isSaturday=loginModel.sat;
+        isSunday=loginModel.sun;
+        isMonday=loginModel.mon;
+        isTuesday=value.data()['tus'];
+        isWednesday=loginModel.wed;
+        isThursday=loginModel.thu;
+        isFriday=loginModel.fri;
 
         emit(DashboardLoginSuccessState(loginModel));
       }).catchError((error) {
@@ -215,17 +234,31 @@ class DashboardCubit extends Cubit<DashboardStates> {
     phone,
     address,
     organization,
+    sat,
+    sun,
+    mon,
+    tus,
+    wed,
+    thu,
+    fri,
     image,
     context,
-  }) {
+  }) async {
     emit(UpdateStateLoadingDashboardState());
     if (image != null) {
-      FirebaseFirestore.instance.collection('users').doc(uid).update({
+      await FirebaseFirestore.instance.collection('users').doc(uid).update({
         'address': address,
         'firstName': name,
         'phone': phone,
         'organization': organization,
         'image': image,
+        'sat': sat,
+        'sun': sun,
+        'mon': mon,
+        'tus': tus,
+        'wed': wed,
+        'thu': thu,
+        'fri': fri,
       }).then((value) async {
         await userLogin(
             context: context,
@@ -241,11 +274,18 @@ class DashboardCubit extends Cubit<DashboardStates> {
         emit(UpdateStateErrorDashboardState());
       });
     } else {
-      FirebaseFirestore.instance.collection('users').doc(uid).update({
+      await FirebaseFirestore.instance.collection('users').doc(uid).update({
         'address': address,
         'firstName': name,
         'phone': phone,
         'organization': organization,
+        'sat': sat,
+        'sun': sun,
+        'mon': mon,
+        'tus': tus,
+        'wed': wed,
+        'thu': thu,
+        'fri': fri,
       }).then((value) async {
         await userLogin(
             context: context,
@@ -262,6 +302,24 @@ class DashboardCubit extends Cubit<DashboardStates> {
     }
   }
 
+  updateLocation({
+    uid,
+    latitude,
+    longitude,
+    posStreet,
+}){
+    emit(UpdateLocationLoadingDashboardState());
+    FirebaseFirestore.instance.collection('users').doc(uid).update({
+      'posStreet': posStreet,
+      'longitude': longitude,
+      'latitude': latitude,
+    }).then((value) async {
+      emit(UpdateLocationSuccessDashboardState());
+    }).catchError((err) {
+      log(err.toString());
+      emit(UpdateLocationErrorDashboardState());
+    });
+  }
   getOffers() {
     FirebaseFirestore.instance.collection('banners').get().then((value) {
       for (var element in value.docs) {
@@ -365,9 +423,9 @@ class DashboardCubit extends Cubit<DashboardStates> {
     emit(ChangeDropRequestState());
   }
 
-  changeOrderState(value, id, dropVal, context) {
+  changeOrderState(value, id, dropVal, context) async {
     emit(UpdateStateLoadingDashboardState());
-    FirebaseFirestore.instance.collection('orders').doc(id).update({
+    await FirebaseFirestore.instance.collection('orders').doc(id).update({
       'pState': value,
     }).then((val) {
       log(value.toString());
@@ -379,7 +437,7 @@ class DashboardCubit extends Cubit<DashboardStates> {
         requestDropDownValueEn,
       );
       getAllOrdered(context);
-      // DashboardCubit.get(context).dropDownValue=widget.dropValue;
+      // dropDownValue=widget.dropValue;
       changeDropButtonValue(dropVal,context);
       lastDropDownValueEn = dropVal;
       emit(UpdateStateSuccessDashboardState());
@@ -446,7 +504,7 @@ class DashboardCubit extends Cubit<DashboardStates> {
     @required String state,
   }) async {
     emit(CreateProductLoadingState());
-    var create = FirebaseFirestore.instance.collection('products').doc();
+    var create = await FirebaseFirestore.instance.collection('products').doc();
     create.set({
       'category': category,
       'description': description,
@@ -600,7 +658,7 @@ class DashboardCubit extends Cubit<DashboardStates> {
     final pickedFile = await picker.pickImage(
         source: isCamera ? ImageSource.camera : ImageSource.gallery);
     if (pickedFile != null) {
-      image = pickedFile.path;
+      listImage.add(pickedFile.path);
       emit(SuccessPickImageState());
     } else {
       log('No image selected.');
@@ -669,7 +727,7 @@ class DashboardCubit extends Cubit<DashboardStates> {
     emit(LoadingUploadImageState());
     firebaseLinkEdit = [];
     for (var element in listImage) {
-      firebase_storage.FirebaseStorage.instance
+      await firebase_storage.FirebaseStorage.instance
           .ref()
           .child('products/${Uri.file(element).pathSegments.last}')
           .putFile(File(element))
@@ -707,11 +765,18 @@ class DashboardCubit extends Cubit<DashboardStates> {
     phone,
     address,
     organization,
+    sat,
+    sun,
+    mon,
+    tus,
+    wed,
+    thu,
+    fri,
     context,
   }) async {
     emit(LoadingUploadImageState());
     firebaseImagesEdit = '';
-    firebase_storage.FirebaseStorage.instance
+    await firebase_storage.FirebaseStorage.instance
         .ref()
         .child('products/${Uri.file(image).pathSegments.last}')
         .putFile(File(image))
@@ -729,6 +794,13 @@ class DashboardCubit extends Cubit<DashboardStates> {
               address: address,
               image: firebaseImagesEdit,
               context: context,
+              sat: sat,
+              sun: sun,
+              mon: mon,
+              tus: tus,
+              wed: wed,
+              thu: thu,
+              fri: fri,
             );
           })
           .whenComplete(() => emit(SuccessUploadImageState()))
@@ -1069,6 +1141,31 @@ class DashboardCubit extends Cubit<DashboardStates> {
     }
   }
 
+  changeDate(day) {
+    if (day == 'isSaturday') {
+      isSaturday = !isSaturday;
+      emit(ChangeDayState());
+    } else if (day == 'isSunday') {
+      isSunday = !isSunday;
+      emit(ChangeDayState());
+    } else if (day == 'isMonday') {
+      isMonday = !isMonday;
+      emit(ChangeDayState());
+    } else if (day == 'isTuesday') {
+      isTuesday = !isTuesday;
+      emit(ChangeDayState());
+    } else if (day == 'isWednesday') {
+      isWednesday = !isWednesday;
+      emit(ChangeDayState());
+    } else if (day == 'isThursday') {
+      isThursday = !isThursday;
+      emit(ChangeDayState());
+    } else if (day == 'isFriday') {
+      isFriday = !isFriday;
+      emit(ChangeDayState());
+    }
+  }
+
   removeProduct(pid) {
     List id = [];
     if (allProductsID.contains(pid)) {
@@ -1171,6 +1268,147 @@ class DashboardCubit extends Cubit<DashboardStates> {
   changeLanguageValue(v, context) async {
     isEnglish = v;
     log(isEnglish.toString());
+    CacheHelper.putBoolean(key: 'lang', value: isEnglish);
     emit(ChangeLanguageState());
+  }
+
+  void sendMessages({
+    @required String receiverId,
+    @required String dateTime,
+    @required String text
+  }){
+    MessageModel model=MessageModel(
+        senderId:loginModel.uId,
+        receiverId: receiverId,
+        dateTime: dateTime,
+        text: text
+    );
+
+    FirebaseFirestore.instance.
+    collection("users").
+    doc(loginModel.uId).
+    collection("chats").
+    doc(model.receiverId).
+    collection("messages").
+    add(model.toMap()).then((value){
+      emit(SellerSendMessagesSuccessState());
+    }).catchError((error){
+      emit(SellerSendMessagesErrorState());
+    });
+
+    FirebaseFirestore.instance.
+    collection("users").
+    doc(receiverId).
+    collection("chats").
+    doc(loginModel.uId).
+    collection("messages").
+    add(model.toMap()).then((value){
+      emit(SellerSendMessagesSuccessState());
+    }).catchError((error){
+      emit(SellerSendMessagesErrorState());
+    });
+  }
+
+  List<MessageModel> messages=[];
+
+  void getMessages({
+    @required String receiverId
+  }){
+    FirebaseFirestore.instance.
+    collection("users").
+    doc(loginModel.uId).
+    collection("chats").
+    doc(receiverId).
+    collection("messages").orderBy('dateTime').
+    snapshots().
+    listen((event) {
+      messages=[];
+      for (var element in event.docs) {
+        messages.add(MessageModel.fromJson(element.data()));
+      }
+      emit(SellerGetAllMessagesSuccessState());
+    });
+  }
+
+  ProductUserModel umodel;
+
+  getUid(String uid) async {
+    // var uid;
+    // for(var element in productsID){
+    //   if(element==productId){
+    //     uid= products[productsID.indexOf(element)].uid;
+    //   }
+    // }
+    await  FirebaseFirestore.instance.collection('users').doc(uid).get().then((value){
+      umodel = ProductUserModel.fromJson(value.data());
+      // log(uid.toString());
+      // log(value.data().toString());
+      // log(value.data()['uId'].toString());
+    });
+  }
+
+  Future<Position> getGeoLocationPosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      await Geolocator.openLocationSettings();
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+
+        return Future.error('Location permissions are denied');
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  }
+  var Address='';
+  Placemark place;
+  Future<void> GetAddressFromLatLong(Position position)async {
+    List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+    print(placemarks);
+    place = placemarks[0];
+    Address = '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
+    log(Address);
+  }
+
+}
+class ProductUserModel {
+  String firstName;
+  String secondName;
+  String uId;
+  String image;
+  ProductUserModel({
+    @required this.uId,
+    @required this.firstName,
+    @required this.secondName,
+    @required this.image,
+  });
+  ProductUserModel.fromJson(Map<String, dynamic> json) {
+    uId = json['uId'];
+    firstName = json['firstName'];
+    secondName = json['secondName'];
+  }
+  Map<String, dynamic> toMap() {
+    return {
+      'uId': uId,
+      'firstName': firstName,
+      'secondName': secondName,
+    };
   }
 }

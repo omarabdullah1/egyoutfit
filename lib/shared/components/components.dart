@@ -283,7 +283,7 @@ Widget categoryButton({
           Text(
             text,
             style: const TextStyle(
-                fontSize: 15.0,
+                fontSize: 14.0,
                 fontWeight: FontWeight.bold,
                 color: Colors.white),
           ),
@@ -1298,7 +1298,7 @@ class _BuildAllProductsState extends State<BuildAllProducts> {
                                                             'en'
                                                         ? 'Cancelled'
                                                         : 'ملغي'
-                                                    : Colors.white,
+                                                    : '',
                                         overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
                                           color: Colors.white,
@@ -1531,7 +1531,7 @@ Widget buildRequests({
                                                 : model[index]
                                                     .image
                                                     .map(
-                                                        (e) => Image.network(e))
+                                                        (e) => Image.network(e,width: 110.0,))
                                                     .toList(),
                                             options: CarouselOptions(
                                               aspectRatio: 1.0,
@@ -2603,7 +2603,7 @@ Widget buildSizeCircle(
       child: CircleAvatar(
         child: Text(
           size,
-          style: const TextStyle(fontSize: 14.0),
+          style: const TextStyle(fontSize: 14.0,fontWeight: FontWeight.bold),
         ),
         radius: innerSize,
         backgroundColor: Colors.white,

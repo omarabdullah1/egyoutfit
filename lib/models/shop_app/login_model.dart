@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ShopLoginModel
-{
+class ShopLoginModel {
   String firstName;
   String secondName;
   String email;
@@ -14,6 +13,14 @@ class ShopLoginModel
   bool isSeller;
   List cart;
   List favorites;
+  bool sat;
+  bool sun;
+  bool mon;
+  bool tus;
+  bool wed;
+  bool thu;
+  bool fri;
+
   ShopLoginModel({
     @required this.firstName,
     @required this.secondName,
@@ -27,7 +34,15 @@ class ShopLoginModel
     @required this.favorites,
     @required this.image,
     @required this.organization,
+    @required this.sat,
+    @required this.sun,
+    @required this.mon,
+    @required this.tus,
+    @required this.wed,
+    @required this.thu,
+    @required this.fri,
   });
+
   ShopLoginModel.fromJson(Map<String, dynamic> json) {
     email = json['email'];
     phone = json['phone'];
@@ -40,8 +55,15 @@ class ShopLoginModel
     cart = json['cart'];
     favorites = json['favorites'];
     image = json['userImage'];
-    organization = json['organization'];
+    sat = json['sat'];
+    sun = json['sun'];
+    mon = json['mon'];
+    thu = json['tus'];
+    wed = json['wed'];
+    thu = json['thu'];
+    fri = json['fri'];
   }
+
   Map<String, dynamic> toMap() {
     return {
       'firstName': firstName,
@@ -55,7 +77,13 @@ class ShopLoginModel
       'cart': cart,
       'favorites': favorites,
       'userImage': image,
-      'organization': organization,
+      'sat': sat,
+      'sun': sun,
+      'mon': mon,
+      'tus': tus,
+      'wed': wed,
+      'thu': thu,
+      'fri': fri,
     };
   }
 }

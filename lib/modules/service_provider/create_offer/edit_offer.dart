@@ -44,9 +44,8 @@ class EditOfferScreen extends StatelessWidget {
                       context: context,
                       dialogType: DialogType.WARNING,
                       animType: AnimType.BOTTOMSLIDE,
-                      title: 'Warning',
-                      desc:
-                          'Your Offer will be deleted if you want to continue press ok.',
+                      title: LocaleKeys.alerts_warning.tr(),
+                      desc: LocaleKeys.alerts_yourOfferWillBeDeleted.tr(),
                       btnOkOnPress: () async {
                         await DashboardCubit.get(context).deletePromo(id);
                         await DashboardCubit.get(context).getPromoCodes();
@@ -55,6 +54,8 @@ class EditOfferScreen extends StatelessWidget {
                         Navigator.pop(context);
                         // Navigator.of(context).pop();
                       },
+                      btnOkText: LocaleKeys.alerts_ok.tr(),
+                      btnCancelText: LocaleKeys.alerts_cancel.tr(),
                       btnCancelOnPress: () {
                         // Navigator.pop(context);
                       }).show();

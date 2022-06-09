@@ -39,7 +39,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           phoneController.text = model.phone;
         }
         return Scaffold(
-          appBar: AppBar(),
+          appBar: AppBar(
+            leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.arrow_back_ios)),
+          ),
           body: ConditionalBuilder(
             condition: ShopCubit.get(context).loginModel != null,
             builder: (context) => Padding(

@@ -151,3 +151,25 @@ class GetPromoCodesLoadingState extends ShopStates {}
 class GetPromoCodesSuccessState extends ShopStates {}
 
 class GetPromoCodesErrorState extends ShopStates {}
+
+class ShopSendMessagesSuccessState extends ShopStates {}
+
+class ShopSendMessagesErrorState extends ShopStates {}
+
+class ShopGetAllMessagesSuccessState extends ShopStates {}
+
+class LoadingPickImageState extends ShopStates {}
+
+class SuccessPickImageState extends ShopStates {}
+
+class ErrorPickImageState extends ShopStates {}
+
+class LoadingUploadImageState extends ShopStates {}
+
+class SuccessUploadImageState extends ShopStates {}
+
+class ErrorUploadImageState extends ShopStates {}
+
+class GetSellerIDLoadingState extends ShopStates {}
+
+class GetSellerIDSuccessState extends ShopStates {}

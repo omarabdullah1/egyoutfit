@@ -5,6 +5,8 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:map_launcher/map_launcher.dart';
 import '../../../layout/shop_app/cubit/cubit.dart';
 import '../../../layout/shop_app/cubit/states.dart';
 import '../../../models/shop_app/products_model.dart';
@@ -15,7 +17,12 @@ import '../../../translations/locale_keys.g.dart';
 
 class HomeSelectedProductScreen extends StatefulWidget {
   const HomeSelectedProductScreen(
-      {Key key, this.productIndex, this.mmodel, this.mmodelID,this.category,this.color})
+      {Key key,
+      this.productIndex,
+      this.mmodel,
+      this.mmodelID,
+      this.category,
+      this.color})
       : super(key: key);
   final ShopProductsModel mmodel;
   final List mmodelID;
@@ -31,6 +38,7 @@ class HomeSelectedProductScreen extends StatefulWidget {
 class _HomeSelectedProductScreenState extends State<HomeSelectedProductScreen> {
   @override
   void initState() {
+    // ShopCubit.get(context).getProductSellerModel(widget.mmodel.uid);
     ShopCubit.get(context).isS = false;
     ShopCubit.get(context).isM = false;
     ShopCubit.get(context).isL = false;
@@ -41,16 +49,25 @@ class _HomeSelectedProductScreenState extends State<HomeSelectedProductScreen> {
     ShopCubit.get(context).is5XL = false;
     super.initState();
   }
+
+  @override
+  Future<void> didChangeDependencies() async {
+    await ShopCubit.get(context).getProductSellerModel(widget.mmodel.uid);
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ShopCubit, ShopStates>(
       listener: (context, state) {
         if (state is AddCartSuccessState) {
           showToast(
-              text: LocaleKeys.alerts_productAddedToYourCart.tr(), state: ToastStates.success);
+              text: LocaleKeys.alerts_productAddedToYourCart.tr(),
+              state: ToastStates.success);
         } else if (state is UpdateCartSuccessState) {
           showToast(
-              text:LocaleKeys.alerts_productAddedToYourCart.tr(), state: ToastStates.success);
+              text: LocaleKeys.alerts_productAddedToYourCart.tr(),
+              state: ToastStates.success);
         } else if (state is RemoveCartSuccessState) {
           showToast(
               text: 'Product removed from your cart', state: ToastStates.error);
@@ -66,27 +83,39 @@ class _HomeSelectedProductScreenState extends State<HomeSelectedProductScreen> {
       },
       builder: (context, state) {
         return ConditionalBuilder(
-          condition: ShopCubit.get(context).products != null,
-          fallback: (context) => const Center(
-            child: CircularProgressIndicator(),
-          ),
-          builder: (context) => Scaffold(
-            backgroundColor: const Color(0xffF7F7F7),
-            appBar: AppBar(
-              leading: IconButton(
-                onPressed: () {
-                  ShopCubit.get(context).productCaroIndex = 0;
-                  Navigator.pop(context);
-                },
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  // size: 14.0,
-                  color: Colors.black,
-                ),
-              ),
+          condition: state is! GetSellerIDLoadingState,
+          fallback: (context) => const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
             ),
-            body: builderWidget(context),
           ),
+          builder: (context) {
+            log(widget.mmodel.uid.toString());
+            log(ShopCubit.get(context).mmodel.organization.toString());
+            return ConditionalBuilder(
+              condition: ShopCubit.get(context).products != null,
+              fallback: (context) => const Center(
+                child: CircularProgressIndicator(),
+              ),
+              builder: (context) => Scaffold(
+                backgroundColor: const Color(0xffF7F7F7),
+                appBar: AppBar(
+                  leading: IconButton(
+                    onPressed: () {
+                      ShopCubit.get(context).productCaroIndex = 0;
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back_ios,
+                      // size: 14.0,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                body: builderWidget(context),
+              ),
+            );
+          },
         );
       },
     );
@@ -159,7 +188,8 @@ class _HomeSelectedProductScreenState extends State<HomeSelectedProductScreen> {
                                   horizontal: 5.0,
                                 ),
                                 child: Text(
-                                  LocaleKeys.usersHomeScreen_productDiscount.tr(),
+                                  LocaleKeys.usersHomeScreen_productDiscount
+                                      .tr(),
                                   style: const TextStyle(
                                     fontSize: 14.0,
                                     color: Colors.white,
@@ -231,6 +261,60 @@ class _HomeSelectedProductScreenState extends State<HomeSelectedProductScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(
+                      height: 110.0,
+                      child: InkWell(
+                        key: Key(widget.mmodel.name),
+                        onTap: () {
+                          navigateTo(
+                            context,
+                            const OpenSellerScreen(),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 40.0,
+                              backgroundImage: NetworkImage(
+                                ShopCubit.get(context).mmodel.image,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 20.0,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  ShopCubit.get(context).mmodel.organization,
+                                  style: const TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  ShopCubit.get(context).mmodel.city,
+                                  style: const TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  ShopCubit.get(context).mmodel.area,
+                                  style: const TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Spacer(),
+                            const Icon(Icons.arrow_forward_ios),
+                          ],
+                        ),
+                      ),
+                    ),
                     Row(
                       children: [
                         Expanded(
@@ -249,17 +333,29 @@ class _HomeSelectedProductScreenState extends State<HomeSelectedProductScreen> {
                               ),
                               Row(
                                 children: [
-                                  Text(LocaleKeys.usersHomeScreen_productDelivery.tr()+':  '),
-                                  Text(widget.mmodel.isShipping?widget.mmodel.shippingPrice.toString()+' LE':'Not Available'),
+                                  Text(LocaleKeys
+                                          .usersHomeScreen_productDelivery
+                                          .tr() +
+                                      ':  '),
+                                  Text(widget.mmodel.isShipping
+                                      ? widget.mmodel.shippingPrice.toString() +
+                                          ' LE'
+                                      : 'Not Available'),
                                 ],
                               ),
-                              widget.mmodel.discount!=0?Text(
-                                LocaleKeys.usersHomeScreen_productDiscount.tr()+':  '+widget.mmodel.discount.toString()+' %',
-                                style: const TextStyle(
-                                  fontSize: 16.0,
-                                  color: defaultColor,
-                                ),
-                              ):const SizedBox(),
+                              widget.mmodel.discount != 0
+                                  ? Text(
+                                      LocaleKeys.usersHomeScreen_productDiscount
+                                              .tr() +
+                                          ':  ' +
+                                          widget.mmodel.discount.toString() +
+                                          ' %',
+                                      style: const TextStyle(
+                                        fontSize: 16.0,
+                                        color: defaultColor,
+                                      ),
+                                    )
+                                  : const SizedBox(),
                             ],
                           ),
                         ),
@@ -270,8 +366,7 @@ class _HomeSelectedProductScreenState extends State<HomeSelectedProductScreen> {
                               Container(
                                 decoration: BoxDecoration(
                                   color: widget.color,
-                                  borderRadius:
-                                  BorderRadius.circular(14.0),
+                                  borderRadius: BorderRadius.circular(14.0),
                                 ),
                                 width: 100.0,
                                 height: 30.0,
@@ -282,21 +377,22 @@ class _HomeSelectedProductScreenState extends State<HomeSelectedProductScreen> {
                                         ))),
                               ),
                               Text(
-                                '\$${widget.mmodel.price-((widget.mmodel.price/100)*widget.mmodel.discount)}',
+                                '\$${widget.mmodel.price - ((widget.mmodel.price / 100) * widget.mmodel.discount)}',
                                 style: const TextStyle(
                                   fontSize: 16.0,
                                   color: defaultColor,
                                 ),
                               ),
-                              widget.mmodel.discount != 0?
-                              Text(
-                                '\$${widget.mmodel.price}',
-                                style: const TextStyle(
-                                  fontSize: 16.0,
-                                  color: Colors.grey,
-                                  decoration: TextDecoration.lineThrough,
-                                ),
-                              ): const SizedBox(),
+                              widget.mmodel.discount != 0
+                                  ? Text(
+                                      '\$${widget.mmodel.price}',
+                                      style: const TextStyle(
+                                        fontSize: 16.0,
+                                        color: Colors.grey,
+                                        decoration: TextDecoration.lineThrough,
+                                      ),
+                                    )
+                                  : const SizedBox(),
                             ],
                           ),
                         ),
@@ -318,67 +414,67 @@ class _HomeSelectedProductScreenState extends State<HomeSelectedProductScreen> {
                       children: [
                         widget.mmodel.isS
                             ? GestureDetector(
-                            child: buildSizeCircle(
-                                size: 'S',
-                                state: ShopCubit.get(context).isS),
-                            onTap: () {
-                              ShopCubit.get(context).changeSize('isS');
-                            })
+                                child: buildSizeCircle(
+                                    size: 'S',
+                                    state: ShopCubit.get(context).isS),
+                                onTap: () {
+                                  ShopCubit.get(context).changeSize('isS');
+                                })
                             : buildSizeCircle(
-                          size: 'S',
-                          state: true,
-                          color: Colors.grey[300],
-                        ),
+                                size: 'S',
+                                state: true,
+                                color: Colors.grey[300],
+                              ),
                         const SizedBox(
                           width: 10.0,
                         ),
                         widget.mmodel.isM
                             ? GestureDetector(
-                            child: buildSizeCircle(
-                                size: 'M',
-                                state: ShopCubit.get(context).isM),
-                            onTap: () {
-                              ShopCubit.get(context).changeSize('isM');
-                            })
+                                child: buildSizeCircle(
+                                    size: 'M',
+                                    state: ShopCubit.get(context).isM),
+                                onTap: () {
+                                  ShopCubit.get(context).changeSize('isM');
+                                })
                             : buildSizeCircle(
-                          size: 'M',
-                          state: true,
-                          color: Colors.grey[300],
-                        ),
+                                size: 'M',
+                                state: true,
+                                color: Colors.grey[300],
+                              ),
                         const SizedBox(
                           width: 10.0,
                         ),
                         widget.mmodel.isL
                             ? GestureDetector(
-                          child: buildSizeCircle(
-                              size: 'L',
-                              state: ShopCubit.get(context).isL),
-                          onTap: () {
-                            ShopCubit.get(context).changeSize('isL');
-                          },
-                        )
+                                child: buildSizeCircle(
+                                    size: 'L',
+                                    state: ShopCubit.get(context).isL),
+                                onTap: () {
+                                  ShopCubit.get(context).changeSize('isL');
+                                },
+                              )
                             : buildSizeCircle(
-                          size: 'L',
-                          state: true,
-                          color: Colors.grey[300],
-                        ),
+                                size: 'L',
+                                state: true,
+                                color: Colors.grey[300],
+                              ),
                         const SizedBox(
                           width: 10.0,
                         ),
                         widget.mmodel.isXL
                             ? GestureDetector(
-                          child: buildSizeCircle(
-                              size: 'XL',
-                              state: ShopCubit.get(context).isXL),
-                          onTap: () {
-                            ShopCubit.get(context).changeSize('isXL');
-                          },
-                        )
+                                child: buildSizeCircle(
+                                    size: 'XL',
+                                    state: ShopCubit.get(context).isXL),
+                                onTap: () {
+                                  ShopCubit.get(context).changeSize('isXL');
+                                },
+                              )
                             : buildSizeCircle(
-                          size: 'XL',
-                          state: true,
-                          color: Colors.grey[300],
-                        ),
+                                size: 'XL',
+                                state: true,
+                                color: Colors.grey[300],
+                              ),
                       ],
                     ),
                     const SizedBox(
@@ -390,73 +486,69 @@ class _HomeSelectedProductScreenState extends State<HomeSelectedProductScreen> {
                       children: [
                         widget.mmodel.is2XL
                             ? GestureDetector(
-                          child: buildSizeCircle(
-                              size: '2XL',
-                              state: ShopCubit.get(context).is2XL),
-                          onTap: () {
-                            ShopCubit.get(context)
-                                .changeSize('is2XL');
-                          },
-                        )
+                                child: buildSizeCircle(
+                                    size: '2XL',
+                                    state: ShopCubit.get(context).is2XL),
+                                onTap: () {
+                                  ShopCubit.get(context).changeSize('is2XL');
+                                },
+                              )
                             : buildSizeCircle(
-                          size: '2XL',
-                          state: true,
-                          color: Colors.grey[300],
-                        ),
+                                size: '2XL',
+                                state: true,
+                                color: Colors.grey[300],
+                              ),
                         const SizedBox(
                           width: 10.0,
                         ),
                         widget.mmodel.is3XL
                             ? GestureDetector(
-                          child: buildSizeCircle(
-                              size: '3XL',
-                              state: ShopCubit.get(context).is3XL),
-                          onTap: () {
-                            ShopCubit.get(context)
-                                .changeSize('is3XL');
-                          },
-                        )
+                                child: buildSizeCircle(
+                                    size: '3XL',
+                                    state: ShopCubit.get(context).is3XL),
+                                onTap: () {
+                                  ShopCubit.get(context).changeSize('is3XL');
+                                },
+                              )
                             : buildSizeCircle(
-                          size: '3XL',
-                          state: true,
-                          color: Colors.grey[300],
-                        ),
+                                size: '3XL',
+                                state: true,
+                                color: Colors.grey[300],
+                              ),
                         const SizedBox(
                           width: 10.0,
                         ),
                         widget.mmodel.is4XL
                             ? GestureDetector(
-                          child: buildSizeCircle(
-                              size: '4XL',
-                              state: ShopCubit.get(context).is4XL),
-                          onTap: () {
-                            ShopCubit.get(context)
-                                .changeSize('is4XL');
-                          },
-                        )
+                                child: buildSizeCircle(
+                                    size: '4XL',
+                                    state: ShopCubit.get(context).is4XL),
+                                onTap: () {
+                                  ShopCubit.get(context).changeSize('is4XL');
+                                },
+                              )
                             : buildSizeCircle(
-                          size: '4XL',
-                          state: true,
-                          color: Colors.grey[300],
-                        ),
+                                size: '4XL',
+                                state: true,
+                                color: Colors.grey[300],
+                              ),
                         const SizedBox(
                           width: 10.0,
                         ),
                         widget.mmodel.is5XL
                             ? GestureDetector(
-                          child: buildSizeCircle(
-                              size: '5XL',
-                              state: ShopCubit.get(context).is5XL),
-                          onTap: () {
-                            ShopCubit.get(context)
-                                .changeSize('is5XL');
-                          },
-                        )
+                                child: buildSizeCircle(
+                                    size: '5XL',
+                                    state: ShopCubit.get(context).is5XL),
+                                onTap: () {
+                                  ShopCubit.get(context).changeSize('is5XL');
+                                },
+                              )
                             : buildSizeCircle(
-                          size: '5XL',
-                          state: true,
-                          color: Colors.grey[300],
-                        ),
+                                size: '5XL',
+                                state: true,
+                                color: Colors.grey[300],
+                              ),
                       ],
                     ),
                   ],
@@ -465,43 +557,47 @@ class _HomeSelectedProductScreenState extends State<HomeSelectedProductScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 8.0,left: 12.0,right: 12.0,),
+            padding: const EdgeInsets.only(
+              bottom: 8.0,
+              left: 12.0,
+              right: 12.0,
+            ),
             child: defaultButton2(
                 function: () {
                   String s = '';
-                  if (ShopCubit.get(context).isS==true) {
+                  if (ShopCubit.get(context).isS == true) {
                     s = 'S';
                     log(s);
-                  } else if (ShopCubit.get(context).isM==true) {
+                  } else if (ShopCubit.get(context).isM == true) {
                     s = 'M';
                     log(s);
-                  } else if (ShopCubit.get(context).isL==true) {
+                  } else if (ShopCubit.get(context).isL == true) {
                     s = 'L';
                     log(s);
-                  } else if (ShopCubit.get(context).isXL==true) {
+                  } else if (ShopCubit.get(context).isXL == true) {
                     s = 'XL';
                     log(s);
-                  } else if (ShopCubit.get(context).is2XL==true) {
+                  } else if (ShopCubit.get(context).is2XL == true) {
                     s = '2XL';
                     log(s);
-                  } else if (ShopCubit.get(context).is3XL==true) {
+                  } else if (ShopCubit.get(context).is3XL == true) {
                     s = '3XL';
                     log(s);
-                  } else if (ShopCubit.get(context).is4XL==true) {
+                  } else if (ShopCubit.get(context).is4XL == true) {
                     s = '4XL';
                     log(s);
-                  } else if (ShopCubit.get(context).is5XL==true) {
+                  } else if (ShopCubit.get(context).is5XL == true) {
                     s = '5XL';
                     log(s);
                   }
-                  ShopCubit.get(context).isS=false;
-                  ShopCubit.get(context).isM=false;
-                  ShopCubit.get(context).isL=false;
-                  ShopCubit.get(context).isXL=false;
-                  ShopCubit.get(context).is2XL=false;
-                  ShopCubit.get(context).is3XL=false;
-                  ShopCubit.get(context).is4XL=false;
-                  ShopCubit.get(context).is5XL=false;
+                  ShopCubit.get(context).isS = false;
+                  ShopCubit.get(context).isM = false;
+                  ShopCubit.get(context).isL = false;
+                  ShopCubit.get(context).isXL = false;
+                  ShopCubit.get(context).is2XL = false;
+                  ShopCubit.get(context).is3XL = false;
+                  ShopCubit.get(context).is4XL = false;
+                  ShopCubit.get(context).is5XL = false;
                   ShopCubit.get(context).inCart(
                     pid: widget.mmodelID[widget.productIndex],
                     s: s,
@@ -548,6 +644,251 @@ class OpenImage extends StatelessWidget {
           ),
           // width: 500,
           width: double.infinity,
+        ),
+      ),
+    );
+  }
+}
+
+class OpenSellerScreen extends StatelessWidget {
+  const OpenSellerScreen({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    log(ShopCubit.get(context).isSaturday.toString());
+    log(ShopCubit.get(context).isSunday.toString());
+    log(ShopCubit.get(context).isMonday.toString());
+    log(ShopCubit.get(context).isTuesday.toString());
+    log(ShopCubit.get(context).isWednesday.toString());
+    log(ShopCubit.get(context).isThursday.toString());
+    log(ShopCubit.get(context).isFriday.toString());
+
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            // size: 14.0,
+            color: Colors.black,
+          ),
+        ),
+      ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          ShopCubit.get(context).mmodel.lat != null
+              ? FloatingActionButton(
+                  heroTag: 'btn1',
+                  backgroundColor: Colors.black,
+                  onPressed: () async {
+                    log(ShopCubit.get(context).mmodel.lat.toString());
+                    log(ShopCubit.get(context).mmodel.long.toString());
+                    log(ShopCubit.get(context).mmodel.posStreet.toString());
+                    // var c = Coords(ShopCubit.get(context).mmodel.lat,
+                    //     ShopCubit.get(context).mmodel.long);
+                    final availableMaps = await MapLauncher.installedMaps;
+                    await availableMaps.first.showMarker(
+                      coords: Coords(ShopCubit.get(context).mmodel.lat,
+                          ShopCubit.get(context).mmodel.long),
+                      title: ShopCubit.get(context).mmodel.posStreet,
+                    );
+                  },
+                  child: const Icon(
+                    Icons.location_on,
+                    color: Colors.white,
+                  ),
+                )
+              : const SizedBox(),
+          const SizedBox(
+            height: 10.0,
+          ),
+          FloatingActionButton(
+            heroTag: 'btn2',
+            backgroundColor: Colors.black,
+            onPressed: () async {
+              await FlutterPhoneDirectCaller.callNumber(
+                  ShopCubit.get(context).mmodel.phone);
+            },
+            child: const Icon(
+              Icons.phone,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            children: [
+              Image(
+                image: NetworkImage(
+                  ShopCubit.get(context).mmodel.image,
+                ),
+                // width: 500,
+                width: double.infinity,
+              ),
+              ShopCubit.get(context).isSaturday!=null?SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ShopCubit.get(context).isSaturday
+                            ? GestureDetector(
+                          child: buildSizeCircle(
+                              size: 'SAT',
+                              state: true),
+                        )
+                            : const SizedBox(),
+                        const SizedBox(
+                          width: 10.0,
+                        ),
+                        ShopCubit.get(context).isSunday
+                            ? GestureDetector(
+                          child: buildSizeCircle(
+                              size: 'SUN',
+                              state: true),
+                        )
+                            : const SizedBox(),
+                        const SizedBox(
+                          width: 10.0,
+                        ),
+                        ShopCubit.get(context).isMonday
+                            ? GestureDetector(
+                          child: buildSizeCircle(
+                              size: 'MON',
+                              state: true),
+                        )
+                            : const SizedBox(),
+                        const SizedBox(
+                          width: 10.0,
+                        ),
+                        ShopCubit.get(context).isTuesday
+                            ? GestureDetector(
+                          child: buildSizeCircle(
+                              size: 'TUS',
+                              state: true),
+                        )
+                            : const SizedBox(),
+                        const SizedBox(
+                          width: 10.0,
+                        ),
+                        ShopCubit.get(context).isWednesday
+                            ? GestureDetector(
+                          child: buildSizeCircle(
+                              size: 'WED',
+                              state: true),
+                        )
+                            : const SizedBox(),
+                        const SizedBox(
+                          width: 10.0,
+                        ),
+                        ShopCubit.get(context).isThursday
+                            ? GestureDetector(
+                          child: buildSizeCircle(
+                              size: 'THU',
+                              state: true),
+                        )
+                            : const SizedBox(),
+                        const SizedBox(
+                          width: 10.0,
+                        ),
+                        ShopCubit.get(context).isFriday
+                            ? GestureDetector(
+                          child: buildSizeCircle(
+                              size: 'FRI',
+                              state: true),
+                        )
+                            : const SizedBox(),
+                      ],
+                    ),
+                  ],
+                ),
+              ):const SizedBox(),
+              const SizedBox(
+                height: 20.0,
+              ),
+              Row(
+                children: [
+                  Text(
+                    LocaleKeys.sellerAcountScreen_sellerName.tr() + ': ',
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    ShopCubit.get(context).mmodel.firstName +
+                        ' ' +
+                        ShopCubit.get(context).mmodel.secondName,
+                    style: const TextStyle(
+                      fontSize: 18.0,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    LocaleKeys.sellerRequestScreen_address.tr() + ': ',
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    ShopCubit.get(context).mmodel.address,
+                    style: const TextStyle(
+                      fontSize: 18.0,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    LocaleKeys.signUpScreen_area.tr() + ': ',
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    ShopCubit.get(context).mmodel.area,
+                    style: const TextStyle(
+                      fontSize: 18.0,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    LocaleKeys.signUpScreen_select_City.tr() + ': ',
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    ShopCubit.get(context).mmodel.city,
+                    style: const TextStyle(
+                      fontSize: 18.0,
+                    ),
+                  ),
+                ],
+              ),
+
+            ],
+          ),
         ),
       ),
     );

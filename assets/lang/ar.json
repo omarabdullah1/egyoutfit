@@ -132,7 +132,13 @@
     "orderCreatedSuccessfully": "تم إنشاء الطلب بنجاح",
     "orderErrorCreatingOrder": "خطأ في إنشاء الطلب",
     "loginSuccessfully": "تم تسجيل الدخول بنجاح",
-    "errorInRegistration": "خطأ في التسجيل (تحقق من تكرار البريد الإلكتروني)"
+    "errorInRegistration": "خطأ في التسجيل (تحقق من تكرار البريد الإلكتروني)",
+    "yourProductWillBeDeleted": "سيتم حذف منتجك إذا كنت تريد الاستمرار بالضغط على موافق.",
+    "warning": "تحذير",
+    "cancel": "إلغاء",
+    "ok": "موافق",
+    "yourOfferWillBeDeleted": "سيتم حذف التخفيض إذا كنت تريد الاستمرار بالضغط على موافق.",
+    "openOrdersToSee": "افتح \"الطلبات\" لرؤية طلباتك والدردشة مع بائعي المنتجات"
   },
   "sellerAcountScreen": {
     "account": "الحساب",
@@ -210,5 +216,13 @@
     "pleaseEnterDeliveryCost": "الرجاء إدخال تكلفة التوصيل",
     "cost": "التكلفه",
     "submit": "إرسال"
+  },
+  "chatScreen": {
+    "typeMessageHere": "اكتب الرسالة هنا ...",
+    "noMessagesYet": "لا رسائل بعد"
+  },
+  "forgetPasswordScreen": {
+    "pleaseEnterEmail": "تلقي بريد إلكتروني لإعادة تعيين كلمة المرور الخاصة بك.",
+    "resetPassword": "إعادة تعيين كلمة المرور"
   }
 }

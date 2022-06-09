@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../layout/dashboard_layout/cubit/cubit.dart';
 import '../../../layout/dashboard_layout/cubit/states.dart';
 import '../../../shared/components/components.dart';
+import '../../../translations/locale_keys.g.dart';
 
 class EditProductScreen extends StatefulWidget {
   const EditProductScreen({
@@ -68,11 +69,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     nameController.text = widget.pName;
     // isDescripted = true;
 
-    EasyLocalization.of(context).locale.languageCode == 'en'
-        ? DashboardCubit.get(context).createScreenDropDownValueEn =
-            widget.pCategory
-        : DashboardCubit.get(context).createScreenDropDownValueAr =
-            widget.pCategory;
+    DashboardCubit.get(context).createScreenDropDownValueEn = widget.pCategory;
     widget.pDelivery.isNotEmpty
         ? DashboardCubit.get(context).deliveryToggle = true
         : false;
@@ -145,11 +142,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                           Icons.category,
                                           color: Colors.grey,
                                         ),
-                                        const SizedBox(
-                                          width: 15.0,
-                                        ),
+                                        const Spacer(),
                                         Text(
-                                          'Category',
+                                          LocaleKeys
+                                              .sellerCreateProductScreen_category
+                                              .tr(),
                                           style: TextStyle(
                                               color: Colors.grey[600],
                                               fontSize: 16.0),
@@ -159,17 +156,17 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                         ),
                                         DropdownButton(
                                           value: DashboardCubit.get(context)
-                                                  .createScreenDropDownValueEn,
+                                              .createScreenDropDownValueEn,
                                           icon: const Icon(
                                               Icons.keyboard_arrow_down),
                                           items: DashboardCubit.get(context)
-                                                  .createProductItemsEn
-                                                  .map((String items) {
-                                                  return DropdownMenuItem(
-                                                    value: items,
-                                                    child: Text(items),
-                                                  );
-                                                }).toList(),
+                                              .createProductItemsEn
+                                              .map((String items) {
+                                            return DropdownMenuItem(
+                                              value: items,
+                                              child: Text(items),
+                                            );
+                                          }).toList(),
                                           onChanged: (newValue) {
                                             DashboardCubit.get(context)
                                                 .changeEditProductDropButtonValue(
@@ -189,12 +186,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                   isValidate: true,
                                   validate: (value) {
                                     if (value.isEmpty) {
-                                      return "Please Enter Product Name";
+                                      return LocaleKeys
+                                          .sellerCreateProductScreen_pleaseEnterProductName
+                                          .tr();
                                     }
                                   },
                                   isPassword: false,
                                   controller: nameController,
-                                  label: " Product Name",
+                                  label: LocaleKeys
+                                      .sellerRequestScreen_productName
+                                      .tr(),
                                 ),
                                 const SizedBox(
                                   height: 25,
@@ -232,7 +233,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                       ),
                                       borderRadius: BorderRadius.circular(25.0),
                                     ),
-                                    labelText: 'Description',
+                                    labelText: LocaleKeys
+                                        .sellerCreateProductScreen_description
+                                        .tr(),
                                     prefixIcon: const Icon(Icons.text_fields),
                                   ),
                                 ),
@@ -241,12 +244,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      'Size:',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w900,
-                                          fontSize: 20.0,
-                                          color: Colors.black45),
+                                    Text(
+                                      LocaleKeys.sellerCreateProductScreen_size
+                                              .tr() +
+                                          ':',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 20.0,
+                                        color: Colors.black45,
+                                      ),
                                     ),
                                     Row(
                                       mainAxisAlignment:
@@ -368,12 +374,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                     const SizedBox(
                                       height: 15,
                                     ),
-                                    const Text(
-                                      'Price & Offers:',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w900,
-                                          fontSize: 20.0,
-                                          color: Colors.black45),
+                                    Text(
+                                      LocaleKeys
+                                              .sellerCreateProductScreen_priceOffers
+                                              .tr() +
+                                          ':',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 20.0,
+                                        color: Colors.black45,
+                                      ),
                                     ),
                                     const SizedBox(
                                       height: 15.0,
@@ -388,24 +398,31 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                             isValidate: true,
                                             validate: (value) {
                                               if (value.isEmpty) {
-                                                return "Please Enter Price!";
+                                                return LocaleKeys
+                                                    .sellerCreateProductScreen_PleaseEnterPrice
+                                                    .tr();
                                               }
                                             },
                                             isPassword: false,
                                             controller: priceController,
-                                            label: "Price",
+                                            label: LocaleKeys
+                                                .sellerCreateProductScreen_price
+                                                .tr(),
                                           ),
                                         ),
                                       ],
                                     ),
                                     Row(
                                       children: [
-                                        const Text(
-                                          'Discount:',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w900,
-                                              fontSize: 15.0,
-                                              color: Colors.black45),
+                                        Text(
+                                          LocaleKeys.sellerAcountScreen_discount
+                                                  .tr() +
+                                              ':',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w900,
+                                            fontSize: 15.0,
+                                            color: Colors.black45,
+                                          ),
                                         ),
                                         Switch(
                                             activeColor: Colors.black,
@@ -424,26 +441,34 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                       isValidate: true,
                                       validate: (value) {
                                         if (value.isEmpty) {
-                                          return 'please enter discount ';
+                                          return LocaleKeys
+                                              .sellerAcountScreen_pleaseEnterDiscount
+                                              .tr();
                                         }
                                       },
                                       isClickable: DashboardCubit.get(context)
                                           .discountToggle,
                                       isPassword: false,
                                       controller: discountController,
-                                      label: "discount %",
+                                      label: LocaleKeys
+                                              .sellerAcountScreen_discount
+                                              .tr() +
+                                          '  %',
                                     ),
                                     const SizedBox(
                                       height: 20,
                                     ),
                                     Row(
                                       children: [
-                                        const Text(
-                                          'Delivery:',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w900,
-                                              fontSize: 15.0,
-                                              color: Colors.black45),
+                                        Text(
+                                          LocaleKeys
+                                              .sellerCreateProductScreen_delivery
+                                              .tr(),
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w900,
+                                            fontSize: 15.0,
+                                            color: Colors.black45,
+                                          ),
                                         ),
                                         Switch(
                                             activeColor: Colors.black,
@@ -464,7 +489,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                         if (value.isEmpty) {
                                           if (DashboardCubit.get(context)
                                               .deliveryToggle) {
-                                            return ' please enter delivery cost';
+                                            return LocaleKeys.sellerCreateProductScreen_pleaseEnterDeliveryCost.tr();
                                           }
                                         }
                                       },
@@ -472,7 +497,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                           .deliveryToggle,
                                       isPassword: false,
                                       controller: deliveryController,
-                                      label: "Delivery Cost",
+                                      label: LocaleKeys.sellerCreateProductScreen_delivery.tr(),
                                     ),
                                     const SizedBox(
                                       height: 30,
@@ -485,7 +510,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                             MediaQuery.of(context).size.width,
                                         radius: 20.0,
                                         height: 50.0,
-                                        text: "Submit",
+                                        text: LocaleKeys.sellerCreateProductScreen_submit.tr(),
                                         function: () async {
                                           if (formKey.currentState.validate() &&
                                               (DashboardCubit.get(context)
@@ -500,8 +525,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                               isDiscount:
                                                   DashboardCubit.get(context)
                                                       .discountToggle,
-                                              category: DashboardCubit.get(context)
-                                                      .createScreenDropDownValueEn,
+                                              category: DashboardCubit.get(
+                                                      context)
+                                                  .createScreenDropDownValueEn,
                                               description:
                                                   descriptionController.text,
                                               name: nameController.text,
@@ -539,6 +565,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                                 .getAllProducts();
                                             DashboardCubit.get(context)
                                                 .getAllOrdered(context);
+                                            Navigator.pop(context);
                                             Navigator.pop(context);
                                           }
                                           // log(DashboardCubit.get(context)
