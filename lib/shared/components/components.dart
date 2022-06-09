@@ -1126,13 +1126,7 @@ class _BuildAllProductsState extends State<BuildAllProducts> {
   @override
   Widget build(BuildContext context) {
     return widget.model.isNotEmpty
-        ? RefreshIndicator(
-            onRefresh: () {
-              return Future.delayed(const Duration(seconds: 2), () async {
-                await DashboardCubit.get(context).getAllProducts();
-              });
-            },
-            child: SingleChildScrollView(
+        ?  SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: ListView.separated(
@@ -1322,7 +1316,6 @@ class _BuildAllProductsState extends State<BuildAllProducts> {
                   itemCount: widget.model.length,
                 ),
               ),
-            ),
           )
         : Center(
             child: Text(LocaleKeys.dashboardScreen_noProductsError.tr()),
@@ -1338,13 +1331,7 @@ Widget buildRequests({
   @required List countList,
   @required List id,
 }) =>
-    RefreshIndicator(
-      onRefresh: () {
-        return Future.delayed(const Duration(seconds: 2), () async {
-          await DashboardCubit.get(context).getAllOrdered(context);
-        });
-      },
-      child: SingleChildScrollView(
+    SingleChildScrollView(
         child: Column(
           children: [
             // const SizedBox(height: 15.0,),
@@ -1693,7 +1680,6 @@ Widget buildRequests({
                   ),
           ],
         ),
-      ),
     );
 
 Widget buildRecommendedItem({

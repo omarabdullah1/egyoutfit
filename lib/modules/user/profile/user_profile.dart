@@ -5,10 +5,8 @@ import 'package:egyoutfit/modules/user/profile/user_orders_screen.dart';
 import 'package:egyoutfit/shared/network/local/cache_helper.dart';
 import 'package:egyoutfit/translations/locale_keys.g.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:showcaseview/showcaseview.dart';
-
 import '../../../layout/shop_app/cubit/cubit.dart';
 import '../../../shared/components/components.dart';
 import 'change_password_screen.dart';
@@ -31,12 +29,11 @@ class UserProfile extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (CacheHelper.getData(key: 'showCase') == null ||
-              CacheHelper.getData(key: 'showCase') == false) {
-            ShowCaseWidget.of(context).startShowCase([one]);
-          }
-        });
+        // WidgetsBinding.instance.addPostFrameCallback((_) {
+        //   if (CacheHelper.getData(key: 'showCase') == null) {
+        //     ShowCaseWidget.of(context).startShowCase([one]);
+        //   }
+        // });
 
         return ConditionalBuilder(
           condition: model.firstName != null,
@@ -99,91 +96,41 @@ class UserProfile extends StatelessWidget {
                       ),
                     ),
                   ),
-                  (CacheHelper.getData(key: 'showCase') == null ||
-                          CacheHelper.getData(key: 'showCase') == false)
-                      ? Showcase(
-                          key: one,
-                          description: LocaleKeys.alerts_openOrdersToSee.tr(),
-                          disposeOnTap: true,
-                          onTargetClick: () {
-                            CacheHelper.putBoolean(
-                                key: 'showCase', value: true);
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 8),
+                    child: Column(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            navigateTo(context, const OrdersScreen());
                           },
-                          onToolTipClick: () {
-                            CacheHelper.putBoolean(
-                                key: 'showCase', value: true);
-                          },
-                          animationDuration: const Duration(milliseconds: 500),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 8),
-                            child: Column(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    navigateTo(context, const OrdersScreen());
-                                  },
-                                  child: Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.shop,
-                                        color: Colors.black,
-                                      ),
-                                      const SizedBox(
-                                        width: 15,
-                                      ),
-                                      Text(
-                                        LocaleKeys.userAccountScreen_orders
-                                            .tr(),
-                                        style: const TextStyle(
-                                            color: Colors.black),
-                                      ),
-                                      const Spacer(),
-                                      const Icon(
-                                        Icons.navigate_next,
-                                        color: Colors.black,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 8),
-                          child: Column(
+                          child: Row(
                             children: [
-                              InkWell(
-                                onTap: () {
-                                  navigateTo(context, const OrdersScreen());
-                                },
-                                child: Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.shop,
-                                      color: Colors.black,
-                                    ),
-                                    const SizedBox(
-                                      width: 15,
-                                    ),
-                                    Text(
-                                      LocaleKeys.userAccountScreen_orders.tr(),
-                                      style:
-                                          const TextStyle(color: Colors.black),
-                                    ),
-                                    const Spacer(),
-                                    const Icon(
-                                      Icons.navigate_next,
-                                      color: Colors.black,
-                                    ),
-                                  ],
-                                ),
+                              const Icon(
+                                Icons.shop,
+                                color: Colors.black,
+                              ),
+                              const SizedBox(
+                                width: 15,
+                              ),
+                              Text(
+                                LocaleKeys.userAccountScreen_orders
+                                    .tr(),
+                                style: const TextStyle(
+                                    color: Colors.black),
+                              ),
+                              const Spacer(),
+                              const Icon(
+                                Icons.navigate_next,
+                                color: Colors.black,
                               ),
                             ],
                           ),
                         ),
+                      ],
+                    ),
+                  ),
                   Container(
                     color: Colors.grey[400],
                     // height: 30,

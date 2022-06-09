@@ -267,6 +267,9 @@ class DashboardCubit extends Cubit<DashboardStates> {
         listImage = [];
         image = null;
         firebaseImagesEdit = null;
+        await getAllProducts();
+        await getAllOrdered(context);
+        currentIndex=0;
         emit(UpdateStateSuccessDashboardState());
         Navigator.pop(context);
       }).catchError((err) {
@@ -293,6 +296,9 @@ class DashboardCubit extends Cubit<DashboardStates> {
             password: CacheHelper.getData(key: 'pass'));
         image = null;
         firebaseImagesEdit = null;
+        await getAllProducts();
+        await getAllOrdered(context);
+        currentIndex=0;
         emit(UpdateStateSuccessDashboardState());
         Navigator.pop(context);
       }).catchError((err) {
@@ -659,6 +665,20 @@ class DashboardCubit extends Cubit<DashboardStates> {
         source: isCamera ? ImageSource.camera : ImageSource.gallery);
     if (pickedFile != null) {
       listImage.add(pickedFile.path);
+      emit(SuccessPickImageState());
+    } else {
+      log('No image selected.');
+      emit(ErrorPickImageState());
+    }
+  }
+  Future<void> getImageProfile(bool isCamera) async {
+    emit(LoadingPickImageState());
+    image='';
+    var picker = ImagePicker();
+    final pickedFile = await picker.pickImage(
+        source: isCamera ? ImageSource.camera : ImageSource.gallery);
+    if (pickedFile != null) {
+      image=pickedFile.path;
       emit(SuccessPickImageState());
     } else {
       log('No image selected.');

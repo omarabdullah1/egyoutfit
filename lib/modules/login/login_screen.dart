@@ -85,38 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         builder: (context, state) {
           return Scaffold(
-            appBar: AppBar(leading: Container(), actions: [
-              Row(
-                children: [
-                  const Icon(Icons.language),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: SizedBox(
-                      child: Text(
-                        'Ar',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                  ),
-                  Switch(
-                    value: ShopLoginCubit.get(context).isEnglish,
-                    onChanged: (v) {
-                      ShopLoginCubit.get(context)
-                          .changeLanguageValue(v, context);
-                    },
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: SizedBox(
-                      child: Text(
-                        'En',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ]),
+            appBar: AppBar(),
             body: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.only(
@@ -266,87 +235,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: Colors.black,
                               ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 10.0,
-                          ),
-                          Center(
-                            child: Text(
-                              LocaleKeys.loginScreen_orSignInWith.tr(),
-                              style: const TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 20.0,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              MaterialButton(
-                                shape: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: const BorderSide(
-                                    color: Colors.black26,
-                                  ),
-                                ),
-                                minWidth: 150.0,
-                                height: 40,
-                                onPressed: () {},
-                                child: Row(
-                                  children: [
-                                    const Image(
-                                      image: AssetImage(
-                                          'assets/images/google.png'),
-                                      width: 25,
-                                      height: 23,
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      LocaleKeys.loginScreen_google.tr(),
-                                      style: const TextStyle(
-                                          color: Colors.black45),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 10.0,
-                              ),
-                              MaterialButton(
-                                shape: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: const BorderSide(
-                                    color: Colors.black26,
-                                  ),
-                                ),
-                                minWidth: 150.0,
-                                height: 40,
-                                onPressed: () {},
-                                child: Row(
-                                  children: [
-                                    const Image(
-                                      image: AssetImage(
-                                          'assets/images/facebook.png'),
-                                      width: 25,
-                                      height: 25,
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      LocaleKeys.loginScreen_facebook.tr(),
-                                      style: const TextStyle(
-                                          color: Colors.black45),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
                           ),
                           const SizedBox(
                             height: 10.0,

@@ -289,21 +289,21 @@ class _HomeSelectedProductScreenState extends State<HomeSelectedProductScreen> {
                                 Text(
                                   ShopCubit.get(context).mmodel.organization,
                                   style: const TextStyle(
-                                    fontSize: 18.0,
+                                    fontSize: 13.0,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
                                   ShopCubit.get(context).mmodel.city,
                                   style: const TextStyle(
-                                    fontSize: 18.0,
+                                    fontSize: 13.0,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
                                   ShopCubit.get(context).mmodel.area,
                                   style: const TextStyle(
-                                    fontSize: 18.0,
+                                    fontSize: 13.0,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -721,173 +721,178 @@ class OpenSellerScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            children: [
-              Image(
-                image: NetworkImage(
-                  ShopCubit.get(context).mmodel.image,
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              children: [
+                Image(
+                  image: NetworkImage(
+                    ShopCubit.get(context).mmodel.image,
+                  ),
+                  // width: 500,
+                  width: double.infinity,
                 ),
-                // width: 500,
-                width: double.infinity,
-              ),
-              ShopCubit.get(context).isSaturday!=null?SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                ShopCubit.get(context).isSaturday!=null?SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
                       children: [
-                        ShopCubit.get(context).isSaturday
-                            ? GestureDetector(
-                          child: buildSizeCircle(
-                              size: 'SAT',
-                              state: true),
-                        )
-                            : const SizedBox(),
-                        const SizedBox(
-                          width: 10.0,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ShopCubit.get(context).isSaturday
+                                ? GestureDetector(
+                              child: buildSizeCircle(
+                                  size: 'SAT',
+                                  state: true),
+                            )
+                                : const SizedBox(),
+                            const SizedBox(
+                              width: 10.0,
+                            ),
+                            ShopCubit.get(context).isSunday
+                                ? GestureDetector(
+                              child: buildSizeCircle(
+                                  size: 'SUN',
+                                  state: true),
+                            )
+                                : const SizedBox(),
+                            const SizedBox(
+                              width: 10.0,
+                            ),
+                            ShopCubit.get(context).isMonday
+                                ? GestureDetector(
+                              child: buildSizeCircle(
+                                  size: 'MON',
+                                  state: true),
+                            )
+                                : const SizedBox(),
+                            const SizedBox(
+                              width: 10.0,
+                            ),
+                            ShopCubit.get(context).isTuesday
+                                ? GestureDetector(
+                              child: buildSizeCircle(
+                                  size: 'TUS',
+                                  state: true),
+                            )
+                                : const SizedBox(),
+                            const SizedBox(
+                              width: 10.0,
+                            ),
+                            ShopCubit.get(context).isWednesday
+                                ? GestureDetector(
+                              child: buildSizeCircle(
+                                  size: 'WED',
+                                  state: true),
+                            )
+                                : const SizedBox(),
+                            const SizedBox(
+                              width: 10.0,
+                            ),
+                            ShopCubit.get(context).isThursday
+                                ? GestureDetector(
+                              child: buildSizeCircle(
+                                  size: 'THU',
+                                  state: true),
+                            )
+                                : const SizedBox(),
+                            const SizedBox(
+                              width: 10.0,
+                            ),
+                            ShopCubit.get(context).isFriday
+                                ? GestureDetector(
+                              child: buildSizeCircle(
+                                  size: 'FRI',
+                                  state: true),
+                            )
+                                : const SizedBox(),
+                          ],
                         ),
-                        ShopCubit.get(context).isSunday
-                            ? GestureDetector(
-                          child: buildSizeCircle(
-                              size: 'SUN',
-                              state: true),
-                        )
-                            : const SizedBox(),
-                        const SizedBox(
-                          width: 10.0,
-                        ),
-                        ShopCubit.get(context).isMonday
-                            ? GestureDetector(
-                          child: buildSizeCircle(
-                              size: 'MON',
-                              state: true),
-                        )
-                            : const SizedBox(),
-                        const SizedBox(
-                          width: 10.0,
-                        ),
-                        ShopCubit.get(context).isTuesday
-                            ? GestureDetector(
-                          child: buildSizeCircle(
-                              size: 'TUS',
-                              state: true),
-                        )
-                            : const SizedBox(),
-                        const SizedBox(
-                          width: 10.0,
-                        ),
-                        ShopCubit.get(context).isWednesday
-                            ? GestureDetector(
-                          child: buildSizeCircle(
-                              size: 'WED',
-                              state: true),
-                        )
-                            : const SizedBox(),
-                        const SizedBox(
-                          width: 10.0,
-                        ),
-                        ShopCubit.get(context).isThursday
-                            ? GestureDetector(
-                          child: buildSizeCircle(
-                              size: 'THU',
-                              state: true),
-                        )
-                            : const SizedBox(),
-                        const SizedBox(
-                          width: 10.0,
-                        ),
-                        ShopCubit.get(context).isFriday
-                            ? GestureDetector(
-                          child: buildSizeCircle(
-                              size: 'FRI',
-                              state: true),
-                        )
-                            : const SizedBox(),
                       ],
+                    ),
+                  ),
+                ):const SizedBox(),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      LocaleKeys.sellerAcountScreen_sellerName.tr() + ': ',
+                      style: const TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      ShopCubit.get(context).mmodel.firstName +
+                          ' ' +
+                          ShopCubit.get(context).mmodel.secondName,
+                      style: const TextStyle(
+                        fontSize: 18.0,
+                      ),
                     ),
                   ],
                 ),
-              ):const SizedBox(),
-              const SizedBox(
-                height: 20.0,
-              ),
-              Row(
-                children: [
-                  Text(
-                    LocaleKeys.sellerAcountScreen_sellerName.tr() + ': ',
-                    style: const TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
+                Row(
+                  children: [
+                    Text(
+                      LocaleKeys.sellerRequestScreen_address.tr() + ': ',
+                      style: const TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    ShopCubit.get(context).mmodel.firstName +
-                        ' ' +
-                        ShopCubit.get(context).mmodel.secondName,
-                    style: const TextStyle(
-                      fontSize: 18.0,
+                    Text(
+                      ShopCubit.get(context).mmodel.address,
+                      style: const TextStyle(
+                        fontSize: 18.0,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    LocaleKeys.sellerRequestScreen_address.tr() + ': ',
-                    style: const TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      LocaleKeys.signUpScreen_area.tr() + ': ',
+                      style: const TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    ShopCubit.get(context).mmodel.address,
-                    style: const TextStyle(
-                      fontSize: 18.0,
+                    Text(
+                      ShopCubit.get(context).mmodel.area,
+                      style: const TextStyle(
+                        fontSize: 18.0,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    LocaleKeys.signUpScreen_area.tr() + ': ',
-                    style: const TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      LocaleKeys.signUpScreen_select_City.tr() + ': ',
+                      style: const TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    ShopCubit.get(context).mmodel.area,
-                    style: const TextStyle(
-                      fontSize: 18.0,
+                    Text(
+                      ShopCubit.get(context).mmodel.city,
+                      style: const TextStyle(
+                        fontSize: 18.0,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    LocaleKeys.signUpScreen_select_City.tr() + ': ',
-                    style: const TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    ShopCubit.get(context).mmodel.city,
-                    style: const TextStyle(
-                      fontSize: 18.0,
-                    ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
 
-            ],
+              ],
+            ),
           ),
         ),
       ),

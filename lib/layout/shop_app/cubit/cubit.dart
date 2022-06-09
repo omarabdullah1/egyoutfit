@@ -882,7 +882,7 @@ class ShopCubit extends Cubit<ShopStates> {
   Placemark place;
   Future<void> GetAddressFromLatLong(Position position)async {
     List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
-    print(placemarks);
+    log(placemarks.toString());
     place = placemarks[0];
     Address = '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
     log(Address);
@@ -905,14 +905,14 @@ class ProductSellerModel {
   ProductSellerModel.fromJson(Map<String, dynamic> json) {
     uId = json['uId'];
     organization = json['organization'];
-    image = json['userImage'];
+    image = json['image'];
   }
 
   Map<String, dynamic> toMap() {
     return {
       'uId': uId,
       'organization': organization,
-      'userImage': image,
+      'image': image,
     };
   }
 }
@@ -949,7 +949,7 @@ class MSellerModel {
   MSellerModel.fromJson(Map<String, dynamic> json) {
     uId = json['uId'];
     organization = json['organization'];
-    image = json['userImage'];
+    image = json['image'];
     firstName = json['firstName'];
     secondName = json['secondName'];
     area = json['area'];
@@ -965,7 +965,7 @@ class MSellerModel {
     return {
       'uId': uId,
       'organization': organization,
-      'userImage': image,
+      'image': image,
       'firstName': firstName,
       'secondName': secondName,
       'area': area,

@@ -48,8 +48,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
               appBar: AppBar(
                 actions: [
                   IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.notifications),
+                    onPressed: () async {
+                      await DashboardCubit.get(context).getAllProducts();
+                      await DashboardCubit.get(context).getAllOrdered(context);
+                    },
+                    icon: const Icon(Icons.refresh),
                   )
                 ],
               ),

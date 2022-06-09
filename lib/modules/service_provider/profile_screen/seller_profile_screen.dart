@@ -112,7 +112,7 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                                       child: SpeedDial(
                                         animatedIcon: AnimatedIcons.menu_close,
                                         openCloseDial: isDialOpen,
-                                        backgroundColor: Colors.blueAccent,
+                                        backgroundColor: Colors.black,
                                         overlayColor: Colors.grey,
                                         overlayOpacity: 0.5,
                                         spacing: 15,
@@ -128,7 +128,7 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                                                   .tr(),
                                               onTap: () {
                                                 DashboardCubit.get(context)
-                                                    .getImage(false);
+                                                    .getImageProfile(false);
                                               }),
                                           SpeedDialChild(
                                               child: const Icon(
@@ -139,7 +139,7 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                                                   .tr(),
                                               onTap: () {
                                                 DashboardCubit.get(context)
-                                                    .getImage(true);
+                                                    .getImageProfile(true);
                                               }),
                                         ],
                                       ),
@@ -346,8 +346,8 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                                             .getGeoLocationPosition()
                                             .then((value) async {
                                           var position = value;
-                                          var c = Coords(position.latitude,
-                                              position.longitude);
+                                          // var c = Coords(position.latitude,
+                                          //     position.longitude);
                                           DashboardCubit.get(context)
                                               .GetAddressFromLatLong(position);
                                           log('Lat: ${position.latitude} , Long: ${position.longitude}');

@@ -54,7 +54,8 @@ class ShopLoginModel {
     isSeller = json['isSeller'];
     cart = json['cart'];
     favorites = json['favorites'];
-    image = json['userImage'];
+    image = json['image'];
+    organization = json['organization'];
     sat = json['sat'];
     sun = json['sun'];
     mon = json['mon'];
@@ -76,7 +77,8 @@ class ShopLoginModel {
       'isSeller': isSeller,
       'cart': cart,
       'favorites': favorites,
-      'userImage': image,
+      'organization': organization,
+      'image': image,
       'sat': sat,
       'sun': sun,
       'mon': mon,

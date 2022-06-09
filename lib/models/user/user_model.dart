@@ -48,7 +48,7 @@ class UserModel {
     city = json['city'];
     organization = json['organization'];
     size = json['size'];
-    image = json['userImage'];
+    image = json['image'];
   }
   Map<String, dynamic> toMap() {
     return {
@@ -66,7 +66,7 @@ class UserModel {
       'city': city,
       'organization': organization,
       'size': size,
-      'userImage': image,
+      'image': image,
     };
   }
 }
