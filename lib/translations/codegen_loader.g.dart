@@ -154,7 +154,16 @@ class CodegenLoader extends AssetLoader{
     "cancel": "إلغاء",
     "ok": "موافق",
     "yourOfferWillBeDeleted": "سيتم حذف التخفيض إذا كنت تريد الاستمرار بالضغط على موافق.",
-    "openOrdersToSee": "افتح \"الطلبات\" لرؤية طلباتك والدردشة مع بائعي المنتجات"
+    "openOrdersToSee": "افتح \"الطلبات\" لرؤية طلباتك والدردشة مع بائعي المنتجات",
+    "newPassword": "كلمة السر الجديدة",
+    "update": "تحديث",
+    "newPasswordConfirm": "تأكيد كلمة المرور الجديدة",
+    "oldPassword": "كلمة المرور القديمة",
+    "pleaseEnterOldPassword": "الرجاء إدخال كلمة المرور القديمة",
+    "pleasEenterNewPassword": "الرجاء إدخال كلمة المرور الجديدة",
+    "pleasEenterNewPasswordConfirm": "الرجاء إدخال تأكيد كلمة المرور الجديدة",
+    "passwordUpdatedSuccessfully": "تم تحديث كلمة السر بنجاح",
+    "noOrdersYet": "لا توجد طلبات حتى الآن"
   },
   "sellerAcountScreen": {
     "account": "الحساب",
@@ -164,7 +173,6 @@ class CodegenLoader extends AssetLoader{
     "changeLanguage": "تغيير اللغة",
     "contactUs": "اتصل بنا",
     "myAccount": "حسابي",
-    "sellerName": "الاسم",
     "sellerAddress": "العنوان",
     "sellerOrganization": "اسم المتجر",
     "sellerPhone": "رقم الهانف",
@@ -182,7 +190,10 @@ class CodegenLoader extends AssetLoader{
     "addressMustNotBeEmpty": "يجب ألا يكون العنوان فارغًا",
     "shopNameMustNotBeEmpty": "يجب ألا يكون اسم المتجر فارغًا",
     "phoneMustNotBeEmpty": "يجب ألا يكون الهاتف فارغًا",
-    "myPromoCodes": "أكوادي الترويجية"
+    "myPromoCodes": "أكوادي الترويجية",
+    "sellerFirstName": "الاسم الاول",
+    "sellerSecondName": "اسم العائلة",
+    "sellerName": "الاسم "
   },
   "dashboardScreen": {
     "noProductsError": "لا توجد منتجات بعد",
@@ -382,7 +393,16 @@ static const Map<String,dynamic> en = {
     "cancel": " Cancel",
     "ok": "OK",
     "yourOfferWillBeDeleted": "Your Offer will be deleted if you want to continue press ok.",
-    "openOrdersToSee": "Open Orders to see your orders and chat with product sellers."
+    "openOrdersToSee": "Open Orders to see your orders and chat with product sellers.",
+    "newPassword": "New Password",
+    "update": "Update",
+    "newPasswordConfirm": "New Password Confirm",
+    "oldPassword": "Old Password",
+    "pleaseEnterOldPassword": "Please enter old password ",
+    "pleasEenterNewPassword": "Please enter new password",
+    "pleasEenterNewPasswordConfirm": "Please enter new password confirm",
+    "passwordUpdatedSuccessfully": "Password Updated Successfully",
+    "noOrdersYet": "No Orders Yet"
   },
   "sellerAcountScreen": {
     "account": "Account",
@@ -392,7 +412,6 @@ static const Map<String,dynamic> en = {
     "changeLanguage": "Change Language",
     "contactUs": "Contact US",
     "myAccount": "MY ACCOUNT",
-    "sellerName": "Name",
     "sellerAddress": "Address",
     "sellerOrganization": "Shop Name",
     "sellerPhone": "Phone Number",
@@ -410,7 +429,10 @@ static const Map<String,dynamic> en = {
     "addressMustNotBeEmpty": "address must not be empty",
     "shopNameMustNotBeEmpty": "Shop name must not be empty",
     "phoneMustNotBeEmpty": "phone must not be empty",
-    "myPromoCodes": "My Promo Codes"
+    "myPromoCodes": "My Promo Codes",
+    "sellerFirstName": "First Name",
+    "sellerSecondName": "Last Name",
+    "sellerName": "Name"
   },
   "dashboardScreen": {
     "noProductsError": "No Products Yet",

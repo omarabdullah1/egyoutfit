@@ -1,13 +1,13 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:egyoutfit/modules/login/cubit/states.dart';
+import 'package:egyoutfit/shared/components/components.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../models/user/user_model.dart';
 import '../../../shared/network/local/cache_helper.dart';
+import '../login_screen.dart';
 
 
 class ShopLoginCubit extends Cubit<ShopLoginStates> {
@@ -36,9 +36,13 @@ class ShopLoginCubit extends Cubit<ShopLoginStates> {
           .doc(value.user.uid)
           .get()
           .then((value) async {
-        loginModel = UserModel.fromJson(value.data());
-
-        emit(ShopLoginSuccessState(loginModel));
+            if(value.data()['isEmailVerfied']) {
+              loginModel = UserModel.fromJson(value.data());
+              emit(ShopLoginSuccessState(loginModel));
+            }else {
+              signOut(context);
+              emit(ShopLoginErrorState(('error.toString()')));
+            }
       }).catchError((error) {
         log(error.toString());
         emit(ShopLoginErrorState((error.toString())));
@@ -49,14 +53,31 @@ class ShopLoginCubit extends Cubit<ShopLoginStates> {
     });
   }
 
+  void signOut(context) {
+    CacheHelper.removeData(
+      key: 'token',
+    ).then((value) {
+      if (value) {
+        emit(ShopLogoutState());
+        navigateAndFinish(
+          context,
+          const LoginScreen(),
+        );
+      }
+    });
+  }
   IconData suffix = Icons.visibility_outlined;
   bool isPassword = true;
 
   Future<void> resetPassword(email) async {
     emit(ResetPasswordLoadingState());
     await FirebaseAuth.instance.sendPasswordResetEmail(email: email).then((
-        value) => emit(ResetPasswordSuccessState())).catchError((err) {
+        value) {
+      showToast(text: 'The email has been sent', state: ToastStates.success);
+      emit(ResetPasswordSuccessState());
+    }).catchError((err) {
       log(err.toString());
+      showToast(text: 'Error when sending Email', state: ToastStates.error);
       emit(ResetPasswordErrorState());
     });
   }

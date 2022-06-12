@@ -1675,8 +1675,8 @@ Widget buildRequests({
                       itemCount: model.length,
                     ),
                   )
-                : const Center(
-                    child: Text('No Requests Yet'),
+                : Center(
+                    child: Text(LocaleKeys.alerts_noOrdersYet.tr()),
                   ),
           ],
         ),

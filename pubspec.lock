@@ -196,21 +196,21 @@ packages:
       name: firebase_auth
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.3.18"
+    version: "3.3.19"
   firebase_auth_platform_interface:
     dependency: transitive
     description:
       name: firebase_auth_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.2.6"
+    version: "6.2.7"
   firebase_auth_web:
     dependency: transitive
     description:
       name: firebase_auth_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.3.15"
+    version: "3.3.16"
   firebase_core:
     dependency: "direct main"
     description:
@@ -292,7 +292,7 @@ packages:
       name: flutter_bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "7.1.0"
+    version: "7.3.3"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -532,13 +532,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
-  overlay_support:
-    dependency: "direct main"
-    description:
-      name: overlay_support
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.2.1"
   page_transition:
     dependency: transitive
     description:
@@ -608,7 +601,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.0"
+    version: "6.0.3"
   shared_preferences:
     dependency: "direct main"
     description:

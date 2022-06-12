@@ -10,11 +10,36 @@ import '../../../shared/components/components.dart';
 import '../../../translations/locale_keys.g.dart';
 import '../home_selected_product/selected_prodct.dart';
 
-class ProductsScreen extends StatelessWidget {
+class ProductsScreen extends StatefulWidget {
   const ProductsScreen({Key key}) : super(key: key);
 
   @override
+  State<ProductsScreen> createState() => _ProductsScreenState();
+}
+
+class _ProductsScreenState extends State<ProductsScreen> {
+  @override
+  void initState() {
+    Future.delayed(const Duration(seconds: 2), () {
+      ShopCubit.get(context).getData(context);
+      ShopCubit.get(context).getAllProducts();
+      ShopCubit.get(context).getFavourite();
+      ShopCubit.get(context).getCart();
+      ShopCubit.get(context).getOrders();
+      ShopCubit.get(context).getPromoCodes();
+      ShopCubit.get(context).getProducts('Men');
+      ShopCubit.get(context).getProducts('Women');
+      ShopCubit.get(context).getProducts('Children');
+      ShopCubit.get(context).getProducts('Bags');
+      ShopCubit.get(context).getProducts('Accessories');
+      ShopCubit.get(context).getProducts('Shoe');
+      ShopCubit.get(context).getProducts('Sports');
+    });
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
+    ShopCubit.get(context).isEnglish = EasyLocalization.of(context).locale.languageCode == 'en'? true : false;
     return BlocConsumer<ShopCubit, ShopStates>(
       listener: (context, state) {
         if (state is ShopLoginSuccessState) {
@@ -31,7 +56,8 @@ class ProductsScreen extends StatelessWidget {
       },
       builder: (context, state) {
         return ConditionalBuilder(
-          condition: ShopCubit.get(context).products != null &&
+          condition: state is! FSuccessState &&
+              ShopCubit.get(context).products != null &&
               ShopCubit.get(context).menCategory != null &&
               ShopCubit.get(context).womenCategory != null &&
               ShopCubit.get(context).childrenCategory != null &&
@@ -49,7 +75,8 @@ class ProductsScreen extends StatelessWidget {
     );
   }
 
-  Widget builderWidget(context) => RefreshIndicator(
+  Widget builderWidget(context) {
+    return RefreshIndicator(
         onRefresh: () {
           return Future.delayed(const Duration(seconds: 2), () {
             ShopCubit.get(context).getAllProducts();
@@ -153,9 +180,9 @@ class ProductsScreen extends StatelessWidget {
                                         ShopCubit.get(context).womenCategoryID,
 
                                     name: EasyLocalization.of(context)
-                                        .locale
-                                        .languageCode ==
-                                        'en'
+                                                .locale
+                                                .languageCode ==
+                                            'en'
                                         ? 'Women\'s'
                                         : 'الموضة النسائية',
                                     // width: 28.0,
@@ -182,9 +209,9 @@ class ProductsScreen extends StatelessWidget {
                                     mmodelID:
                                         ShopCubit.get(context).shoeCategoryID,
                                     name: EasyLocalization.of(context)
-                                        .locale
-                                        .languageCode ==
-                                        'en'
+                                                .locale
+                                                .languageCode ==
+                                            'en'
                                         ? 'Shoes'
                                         : 'أحذية',
                                   ),
@@ -204,9 +231,9 @@ class ProductsScreen extends StatelessWidget {
                                     mmodelID:
                                         ShopCubit.get(context).bagCategoryID,
                                     name: EasyLocalization.of(context)
-                                        .locale
-                                        .languageCode ==
-                                        'en'
+                                                .locale
+                                                .languageCode ==
+                                            'en'
                                         ? 'Bags'
                                         : 'الحقائب',
                                   ),
@@ -234,9 +261,9 @@ class ProductsScreen extends StatelessWidget {
                                     mmodelID:
                                         ShopCubit.get(context).sportCategoryID,
                                     name: EasyLocalization.of(context)
-                                        .locale
-                                        .languageCode ==
-                                        'en'
+                                                .locale
+                                                .languageCode ==
+                                            'en'
                                         ? 'Sports'
                                         : 'الملابس الرياضية',
                                   ),
@@ -258,9 +285,9 @@ class ProductsScreen extends StatelessWidget {
                                     mmodelID: ShopCubit.get(context)
                                         .childrenCategoryID,
                                     name: EasyLocalization.of(context)
-                                        .locale
-                                        .languageCode ==
-                                        'en'
+                                                .locale
+                                                .languageCode ==
+                                            'en'
                                         ? 'Children'
                                         : 'ملابس أطفال',
                                   ),
@@ -288,9 +315,9 @@ class ProductsScreen extends StatelessWidget {
                                     mmodelID: ShopCubit.get(context)
                                         .accessoriesCategoryID,
                                     name: EasyLocalization.of(context)
-                                        .locale
-                                        .languageCode ==
-                                        'en'
+                                                .locale
+                                                .languageCode ==
+                                            'en'
                                         ? 'Accessories'
                                         : 'اكسسوارات',
                                   ),
@@ -622,6 +649,5 @@ class ProductsScreen extends StatelessWidget {
           ),
         ),
       );
-
-//       text: model.name,
+  }
 }

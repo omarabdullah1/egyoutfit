@@ -1,3 +1,5 @@
+// ignore_for_file: missing_required_param
+
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,7 +8,6 @@ import 'package:egyoutfit/modules/register/cubit/states.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../models/shop_app/login_model.dart';
 import '../../../models/user/user_model.dart';
 
 class ShopRegisterCubit extends Cubit<ShopRegisterStates> {
@@ -14,7 +15,7 @@ class ShopRegisterCubit extends Cubit<ShopRegisterStates> {
 
   static ShopRegisterCubit get(context) => BlocProvider.of(context);
 
-  ShopLoginModel loginModel;
+  UserModel loginModel;
   String userRegisterDropdownValueEn;
   String userRegisterDropdownValueAr;
   String sellerRegisterDropdownValueEn;
@@ -92,6 +93,7 @@ class ShopRegisterCubit extends Cubit<ShopRegisterStates> {
     @required String city,
     String organization,
     @required bool isSeller,
+    @required context,
   }) {
     emit(ShopRegisterLoadingState());
     FirebaseAuth.instance
@@ -105,12 +107,12 @@ class ShopRegisterCubit extends Cubit<ShopRegisterStates> {
         firstName: firstName,
         secondName: secondName,
         uId: value.user.uid,
-        isEmailVerified: false,
+        isEmailVerified: true,
         address: address,
         phone: phone,
         isSeller: isSeller,
         area: area,
-        city: city,
+        city: EasyLocalization.of(context).locale.languageCode == 'en'? city : itemsEn[itemsAr.indexOf(city)],
         organization: organization,
       );
     }).catchError((error) {
@@ -148,7 +150,7 @@ class ShopRegisterCubit extends Cubit<ShopRegisterStates> {
       city: city,
       organization: organization,
       image:
-          'https://play-lh.googleusercontent.com/pkDx7qzmaH0F8LF6Q8W2JX0OCYxrIkoNyGI3QQ7ozwJ19ncR6HuZuBP5MuYcuWL_cQ',
+          'https://firebasestorage.googleapis.com/v0/b/egyoutfit-a9d89.appspot.com/o/users%2Funnamed.png?alt=media&token=215eb99f-ad92-464e-9c25-349468478afb',
     );
     FirebaseFirestore.instance
         .collection('users')

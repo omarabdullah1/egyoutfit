@@ -84,130 +84,162 @@ class CreateProductScreen2 extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const SizedBox(
-                                height: 30,
-                              ),
-                              Text(
-                                LocaleKeys.sellerCreateProductScreen_size.tr() +
-                                    ':  ',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 20.0,
-                                    color: Colors.black45),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                      child: buildSizeCircle(
-                                          size: 'S',
-                                          state:
-                                              DashboardCubit.get(context).isS),
-                                      onTap: () {
-                                        DashboardCubit.get(context)
-                                            .changeSize('isS');
-                                      }),
-                                  const SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  GestureDetector(
-                                      child: buildSizeCircle(
-                                          size: 'M',
-                                          state:
-                                              DashboardCubit.get(context).isM),
-                                      onTap: () {
-                                        DashboardCubit.get(context)
-                                            .changeSize('isM');
-                                      }),
-                                  const SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  GestureDetector(
-                                    child: buildSizeCircle(
-                                        size: 'L',
-                                        state: DashboardCubit.get(context).isL),
-                                    onTap: () {
-                                      DashboardCubit.get(context)
-                                          .changeSize('isL');
-                                    },
-                                  ),
-                                  const SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  GestureDetector(
-                                    child: buildSizeCircle(
-                                        size: 'XL',
-                                        state:
-                                            DashboardCubit.get(context).isXL),
-                                    onTap: () {
-                                      DashboardCubit.get(context)
-                                          .changeSize('isXL');
-                                    },
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 15.0,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                    child: buildSizeCircle(
-                                        size: '2XL',
-                                        state:
-                                            DashboardCubit.get(context).is2XL),
-                                    onTap: () {
-                                      DashboardCubit.get(context)
-                                          .changeSize('is2XL');
-                                    },
-                                  ),
-                                  const SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  GestureDetector(
-                                    child: buildSizeCircle(
-                                        size: '3XL',
-                                        state:
-                                            DashboardCubit.get(context).is3XL),
-                                    onTap: () {
-                                      DashboardCubit.get(context)
-                                          .changeSize('is3XL');
-                                    },
-                                  ),
-                                  const SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  GestureDetector(
-                                    child: buildSizeCircle(
-                                        size: '4XL',
-                                        state:
-                                            DashboardCubit.get(context).is4XL),
-                                    onTap: () {
-                                      DashboardCubit.get(context)
-                                          .changeSize('is4XL');
-                                    },
-                                  ),
-                                  const SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  GestureDetector(
-                                    child: buildSizeCircle(
-                                        size: '5XL',
-                                        state:
-                                            DashboardCubit.get(context).is5XL),
-                                    onTap: () {
-                                      DashboardCubit.get(context)
-                                          .changeSize('is5XL');
-                                    },
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 15,
-                              ),
+                              !(category == 'Shoe' ||
+                                      category == 'Bags' ||
+                                      category == 'Accessories')
+                                  ? const SizedBox(
+                                      height: 30,
+                                    )
+                                  : const SizedBox(),
+                              !(category == 'Shoe' ||
+                                      category == 'Bags' ||
+                                      category == 'Accessories')
+                                  ? Text(
+                                      LocaleKeys.sellerCreateProductScreen_size
+                                              .tr() +
+                                          ':  ',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: 20.0,
+                                          color: Colors.black45),
+                                    )
+                                  : const SizedBox(),
+                              !(category == 'Shoe' ||
+                                      category == 'Bags' ||
+                                      category == 'Accessories')
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        GestureDetector(
+                                            child: buildSizeCircle(
+                                                size: 'S',
+                                                state:
+                                                    DashboardCubit.get(context)
+                                                        .isS),
+                                            onTap: () {
+                                              DashboardCubit.get(context)
+                                                  .changeSize('isS');
+                                            }),
+                                        const SizedBox(
+                                          width: 10.0,
+                                        ),
+                                        GestureDetector(
+                                            child: buildSizeCircle(
+                                                size: 'M',
+                                                state:
+                                                    DashboardCubit.get(context)
+                                                        .isM),
+                                            onTap: () {
+                                              DashboardCubit.get(context)
+                                                  .changeSize('isM');
+                                            }),
+                                        const SizedBox(
+                                          width: 10.0,
+                                        ),
+                                        GestureDetector(
+                                          child: buildSizeCircle(
+                                              size: 'L',
+                                              state: DashboardCubit.get(context)
+                                                  .isL),
+                                          onTap: () {
+                                            DashboardCubit.get(context)
+                                                .changeSize('isL');
+                                          },
+                                        ),
+                                        const SizedBox(
+                                          width: 10.0,
+                                        ),
+                                        GestureDetector(
+                                          child: buildSizeCircle(
+                                              size: 'XL',
+                                              state: DashboardCubit.get(context)
+                                                  .isXL),
+                                          onTap: () {
+                                            DashboardCubit.get(context)
+                                                .changeSize('isXL');
+                                          },
+                                        ),
+                                      ],
+                                    )
+                                  : const SizedBox(),
+                              !(category == 'Shoe' ||
+                                      category == 'Bags' ||
+                                      category == 'Accessories')
+                                  ? const SizedBox(
+                                      height: 15.0,
+                                    )
+                                  : const SizedBox(),
+                              !(category == 'Shoe' ||
+                                      category == 'Bags' ||
+                                      category == 'Accessories')
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        GestureDetector(
+                                          child: buildSizeCircle(
+                                              size: '2XL',
+                                              state: DashboardCubit.get(context)
+                                                  .is2XL),
+                                          onTap: () {
+                                            DashboardCubit.get(context)
+                                                .changeSize('is2XL');
+                                          },
+                                        ),
+                                        const SizedBox(
+                                          width: 10.0,
+                                        ),
+                                        GestureDetector(
+                                          child: buildSizeCircle(
+                                              size: '3XL',
+                                              state: DashboardCubit.get(context)
+                                                  .is3XL),
+                                          onTap: () {
+                                            DashboardCubit.get(context)
+                                                .changeSize('is3XL');
+                                          },
+                                        ),
+                                        const SizedBox(
+                                          width: 10.0,
+                                        ),
+                                        GestureDetector(
+                                          child: buildSizeCircle(
+                                              size: '4XL',
+                                              state: DashboardCubit.get(context)
+                                                  .is4XL),
+                                          onTap: () {
+                                            DashboardCubit.get(context)
+                                                .changeSize('is4XL');
+                                          },
+                                        ),
+                                        const SizedBox(
+                                          width: 10.0,
+                                        ),
+                                        GestureDetector(
+                                          child: buildSizeCircle(
+                                              size: '5XL',
+                                              state: DashboardCubit.get(context)
+                                                  .is5XL),
+                                          onTap: () {
+                                            DashboardCubit.get(context)
+                                                .changeSize('is5XL');
+                                          },
+                                        ),
+                                      ],
+                                    )
+                                  : const SizedBox(),
+                              !(category == 'Shoe' ||
+                                      category == 'Bags' ||
+                                      category == 'Accessories')
+                                  ? const SizedBox(
+                                      height: 15,
+                                    )
+                                  : const SizedBox(),
                               Text(
                                 LocaleKeys.sellerCreateProductScreen_priceOffers
                                     .tr(),
@@ -271,11 +303,11 @@ class CreateProductScreen2 extends StatelessWidget {
                                 isValidate: true,
                                 validate: (value) {
                                   if (value.isEmpty) {
-                                    if(DashboardCubit.get(context)
+                                    if (DashboardCubit.get(context)
                                         .discountToggle) {
                                       return LocaleKeys
-                                        .sellerCreateProductScreen_pleaseEnterDiscount
-                                        .tr();
+                                          .sellerCreateProductScreen_pleaseEnterDiscount
+                                          .tr();
                                     }
                                   }
                                 },
@@ -354,8 +386,11 @@ class CreateProductScreen2 extends StatelessWidget {
                                         name: name,
                                         price: int.parse(priceController.text),
                                         oldPrice: 0,
-                                        discount: discountController.text.isNotEmpty?double.parse(
-                                            discountController.text):0.0,
+                                        discount:
+                                            discountController.text.isNotEmpty
+                                                ? double.parse(
+                                                    discountController.text)
+                                                : 0.0,
                                         // image: images,
                                         pbid: DashboardCubit.get(context)
                                             .createId(6),
@@ -375,7 +410,8 @@ class CreateProductScreen2 extends StatelessWidget {
                                             .deliveryToggle,
                                         isDiscount: DashboardCubit.get(context)
                                             .discountToggle,
-                                        shippingPrice: costController.text??'0',
+                                        shippingPrice:
+                                            costController.text ?? '0',
                                         state: 'Pending',
                                       );
                                     }

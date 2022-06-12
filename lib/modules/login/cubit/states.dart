@@ -32,3 +32,5 @@ class ResetPasswordLoadingState extends ShopLoginStates {}
 class ResetPasswordSuccessState extends ShopLoginStates {}
 
 class ResetPasswordErrorState extends ShopLoginStates {}
+
+class ShopLogoutState extends ShopLoginStates {}

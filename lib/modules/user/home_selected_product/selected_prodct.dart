@@ -315,6 +315,15 @@ class _HomeSelectedProductScreenState extends State<HomeSelectedProductScreen> {
                         ),
                       ),
                     ),
+                    Text(
+                      '#'+widget.mmodel.pbid,
+                      maxLines: 2,
+                      style: const TextStyle(
+                        fontSize: 14.0,
+                        height: 1.3,
+                        color: Colors.grey,
+                      ),
+                    ),
                     Row(
                       children: [
                         Expanded(

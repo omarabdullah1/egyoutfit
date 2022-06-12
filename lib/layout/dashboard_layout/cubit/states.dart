@@ -1,6 +1,5 @@
 
-import '../../../models/shop_app/login_model.dart';
-
+import 'package:egyoutfit/models/user/user_model.dart';
 abstract class DashboardStates {}
 
 class DashboardInitialState extends DashboardStates {}
@@ -107,12 +106,14 @@ class SellerSendMessagesErrorState extends DashboardStates {}
 
 class SellerGetAllMessagesSuccessState extends DashboardStates {}
 
+class ShopRegisterChangeDropValueState extends DashboardStates {}
+
 
 class LoadingState extends DashboardStates {}
 class SuccessState extends DashboardStates {}
 
 class DashboardLoginSuccessState extends DashboardStates {
-  final ShopLoginModel loginModel;
+  final UserModel loginModel;
   DashboardLoginSuccessState(this.loginModel);
 }
 

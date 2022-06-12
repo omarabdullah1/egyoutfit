@@ -5,16 +5,16 @@ import 'dart:math' as math;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:egyoutfit/layout/dashboard_layout/cubit/states.dart';
+import 'package:egyoutfit/models/user/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../models/message/MessageModel.dart';
+import '../../../models/message/message_model.dart';
 import '../../../models/orders/orders_model.dart';
 import '../../../models/promo/promo_model.dart';
-import '../../../models/shop_app/login_model.dart';
 import '../../../models/shop_app/products_model.dart';
 import '../../../modules/login/login_screen.dart';
 import '../../../modules/service_provider/dashboard_screen/dashboard_screen.dart';
@@ -145,6 +145,71 @@ class DashboardCubit extends Cubit<DashboardStates> {
     'مكتمل',
     'ملغي',
   ];
+
+
+  String userRegisterDropdownValueEn;
+  String userRegisterDropdownValueAr;
+  List cityItemsEn = <String>[
+    'Cairo',
+    'Alexandria',
+    'Giza',
+    'Matrouh',
+    'Port Said',
+    'Helwan',
+    'Port Said',
+    'Al-Mahallah Al-Kubra',
+    'Tanta',
+    'Suez',
+    'Asyut',
+    'Al-Fayoum',
+    'Ismailia',
+    'Damietta',
+    'Al-Minya',
+    'Luxor',
+    'Qema',
+    'Sohag',
+    'Bani Sewief',
+    'Al-Sharkya',
+    'Al-Gharbya',
+    'Sinai',
+    'Al-Wady El-Geded',
+    'Al-Monofya',
+    'Qalubia',
+    'Dakahlya',
+    'Red Sea',
+    'Beheira',
+  ];
+  List cityItemsAr = <String>[
+    "القاهرة",
+    'الإسكندرية',
+    'الجيزة',
+    'مطروح',
+    'بورسعيد',
+    'حلوان',
+    'بورسعيد'
+        'المحلة الكبرى',
+    "طنطا",
+    "السويس",
+    "أسيوط",
+    "الفيوم",
+    'الإسماعيلية',
+    'دمياط',
+    'المنيا',
+    "الأقصر",
+    'قمة',
+    'سوهاج',
+    "بني سويف",
+    'الشرقية',
+    'الغربية',
+    'سيناء',
+    'الوادي الجديد',
+    'المنوفية',
+    'القليوبية',
+    'الدقهلية',
+    'البحر الاحمر',
+    "البحيرة",
+  ];
+
   bool isS = false;
   bool isM = false;
   bool isL = false;
@@ -193,7 +258,7 @@ class DashboardCubit extends Cubit<DashboardStates> {
   Color dropDownValueColor = Colors.white;
   Color requesdtDropDownValueColor = Colors.white;
 
-  ShopLoginModel loginModel;
+  UserModel loginModel;
 
   userLogin({
     @required context,
@@ -209,7 +274,7 @@ class DashboardCubit extends Cubit<DashboardStates> {
           .doc(value.user.uid)
           .get()
           .then((value) async {
-        loginModel = ShopLoginModel.fromJson(value.data());
+        loginModel = UserModel.fromJson(value.data());
         isSaturday=loginModel.sat;
         isSunday=loginModel.sun;
         isMonday=loginModel.mon;
@@ -230,10 +295,12 @@ class DashboardCubit extends Cubit<DashboardStates> {
 
   updateSellerData({
     uid,
-    name,
+    fname,
+    sname,
     phone,
     address,
     organization,
+    city,
     sat,
     sun,
     mon,
@@ -248,9 +315,11 @@ class DashboardCubit extends Cubit<DashboardStates> {
     if (image != null) {
       await FirebaseFirestore.instance.collection('users').doc(uid).update({
         'address': address,
-        'firstName': name,
+        'firstName': fname,
+        'secondName': sname,
         'phone': phone,
         'organization': organization,
+        'city': EasyLocalization.of(context).locale.languageCode == 'en'? city : cityItemsEn[cityItemsAr.indexOf(city)],
         'image': image,
         'sat': sat,
         'sun': sun,
@@ -269,9 +338,7 @@ class DashboardCubit extends Cubit<DashboardStates> {
         firebaseImagesEdit = null;
         await getAllProducts();
         await getAllOrdered(context);
-        currentIndex=0;
         emit(UpdateStateSuccessDashboardState());
-        Navigator.pop(context);
       }).catchError((err) {
         log(err.toString());
         emit(UpdateStateErrorDashboardState());
@@ -279,9 +346,11 @@ class DashboardCubit extends Cubit<DashboardStates> {
     } else {
       await FirebaseFirestore.instance.collection('users').doc(uid).update({
         'address': address,
-        'firstName': name,
+        'firstName': fname,
+        'secondName': sname,
         'phone': phone,
         'organization': organization,
+        'city': EasyLocalization.of(context).locale.languageCode == 'en'? city : cityItemsEn[cityItemsAr.indexOf(city)],
         'sat': sat,
         'sun': sun,
         'mon': mon,
@@ -510,7 +579,7 @@ class DashboardCubit extends Cubit<DashboardStates> {
     @required String state,
   }) async {
     emit(CreateProductLoadingState());
-    var create = await FirebaseFirestore.instance.collection('products').doc();
+    var create = FirebaseFirestore.instance.collection('products').doc();
     create.set({
       'category': category,
       'description': description,
@@ -781,10 +850,12 @@ class DashboardCubit extends Cubit<DashboardStates> {
 
   Future<void> uploadProfileImageToFireBase({
     uid,
-    name,
+    fname,
+    sname,
     phone,
     address,
     organization,
+    city,
     sat,
     sun,
     mon,
@@ -808,12 +879,14 @@ class DashboardCubit extends Cubit<DashboardStates> {
             log(value.toString());
             updateSellerData(
               uid: uid,
-              name: name,
+              fname: fname,
+              sname: sname,
               phone: phone,
               organization: organization,
               address: address,
               image: firebaseImagesEdit,
               context: context,
+              city: city,
               sat: sat,
               sun: sun,
               mon: mon,
@@ -1397,14 +1470,37 @@ class DashboardCubit extends Cubit<DashboardStates> {
     // continue accessing the position of the device.
     return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   }
-  var Address='';
+  var address='';
   Placemark place;
-  Future<void> GetAddressFromLatLong(Position position)async {
+  Future<void> getAddressFromLatLong(Position position)async {
     List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
-    print(placemarks);
+    log(placemarks.toString());
     place = placemarks[0];
-    Address = '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
-    log(Address);
+    address = '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
+    log(address);
+  }
+
+  userChangeDropValue(value, context) {
+    EasyLocalization.of(context).locale.languageCode == 'en'
+        ? userRegisterDropdownValueEn = value
+        : userRegisterDropdownValueAr = value;
+    emit(ShopRegisterChangeDropValueState());
+  }
+  Future<void> resetEmailAddress(
+      {String newEmail, String oldEmail, String password,context}) async {
+    var authResult = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: oldEmail, password: password);
+    await authResult.user.updateEmail(newEmail);
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(authResult.user.uid)
+        .update({
+      'email': newEmail,
+      'uId': authResult.user.uid,
+    }).then((value) {
+      CacheHelper.saveData(key: 'user', value: newEmail);
+    });
+    userLogin(context: context, email: newEmail, password: password);
   }
 
 }

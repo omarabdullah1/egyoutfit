@@ -3,13 +3,14 @@ import 'package:conditional_builder/conditional_builder.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../layout/dashboard_layout/dashboard_layout.dart';
+import '../../layout/shop_app/shop_layout.dart';
 import '../../shared/components/components.dart';
 import '../../shared/components/constants.dart';
 import '../../shared/network/local/cache_helper.dart';
 import '../../translations/locale_keys.g.dart';
 import 'cubit/cubit.dart';
 import 'cubit/states.dart';
-import 'otp_screen.dart';
 
 class PhoneScreen extends StatefulWidget {
   final String firstName;
@@ -61,7 +62,11 @@ class _PhoneScreenState extends State<PhoneScreen> {
               CacheHelper.saveData(
                   key: 'isSeller', value: state.userModel.isSeller);
               token = state.userModel.uId;
-              navigateAndFinish(context, OtpScreen(state.userModel));
+              if (state.userModel.isSeller) {
+                navigateAndFinish(context, const DashboardLayout());
+              } else {
+                navigateAndFinish(context, const ShopLayout());
+              }
             });
           }
           if (state is ShopRegisterErrorState) {
@@ -139,11 +144,12 @@ class _PhoneScreenState extends State<PhoneScreen> {
                               type: TextInputType.phone,
                               label: LocaleKeys.signUpScreen_phoneNumber.tr(),
                               isPrefixText: true,
-                              prefix:  Column(
+                              prefix: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: const [
                                   Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
                                     child: Text(
                                       '(+02)',
                                       style: TextStyle(
@@ -168,7 +174,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
                                   log('true');
                                   phoneController.text = phoneController.text
                                       .substring(
-                                      0, phoneController.text.length - 1);
+                                          0, phoneController.text.length - 1);
                                 }
                               },
                             ),
@@ -178,25 +184,29 @@ class _PhoneScreenState extends State<PhoneScreen> {
                             SizedBox(
                               child: ConditionalBuilder(
                                 condition: state is! ShopRegisterLoadingState,
-                                fallback: (context)=>const CircularProgressIndicator(),
-                                builder:(context)=> MaterialButton(
+                                fallback: (context) =>
+                                    const CircularProgressIndicator(),
+                                builder: (context) => MaterialButton(
                                   height: 55,
                                   minWidth: 240,
                                   elevation: 5.0,
                                   onPressed: () {
                                     if (formKey.currentState.validate()) {
                                       log(phoneController.text);
-                                      ShopRegisterCubit.get(context).userRegister(
-                                          firstName: widget.firstName,
-                                          secondName: widget.secondName,
-                                          email: widget.email,
-                                          password: widget.password,
-                                          address: widget.address,
-                                          phone: phoneController.text,
-                                          isSeller: widget.isSeller,
-                                          area: widget.area,
-                                          city: widget.city,
-                                          organization: widget.organization);
+                                      ShopRegisterCubit.get(context)
+                                          .userRegister(
+                                        firstName: widget.firstName,
+                                        secondName: widget.secondName,
+                                        email: widget.email,
+                                        password: widget.password,
+                                        address: widget.address,
+                                        phone: phoneController.text,
+                                        isSeller: widget.isSeller,
+                                        area: widget.area,
+                                        city: widget.city,
+                                        organization: widget.organization,
+                                        context: context,
+                                      );
                                     }
                                   },
                                   shape: RoundedRectangleBorder(

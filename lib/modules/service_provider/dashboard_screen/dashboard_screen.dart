@@ -30,6 +30,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             : DashboardCubit.get(context).lastDropDownValueAr,
         context,
       );
+      DashboardCubit.get(context).isEnglish =
+      EasyLocalization.of(context).locale.languageCode == 'en' ? true : false;
     });
     super.initState();
   }

@@ -2,11 +2,9 @@ import 'package:conditional_builder/conditional_builder.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:egyoutfit/layout/shop_app/cubit/states.dart';
 import 'package:egyoutfit/modules/user/profile/user_orders_screen.dart';
-import 'package:egyoutfit/shared/network/local/cache_helper.dart';
 import 'package:egyoutfit/translations/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:showcaseview/showcaseview.dart';
 import '../../../layout/shop_app/cubit/cubit.dart';
 import '../../../shared/components/components.dart';
 import 'change_password_screen.dart';
@@ -115,10 +113,8 @@ class UserProfile extends StatelessWidget {
                                 width: 15,
                               ),
                               Text(
-                                LocaleKeys.userAccountScreen_orders
-                                    .tr(),
-                                style: const TextStyle(
-                                    color: Colors.black),
+                                LocaleKeys.userAccountScreen_orders.tr(),
+                                style: const TextStyle(color: Colors.black),
                               ),
                               const Spacer(),
                               const Icon(
@@ -158,6 +154,12 @@ class UserProfile extends StatelessWidget {
                           },
                           child: Row(
                             children: [
+                              const Icon(
+                                Icons.person,
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
                               Text(
                                 LocaleKeys.userAccountScreen_details.tr(),
                                 style: const TextStyle(color: Colors.black),
@@ -180,6 +182,12 @@ class UserProfile extends StatelessWidget {
                           },
                           child: Row(
                             children: [
+                              const Icon(
+                                Icons.lock,
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
                               Text(
                                 LocaleKeys.userAccountScreen_changePassword
                                     .tr(),
@@ -197,13 +205,47 @@ class UserProfile extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: myDivider(),
                         ),
+                        InkWell(
+                          onTap: () {},
+                          child: Container(
+                            height: 30,
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.contact_support,
+                                ),
+                                const SizedBox(
+                                  width: 8,
+                                ),
+                                Text(
+                                  LocaleKeys.sellerAcountScreen_contactUs.tr(),
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                                const Spacer(),
+                                const Icon(
+                                  Icons.navigate_next,
+                                  color: Colors.black,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                         Row(
                           children: [
+                            const Icon(
+                              Icons.language,
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
                             Text(
                               LocaleKeys.userAccountScreen_changeLanguage.tr(),
                               style: const TextStyle(color: Colors.black),
                             ),
                             const Spacer(),
+                            const Text('AR',
+                                style: TextStyle(color: Colors.black)),
                             Switch(
                               value: ShopCubit.get(context).isEnglish,
                               onChanged: (v) {
@@ -211,6 +253,8 @@ class UserProfile extends StatelessWidget {
                                     .changeLanguageValue(v, context);
                               },
                             ),
+                            const Text('EN',
+                                style: TextStyle(color: Colors.black)),
                           ],
                         ),
                       ],

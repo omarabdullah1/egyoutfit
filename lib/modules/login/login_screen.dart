@@ -31,30 +31,9 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ShopLoginCubit()
-        ..changeLanguageValue(
-          CacheHelper.getData(key: 'lang') != null
-              ? CacheHelper.getData(key: 'lang') == 'en'
-                  ? true
-                  : false
-              : true,
-          context,
-        ),
+      create: (context) => ShopLoginCubit(),
       child: BlocConsumer<ShopLoginCubit, ShopLoginStates>(
         listener: (context, state) async {
-          if (ShopLoginCubit.get(context).isEnglish) {
-            await context.setLocale(const Locale('en'));
-            await CacheHelper.saveData(
-              key: 'lang',
-              value: 'en',
-            );
-          } else {
-            await context.setLocale(const Locale('ar'));
-            await CacheHelper.saveData(
-              key: 'lang',
-              value: 'ar',
-            );
-          }
           if (state is ShopLoginSuccessState) {
             log(state.loginModel.firstName);
             log(state.loginModel.uId);

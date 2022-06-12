@@ -134,6 +134,15 @@ abstract class  LocaleKeys {
   static const alerts_ok = 'alerts.ok';
   static const alerts_yourOfferWillBeDeleted = 'alerts.yourOfferWillBeDeleted';
   static const alerts_openOrdersToSee = 'alerts.openOrdersToSee';
+  static const alerts_newPassword = 'alerts.newPassword';
+  static const alerts_update = 'alerts.update';
+  static const alerts_newPasswordConfirm = 'alerts.newPasswordConfirm';
+  static const alerts_oldPassword = 'alerts.oldPassword';
+  static const alerts_pleaseEnterOldPassword = 'alerts.pleaseEnterOldPassword';
+  static const alerts_pleasEenterNewPassword = 'alerts.pleasEenterNewPassword';
+  static const alerts_pleasEenterNewPasswordConfirm = 'alerts.pleasEenterNewPasswordConfirm';
+  static const alerts_passwordUpdatedSuccessfully = 'alerts.passwordUpdatedSuccessfully';
+  static const alerts_noOrdersYet = 'alerts.noOrdersYet';
   static const alerts = 'alerts';
   static const sellerAcountScreen_account = 'sellerAcountScreen.account';
   static const sellerAcountScreen_welcome = 'sellerAcountScreen.welcome';
@@ -142,7 +151,6 @@ abstract class  LocaleKeys {
   static const sellerAcountScreen_changeLanguage = 'sellerAcountScreen.changeLanguage';
   static const sellerAcountScreen_contactUs = 'sellerAcountScreen.contactUs';
   static const sellerAcountScreen_myAccount = 'sellerAcountScreen.myAccount';
-  static const sellerAcountScreen_sellerName = 'sellerAcountScreen.sellerName';
   static const sellerAcountScreen_sellerAddress = 'sellerAcountScreen.sellerAddress';
   static const sellerAcountScreen_sellerOrganization = 'sellerAcountScreen.sellerOrganization';
   static const sellerAcountScreen_sellerPhone = 'sellerAcountScreen.sellerPhone';
@@ -161,6 +169,9 @@ abstract class  LocaleKeys {
   static const sellerAcountScreen_shopNameMustNotBeEmpty = 'sellerAcountScreen.shopNameMustNotBeEmpty';
   static const sellerAcountScreen_phoneMustNotBeEmpty = 'sellerAcountScreen.phoneMustNotBeEmpty';
   static const sellerAcountScreen_myPromoCodes = 'sellerAcountScreen.myPromoCodes';
+  static const sellerAcountScreen_sellerFirstName = 'sellerAcountScreen.sellerFirstName';
+  static const sellerAcountScreen_sellerSecondName = 'sellerAcountScreen.sellerSecondName';
+  static const sellerAcountScreen_sellerName = 'sellerAcountScreen.sellerName';
   static const sellerAcountScreen = 'sellerAcountScreen';
   static const dashboardScreen_noProductsError = 'dashboardScreen.noProductsError';
   static const dashboardScreen_allProducts = 'dashboardScreen.allProducts';

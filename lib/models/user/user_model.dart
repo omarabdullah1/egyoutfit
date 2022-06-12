@@ -16,6 +16,14 @@ class UserModel {
   List cart;
   List size;
   List favorites;
+  bool sat;
+  bool sun;
+  bool mon;
+  bool tus;
+  bool wed;
+  bool thu;
+  bool fri;
+
   UserModel({
     @required this.firstName,
     @required this.secondName,
@@ -32,6 +40,13 @@ class UserModel {
     @required this.city,
     @required this.organization,
     @required this.image,
+    @required this.sat,
+    @required this.sun,
+    @required this.mon,
+    @required this.tus,
+    @required this.wed,
+    @required this.thu,
+    @required this.fri,
   });
   UserModel.fromJson(Map<String, dynamic> json) {
     email = json['email'];
@@ -49,6 +64,13 @@ class UserModel {
     organization = json['organization'];
     size = json['size'];
     image = json['image'];
+    sat = json['sat'];
+    sun = json['sun'];
+    mon = json['mon'];
+    thu = json['tus'];
+    wed = json['wed'];
+    thu = json['thu'];
+    fri = json['fri'];
   }
   Map<String, dynamic> toMap() {
     return {
@@ -67,6 +89,13 @@ class UserModel {
       'organization': organization,
       'size': size,
       'image': image,
+      'sat': sat,
+      'sun': sun,
+      'mon': mon,
+      'tus': tus,
+      'wed': wed,
+      'thu': thu,
+      'fri': fri,
     };
   }
 }

@@ -138,7 +138,16 @@
     "cancel": " Cancel",
     "ok": "OK",
     "yourOfferWillBeDeleted": "Your Offer will be deleted if you want to continue press ok.",
-    "openOrdersToSee": "Open Orders to see your orders and chat with product sellers."
+    "openOrdersToSee": "Open Orders to see your orders and chat with product sellers.",
+    "newPassword": "New Password",
+    "update": "Update",
+    "newPasswordConfirm": "New Password Confirm",
+    "oldPassword": "Old Password",
+    "pleaseEnterOldPassword": "Please enter old password ",
+    "pleasEenterNewPassword": "Please enter new password",
+    "pleasEenterNewPasswordConfirm": "Please enter new password confirm",
+    "passwordUpdatedSuccessfully": "Password Updated Successfully",
+    "noOrdersYet": "No Orders Yet"
   },
   "sellerAcountScreen": {
     "account": "Account",
@@ -148,7 +157,6 @@
     "changeLanguage": "Change Language",
     "contactUs": "Contact US",
     "myAccount": "MY ACCOUNT",
-    "sellerName": "Name",
     "sellerAddress": "Address",
     "sellerOrganization": "Shop Name",
     "sellerPhone": "Phone Number",
@@ -166,7 +174,10 @@
     "addressMustNotBeEmpty": "address must not be empty",
     "shopNameMustNotBeEmpty": "Shop name must not be empty",
     "phoneMustNotBeEmpty": "phone must not be empty",
-    "myPromoCodes": "My Promo Codes"
+    "myPromoCodes": "My Promo Codes",
+    "sellerFirstName": "First Name",
+    "sellerSecondName": "Last Name",
+    "sellerName": "Name"
   },
   "dashboardScreen": {
     "noProductsError": "No Products Yet",

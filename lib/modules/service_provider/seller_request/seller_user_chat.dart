@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../layout/dashboard_layout/cubit/cubit.dart';
 import '../../../layout/dashboard_layout/cubit/states.dart';
 import '../../../models/orders/orders_model.dart';
-import '../../../models/shop_app/products_model.dart';
 
 class SellerUserChat extends StatefulWidget {
   const SellerUserChat(

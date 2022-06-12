@@ -138,7 +138,16 @@
     "cancel": "إلغاء",
     "ok": "موافق",
     "yourOfferWillBeDeleted": "سيتم حذف التخفيض إذا كنت تريد الاستمرار بالضغط على موافق.",
-    "openOrdersToSee": "افتح \"الطلبات\" لرؤية طلباتك والدردشة مع بائعي المنتجات"
+    "openOrdersToSee": "افتح \"الطلبات\" لرؤية طلباتك والدردشة مع بائعي المنتجات",
+    "newPassword": "كلمة السر الجديدة",
+    "update": "تحديث",
+    "newPasswordConfirm": "تأكيد كلمة المرور الجديدة",
+    "oldPassword": "كلمة المرور القديمة",
+    "pleaseEnterOldPassword": "الرجاء إدخال كلمة المرور القديمة",
+    "pleasEenterNewPassword": "الرجاء إدخال كلمة المرور الجديدة",
+    "pleasEenterNewPasswordConfirm": "الرجاء إدخال تأكيد كلمة المرور الجديدة",
+    "passwordUpdatedSuccessfully": "تم تحديث كلمة السر بنجاح",
+    "noOrdersYet": "لا توجد طلبات حتى الآن"
   },
   "sellerAcountScreen": {
     "account": "الحساب",
@@ -148,7 +157,6 @@
     "changeLanguage": "تغيير اللغة",
     "contactUs": "اتصل بنا",
     "myAccount": "حسابي",
-    "sellerName": "الاسم",
     "sellerAddress": "العنوان",
     "sellerOrganization": "اسم المتجر",
     "sellerPhone": "رقم الهانف",
@@ -166,7 +174,10 @@
     "addressMustNotBeEmpty": "يجب ألا يكون العنوان فارغًا",
     "shopNameMustNotBeEmpty": "يجب ألا يكون اسم المتجر فارغًا",
     "phoneMustNotBeEmpty": "يجب ألا يكون الهاتف فارغًا",
-    "myPromoCodes": "أكوادي الترويجية"
+    "myPromoCodes": "أكوادي الترويجية",
+    "sellerFirstName": "الاسم الاول",
+    "sellerSecondName": "اسم العائلة",
+    "sellerName": "الاسم "
   },
   "dashboardScreen": {
     "noProductsError": "لا توجد منتجات بعد",

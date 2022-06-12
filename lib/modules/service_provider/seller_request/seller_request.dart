@@ -1,3 +1,5 @@
+// ignore_for_file: missing_return
+
 import 'dart:developer';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';

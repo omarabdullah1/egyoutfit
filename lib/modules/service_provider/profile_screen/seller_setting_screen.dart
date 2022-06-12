@@ -250,12 +250,8 @@ class SellerSettingScreen extends StatelessWidget {
                                     style: const TextStyle(color: Colors.black),
                                   ),
                                   const Spacer(),
-                                  // ElevatedButton(onPressed: () async {
-                                  //   await context.setLocale(const Locale('ar'));
-                                  // }, child: const Text('arab')),
-                                  // ElevatedButton(onPressed: () async {
-                                  //   await context.setLocale(const Locale('en'));
-                                  // }, child: const Text('eng')),
+                                  const Text('AR',
+                                      style: TextStyle(color: Colors.black)),
                                   Switch(
                                     value:
                                         DashboardCubit.get(context).isEnglish,
@@ -265,6 +261,8 @@ class SellerSettingScreen extends StatelessWidget {
                                       log(EasyLocalization.of(context).locale.languageCode);
                                     },
                                   ),
+                                  const Text('EN',
+                                      style: TextStyle(color: Colors.black)),
                                 ],
                               ),
                             ],

@@ -1,9 +1,7 @@
-import 'dart:developer';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import 'package:map_launcher/map_launcher.dart';
 import '../../modules/user/search/search_screen.dart';
 import '../../shared/components/components.dart';
 import '../../shared/styles/icons.dart';
@@ -20,15 +18,32 @@ class ShopLayout extends StatefulWidget {
 
 class _ShopLayoutState extends State<ShopLayout> {
   @override
-  void initState() {
-    ShopCubit.get(context).getData(context);
-    super.initState();
+  Future<void> didChangeDependencies() async {
+    ShopCubit.get(context).sState();
+    await ShopCubit.get(context).getData(context);
+    Future.delayed(const Duration(seconds: 2), () async {
+       await ShopCubit.get(context).getAllProducts();
+       await ShopCubit.get(context).getFavourite();
+       await ShopCubit.get(context).getCart();
+       await ShopCubit.get(context).getOrders();
+       await ShopCubit.get(context).getPromoCodes();
+       await ShopCubit.get(context).getProducts('Men');
+       await ShopCubit.get(context).getProducts('Women');
+       await ShopCubit.get(context).getProducts('Children');
+       await ShopCubit.get(context).getProducts('Bags');
+       await ShopCubit.get(context).getProducts('Accessories');
+       await ShopCubit.get(context).getProducts('Shoe');
+       await ShopCubit.get(context).getProducts('Sports');
+       await ShopCubit.get(context).fState();
+    });
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    var widthQuarter = MediaQuery.of(context).size.width / 4;
+    var widthQuarter = MediaQuery.of(context).size.width / 3;
     var width = MediaQuery.of(context).size.width;
+    ShopCubit.get(context).isEnglish = EasyLocalization.of(context).locale.languageCode == 'en'? true : false;
 
     return BlocConsumer<ShopCubit, ShopStates>(
         listener: (context, state) {},
@@ -36,6 +51,7 @@ class _ShopLayoutState extends State<ShopLayout> {
           var cubit = ShopCubit.get(context);
           return Scaffold(
             appBar: AppBar(
+              // backgroundColor: Colors.black,
               title: Image.asset(
                 'assets/images/Egy-Outfit-Black.png',
               ),
@@ -51,7 +67,7 @@ class _ShopLayoutState extends State<ShopLayout> {
                       child: Container(
                         width: width - widthQuarter,
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
+                          border: Border.all(color: Colors.black),
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                         child: Row(
@@ -59,11 +75,11 @@ class _ShopLayoutState extends State<ShopLayout> {
                           children: [
                             const Icon(
                               Icons.search,
-                              color: Colors.grey,
+                              color: Colors.black,
                             ),
                             Text(
                               LocaleKeys.usersHomeScreen_searchInEgyOutfit.tr(),
-                              style: const TextStyle(color: Colors.grey),
+                              style: const TextStyle(color: Colors.black),
                             ),
                           ],
                         ),
@@ -71,6 +87,215 @@ class _ShopLayoutState extends State<ShopLayout> {
                     ),
                   ),
                 ),
+                IconButton(
+                    onPressed: () {
+                      showDialog(
+                        builder: (context) =>
+                            BlocConsumer<ShopCubit, ShopStates>(
+                          listener: (context, state) {},
+                          builder: (context, state) {
+                            return AlertDialog(
+                              actions: [
+                                Row(
+                                  children: [
+                                    defaultButton(
+                                      function: () {
+                                        ShopCubit.get(context)
+                                                .userRegisterDropdownHomeValueEn =
+                                            ShopCubit.get(context)
+                                                .loginModel
+                                                .city;
+                                        ShopCubit.get(context)
+                                                .userRegisterDropdownHomeValueAr =
+                                            ShopCubit.get(context).itemsAr[
+                                                ShopCubit.get(context)
+                                                    .itemsEn
+                                                    .indexOf(
+                                                        ShopCubit.get(context)
+                                                            .loginModel
+                                                            .city)];
+                                        Navigator.pop(context);
+                                      },
+                                      text: LocaleKeys.alerts_cancel.tr(),
+                                      background: Colors.red,
+                                      height: 50.0,
+                                      width: 100.0,
+                                      radius: 14.0,
+                                    ),
+                                    const Spacer(),
+                                    defaultButton(
+                                      function: () {
+                                        EasyLocalization.of(context).locale.languageCode ==
+                                                'en'
+                                            ? ShopCubit.get(context)
+                                                    .userRegisterDropdownHomeValue =
+                                                ShopCubit.get(context)
+                                                    .userRegisterDropdownHomeValueEn
+                                            : ShopCubit.get(context)
+                                                    .userRegisterDropdownHomeValue =
+                                                ShopCubit.get(context)
+                                                        .itemsEn[
+                                                    ShopCubit.get(context)
+                                                        .itemsAr
+                                                        .indexOf(ShopCubit.get(context)
+                                                            .userRegisterDropdownHomeValueAr)];
+                                        ShopCubit.get(context).getAllProducts();
+                                        ShopCubit.get(context).getFavourite();
+                                        ShopCubit.get(context).getCart();
+                                        ShopCubit.get(context).getOrders();
+                                        ShopCubit.get(context).getPromoCodes();
+                                        ShopCubit.get(context)
+                                            .getProducts('Men');
+                                        ShopCubit.get(context)
+                                            .getProducts('Women');
+                                        ShopCubit.get(context)
+                                            .getProducts('Children');
+                                        ShopCubit.get(context)
+                                            .getProducts('Bags');
+                                        ShopCubit.get(context)
+                                            .getProducts('Accessories');
+                                        ShopCubit.get(context)
+                                            .getProducts('Shoe');
+                                        ShopCubit.get(context)
+                                            .getProducts('Sports');
+
+                                        Navigator.pop(context);
+                                      },
+                                      text: LocaleKeys.alerts_ok.tr(),
+                                      background: Colors.green,
+                                      height: 50.0,
+                                      width: 100.0,
+                                      radius: 14.0,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                              content: SizedBox(
+                                width: double.infinity,
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton2(
+                                    isExpanded: true,
+                                    hint: Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.list,
+                                          size: 30,
+                                          color: Colors.black,
+                                        ),
+                                        const SizedBox(
+                                          width: 4,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            LocaleKeys.signUpScreen_select_City
+                                                .tr(),
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    items: EasyLocalization.of(context)
+                                                .locale
+                                                .languageCode ==
+                                            'en'
+                                        ? ShopCubit.get(context)
+                                            .itemsEn
+                                            .map((item) =>
+                                                DropdownMenuItem<String>(
+                                                  value: item,
+                                                  child: Text(
+                                                    item,
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black,
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ))
+                                            .toList()
+                                        : ShopCubit.get(context)
+                                            .itemsAr
+                                            .map((item) =>
+                                                DropdownMenuItem<String>(
+                                                  value: item,
+                                                  child: Text(
+                                                    item,
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black,
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ))
+                                            .toList(),
+                                    value: EasyLocalization.of(context)
+                                                .locale
+                                                .languageCode ==
+                                            'en'
+                                        ? ShopCubit.get(context)
+                                            .userRegisterDropdownHomeValueEn
+                                        : ShopCubit.get(context)
+                                            .userRegisterDropdownHomeValueAr,
+                                    onChanged: (value) {
+                                      ShopCubit.get(context)
+                                          .userChangeDropHomeValue(
+                                              value, context);
+                                      // selectedValue = value as String;
+                                    },
+                                    icon: const Icon(
+                                      Icons.keyboard_arrow_down_sharp,
+                                      size: 20.0,
+                                    ),
+                                    iconSize: 14,
+                                    iconEnabledColor: Colors.black,
+                                    iconDisabledColor: Colors.grey,
+                                    buttonHeight: 50,
+                                    buttonWidth: 160,
+                                    buttonPadding: const EdgeInsets.only(
+                                        left: 14, right: 14),
+                                    buttonDecoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                        width: 2.5,
+                                        color: Colors.black26,
+                                      ),
+                                      color: Colors.white,
+                                    ),
+                                    itemHeight: 40,
+                                    itemPadding: const EdgeInsets.only(
+                                        left: 14, right: 14),
+                                    dropdownMaxHeight: 200,
+                                    dropdownWidth: 200,
+                                    dropdownPadding: null,
+                                    dropdownDecoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(14),
+                                      color: Colors.white,
+                                    ),
+                                    scrollbarRadius: const Radius.circular(40),
+                                    scrollbarThickness: 6,
+                                    scrollbarAlwaysShow: true,
+                                    offset: const Offset(0, 0),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        context: context,
+                      );
+                    },
+                    icon: const Icon(Icons.sort,color: Colors.black,)),
               ],
             ),
             body: cubit.bottomScreens[cubit.currentIndex],

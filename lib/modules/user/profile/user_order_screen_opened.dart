@@ -10,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../models/orders/orders_model.dart';
 import '../../../translations/locale_keys.g.dart';
 
-class UserOpenedOrderScreen extends StatelessWidget {
+class UserOpenedOrderScreen extends StatefulWidget {
   const UserOpenedOrderScreen({
     Key key,
     this.orderModel,
@@ -20,15 +20,22 @@ class UserOpenedOrderScreen extends StatelessWidget {
   final int index;
 
   @override
+  State<UserOpenedOrderScreen> createState() => _UserOpenedOrderScreenState();
+}
+
+class _UserOpenedOrderScreenState extends State<UserOpenedOrderScreen> {
+  @override
+  void initState() {
+    ShopCubit.get(context)
+        .getProductUid(widget.orderModel.orderedProduct);
+    // log(ShopCubit.get(context).smodel.uId.toString());
+    // ShopCubit.get(context)
+    //     .getMessages(receiverId: ShopCubit.get(context).smodel.uId);
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
-      return Builder(
-        builder: (context) {
-          ShopCubit.get(context)
-              .getProductUid(orderModel.orderedProduct);
-          log(ShopCubit.get(context).smodel.uId.toString());
-          ShopCubit.get(context)
-              .getMessages(receiverId: ShopCubit.get(context).smodel.uId);
-          return BlocConsumer<ShopCubit, ShopStates>(
+      return BlocConsumer<ShopCubit, ShopStates>(
             listener: (context, state) {},
             builder: (context, state) {
               return Scaffold(
@@ -61,7 +68,7 @@ class UserOpenedOrderScreen extends StatelessWidget {
                                       ),
                                     ),
                                     child: Image(
-                                      image: NetworkImage(orderModel.orderImage),
+                                      image: NetworkImage(widget.orderModel.orderImage),
                                       // carouselController: caroController,
                                       height:
                                           MediaQuery.of(context).size.height / 3,
@@ -79,7 +86,7 @@ class UserOpenedOrderScreen extends StatelessWidget {
                                         Text(LocaleKeys.userAccountScreen_orderName
                                                 .tr() +
                                             ':'),
-                                        Text(orderModel.orderName),
+                                        Text(widget.orderModel.orderName),
                                         const Spacer(),
                                         Padding(
                                           padding: const EdgeInsets.only(
@@ -89,24 +96,24 @@ class UserOpenedOrderScreen extends StatelessWidget {
                                           child: Container(
                                             decoration: BoxDecoration(
                                               color: ShopCubit.get(context)
-                                                          .ordersModel[index]
+                                                          .ordersModel[widget.index]
                                                           .pState ==
                                                       'Pending'
                                                   ? Colors.orange
                                                   : ShopCubit.get(context)
-                                                              .ordersModel[index]
+                                                              .ordersModel[widget.index]
                                                               .pState ==
                                                           'Scheduled'
                                                       ? Colors.blue
                                                       : ShopCubit.get(context)
                                                                   .ordersModel[
-                                                                      index]
+                                                                      widget.index]
                                                                   .pState ==
                                                               'Cancelled'
                                                           ? Colors.red
                                                           : ShopCubit.get(context)
                                                                       .ordersModel[
-                                                                          index]
+                                                                          widget.index]
                                                                       .pState ==
                                                                   'Completed'
                                                               ? Colors.green
@@ -124,7 +131,7 @@ class UserOpenedOrderScreen extends StatelessWidget {
                                               child: Center(
                                                 child: Text(
                                                   ShopCubit.get(context)
-                                                      .ordersModel[index]
+                                                      .ordersModel[widget.index]
                                                       .pState,
                                                   style: const TextStyle(
                                                     color: Colors.white,
@@ -144,12 +151,12 @@ class UserOpenedOrderScreen extends StatelessWidget {
                                               ':  ',
                                         ),
                                         Text(
-                                          orderModel.orderedProductsCount
+                                          widget.orderModel.orderedProductsCount
                                               .toString(),
                                         ),
                                       ],
                                     ),
-                                    orderModel.orderPromoDiscount.isEmpty
+                                    widget.orderModel.orderPromoDiscount.isEmpty
                                         ? Row(
                                             children: [
                                               Text(LocaleKeys
@@ -166,7 +173,7 @@ class UserOpenedOrderScreen extends StatelessWidget {
                                                       .tr() +
                                                   ':  '),
                                               Row(
-                                                children: orderModel
+                                                children: widget.orderModel
                                                     .orderPromoDiscount
                                                     .map((e) =>
                                                         Text(e.toString() + '% , '))
@@ -179,7 +186,7 @@ class UserOpenedOrderScreen extends StatelessWidget {
                                         Text(LocaleKeys.userAccountScreen_orderSize
                                                 .tr() +
                                             ':  '),
-                                        Text(orderModel.orderSize.toString()),
+                                        Text(widget.orderModel.orderSize.toString()),
                                       ],
                                     ),
                                     Row(
@@ -187,11 +194,11 @@ class UserOpenedOrderScreen extends StatelessWidget {
                                         Text(LocaleKeys.userAccountScreen_orderCost
                                                 .tr() +
                                             ':  '),
-                                        Text(orderModel.orderCost.toString() +
+                                        Text(widget.orderModel.orderCost.toString() +
                                             ' LE'),
                                       ],
                                     ),
-                                    orderModel.orderPromoDiscount.isNotEmpty
+                                    widget.orderModel.orderPromoDiscount.isNotEmpty
                                         ? Row(
                                             children: [
                                               Text(
@@ -201,7 +208,7 @@ class UserOpenedOrderScreen extends StatelessWidget {
                                                     ':  ',
                                               ),
                                               Row(
-                                                children: orderModel.orderPromo
+                                                children: widget.orderModel.orderPromo
                                                     .map((e) =>
                                                         Text(e.toString() + ' , '))
                                                     .toList(),
@@ -226,7 +233,7 @@ class UserOpenedOrderScreen extends StatelessWidget {
                                                   .tr() +
                                               ':  ',
                                         ),
-                                        Text(orderModel.firstName),
+                                        Text(widget.orderModel.firstName),
                                       ],
                                     ),
                                     Row(
@@ -237,7 +244,7 @@ class UserOpenedOrderScreen extends StatelessWidget {
                                               ':  ',
                                         ),
                                         Text(
-                                          orderModel.address,
+                                          widget.orderModel.address,
                                         ),
                                       ],
                                     ),
@@ -249,7 +256,7 @@ class UserOpenedOrderScreen extends StatelessWidget {
                                               ':  ',
                                         ),
                                         Text(
-                                          orderModel.phoneNumber,
+                                          widget.orderModel.phoneNumber,
                                         ),
                                       ],
                                     ),
@@ -262,7 +269,7 @@ class UserOpenedOrderScreen extends StatelessWidget {
                                               ':  ',
                                         ),
                                         Text(
-                                          orderModel.otherPhoneNumber,
+                                          widget.orderModel.otherPhoneNumber,
                                         ),
                                       ],
                                     ),
@@ -276,8 +283,8 @@ class UserOpenedOrderScreen extends StatelessWidget {
                                           child: defaultButton(
                                             function: () {
                                               navigateTo(context, UserSellerChatScreen(
-                                                 orderModel: orderModel,
-                                                index: index,
+                                                 orderModel: widget.orderModel,
+                                                index: widget.index,
                                               ));
                                             },
                                             text: 'Send Message',
@@ -300,10 +307,7 @@ class UserOpenedOrderScreen extends StatelessWidget {
               );
             },
           );
-        }
-      );
     }
-
 
   buildDiscount(List list) {
     for (var element in list) {

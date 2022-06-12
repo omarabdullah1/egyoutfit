@@ -9,7 +9,7 @@ import '../../../models/orders/orders_model.dart';
 import '../../../translations/locale_keys.g.dart';
 
 class UserSellerChatScreen extends StatelessWidget {
-  UserSellerChatScreen({
+  const UserSellerChatScreen({
     Key key,
     this.orderModel,
     this.index,
@@ -17,10 +17,10 @@ class UserSellerChatScreen extends StatelessWidget {
   final OrdersModel orderModel;
   final int index;
 
-  var messageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    var messageController = TextEditingController();
     return Builder(
       builder: (context) {
         ShopCubit.get(context)

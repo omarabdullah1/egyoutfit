@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import '../../../models/message/MessageModel.dart';
+import '../../../models/message/message_model.dart';
 import '../../../models/orders/orders_model.dart';
 import '../../../models/promo/promo_model.dart';
-import '../../../models/shop_app/login_model.dart';
 import '../../../models/shop_app/products_model.dart';
+import '../../../models/user/user_model.dart';
 import '../../../modules/login/login_screen.dart';
 import '../../../modules/user/cart/cart_screen.dart';
 import '../../../modules/user/favorites/favorites_screen.dart';
@@ -21,7 +21,6 @@ import '../../../modules/user/profile/user_profile.dart';
 import '../../../shared/components/components.dart';
 import '../../../shared/network/local/cache_helper.dart';
 import '../../../translations/locale_keys.g.dart';
-
 
 class ShopCubit extends Cubit<ShopStates> {
   ShopCubit() : super(ShopInitialState());
@@ -78,6 +77,8 @@ class ShopCubit extends Cubit<ShopStates> {
 
   int currentIndex = 0;
 
+  bool isError = false;
+
   bool isS = false;
   bool isM = false;
   bool isL = false;
@@ -88,7 +89,6 @@ class ShopCubit extends Cubit<ShopStates> {
   bool is5XL = false;
   bool isEnglish = CacheHelper.getData(key: 'lang') == 'en' ? true : false;
 
-
   bool isSaturday = false;
   bool isSunday = false;
   bool isMonday = false;
@@ -97,6 +97,73 @@ class ShopCubit extends Cubit<ShopStates> {
   bool isThursday = false;
   bool isFriday = false;
 
+  String city;
+
+  String userRegisterDropdownValueEn;
+  String userRegisterDropdownValueAr;
+  String userRegisterDropdownHomeValueEn;
+  String userRegisterDropdownHomeValueAr;
+  String userRegisterDropdownHomeValue;
+  List itemsEn = <String>[
+    'Cairo',
+    'Alexandria',
+    'Giza',
+    'Matrouh',
+    'Port Said',
+    'Helwan',
+    'Port Said',
+    'Al-Mahallah Al-Kubra',
+    'Tanta',
+    'Suez',
+    'Asyut',
+    'Al-Fayoum',
+    'Ismailia',
+    'Damietta',
+    'Al-Minya',
+    'Luxor',
+    'Qema',
+    'Sohag',
+    'Bani Sewief',
+    'Al-Sharkya',
+    'Al-Gharbya',
+    'Sinai',
+    'Al-Wady El-Geded',
+    'Al-Monofya',
+    'Qalubia',
+    'Dakahlya',
+    'Red Sea',
+    'Beheira',
+  ];
+  List itemsAr = <String>[
+    "القاهرة",
+    'الإسكندرية',
+    'الجيزة',
+    'مطروح',
+    'بورسعيد',
+    'حلوان',
+    'بورسعيد'
+        'المحلة الكبرى',
+    "طنطا",
+    "السويس",
+    "أسيوط",
+    "الفيوم",
+    'الإسماعيلية',
+    'دمياط',
+    'المنيا',
+    "الأقصر",
+    'قمة',
+    'سوهاج',
+    "بني سويف",
+    'الشرقية',
+    'الغربية',
+    'سيناء',
+    'الوادي الجديد',
+    'المنوفية',
+    'القليوبية',
+    'الدقهلية',
+    'البحر الاحمر',
+    "البحيرة",
+  ];
   List<Widget> bottomScreens = [
     const ProductsScreen(),
     const CartScreen(),
@@ -199,29 +266,22 @@ class ShopCubit extends Cubit<ShopStates> {
   var dropdownvalueAr = 'أحذية';
 
   changeDropValue(value, context) {
-    EasyLocalization
-        .of(context)
-        .locale
-        .languageCode == 'en' ? dropdownvalueEn = value : dropdownvalueAr =
-        value;
+    EasyLocalization.of(context).locale.languageCode == 'en'
+        ? dropdownvalueEn = value
+        : dropdownvalueAr = value;
   }
 
   changeDropButtonValue(String newValue, context) {
-    EasyLocalization
-        .of(context)
-        .locale
-        .languageCode == 'en' ? dropdownvalueEn = newValue : dropdownvalueAr =
-        newValue;
+    EasyLocalization.of(context).locale.languageCode == 'en'
+        ? dropdownvalueEn = newValue
+        : dropdownvalueAr = newValue;
     emit(ChangeDropState());
   }
 
   getOffers() {
     FirebaseFirestore.instance.collection('banners').get().then((value) {
       for (var element in value.docs) {
-        offers = element
-            .data()
-            .values
-            .first;
+        offers = element.data().values.first;
         for (var ele in offers) {
           log(ele);
         }
@@ -251,10 +311,13 @@ class ShopCubit extends Cubit<ShopStates> {
         .collection('products')
         .where('category', isEqualTo: categoryName)
         .get()
-        .then((value) {
+        .then((value) async {
       // log(value.docs.first.id);
       for (var element in value.docs) {
-        if (element.data()['state'] == 'Approved') {
+        await getProductSellerModel(element.data()['uid']);
+        if (element.data()['state'] == 'Approved' &&
+            userRegisterDropdownHomeValue == city) {
+          log(city.toString());
           if (categoryName == 'Men') {
             menCategory.add(ShopProductsModel.fromJson(element.data()));
             menCategoryID.add(element.id);
@@ -287,11 +350,15 @@ class ShopCubit extends Cubit<ShopStates> {
   }
 
   getAllProducts() {
-    products.clear();
-    productsID.clear();
-    FirebaseFirestore.instance.collection('products').get().then((value) {
+    log(city.toString());
+    log(loginModel.city);
+    products = [];
+    productsID = [];
+    FirebaseFirestore.instance.collection('products').get().then((value) async {
       for (var element in value.docs) {
-        if (element.data()['state'] == 'Approved') {
+        await getProductSellerModel(element.data()['uid']);
+        if (element.data()['state'] == 'Approved' &&
+            userRegisterDropdownHomeValue == city) {
           products.add(ShopProductsModel.fromJson(element.data()));
           productsID.add(element.id);
         } else {
@@ -323,15 +390,15 @@ class ShopCubit extends Cubit<ShopStates> {
     });
   }
 
-  ShopLoginModel loginModel;
+  UserModel loginModel;
 
-  void userLogin({
+  Future<void> userLogin({
     @required context,
     @required String email,
     @required String password,
-  }) {
+  }) async {
     emit(ShopLoginLoadingState());
-    FirebaseAuth.instance
+    await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password)
         .then((value) async {
       // await CacheHelper.saveData(key: 'UID', value: value.user?.uid);
@@ -340,13 +407,22 @@ class ShopCubit extends Cubit<ShopStates> {
           .doc(value.user.uid)
           .get()
           .then((value) async {
-        // log(value.data()['favorites']);
-        loginModel = ShopLoginModel.fromJson(value.data());
-        favorites = value.data()['favorites'];
-        cart = value.data()['cart'];
-        size = value.data()['size'];
-        log(favorites.toString());
-        log(cart.toString());
+        if(value.data()['isEmailVerfied']) {
+          loginModel = UserModel.fromJson(value.data());
+          favorites = value.data()['favorites'];
+          cart = value.data()['cart'];
+          size = value.data()['size'];
+          userRegisterDropdownHomeValue = value.data()['city'];
+          userRegisterDropdownHomeValueEn = loginModel.city;
+          userRegisterDropdownHomeValueAr =
+          itemsAr[itemsEn.indexOf(loginModel.city)];
+          log(favorites.toString());
+          log(cart.toString());
+          emit(ShopLoginSuccessState(loginModel));
+        }else {
+          signOut(context);
+          emit(ShopLoginErrorState(('error.toString()')));
+        }
 
         emit(ShopLoginSuccessState(loginModel));
       }).catchError((error) {
@@ -368,12 +444,12 @@ class ShopCubit extends Cubit<ShopStates> {
           .collection('users')
           .doc(CacheHelper.getData(key: 'token'))
           .update({
-        'favorites': favorites,
-      })
+            'favorites': favorites,
+          })
           .then((value) => emit(AddFavouritesSuccessState()))
           .catchError((error) {
-        emit(AddFavouritesErrorState());
-      });
+            emit(AddFavouritesErrorState());
+          });
     } else {
       if (favorites.contains(pid)) {
         favorites.remove(pid);
@@ -382,12 +458,12 @@ class ShopCubit extends Cubit<ShopStates> {
             .collection('users')
             .doc(CacheHelper.getData(key: 'token'))
             .update({
-          'favorites': favorites,
-        })
+              'favorites': favorites,
+            })
             .then((value) => emit(RemoveFavouritesSuccessState()))
             .catchError((error) {
-          emit(RemoveFavouritesErrorState());
-        });
+              emit(RemoveFavouritesErrorState());
+            });
       } else {
         favorites.add(pid);
         log(favorites.toString());
@@ -397,12 +473,12 @@ class ShopCubit extends Cubit<ShopStates> {
             .collection('users')
             .doc(CacheHelper.getData(key: 'token'))
             .update({
-          'favorites': favorites,
-        })
+              'favorites': favorites,
+            })
             .then((value) => emit(UpdateFavouritesSuccessState()))
             .catchError((error) {
-          emit(UpdateFavouritesErrorState());
-        });
+              emit(UpdateFavouritesErrorState());
+            });
       }
     }
   }
@@ -436,13 +512,13 @@ class ShopCubit extends Cubit<ShopStates> {
         .collection('users')
         .doc(CacheHelper.getData(key: 'token'))
         .update({
-      'cart': cart,
-      'size': size,
-    })
+          'cart': cart,
+          'size': size,
+        })
         .then((value) => emit(AddCartSuccessState()))
         .catchError((error) {
-      emit(AddCartErrorState());
-    });
+          emit(AddCartErrorState());
+        });
   }
 
   removeCart(pid) {
@@ -455,13 +531,13 @@ class ShopCubit extends Cubit<ShopStates> {
           .collection('users')
           .doc(CacheHelper.getData(key: 'token'))
           .update({
-        'cart': cart,
-        'size': size,
-      })
+            'cart': cart,
+            'size': size,
+          })
           .then((value) => emit(RemoveCartSuccessState()))
           .catchError((error) {
-        emit(RemoveCartErrorState());
-      });
+            emit(RemoveCartErrorState());
+          });
     }
   }
 
@@ -573,7 +649,8 @@ class ShopCubit extends Cubit<ShopStates> {
       'orderImage': orderImage,
       'orderName': orderName,
     }).then((value) {
-      showToast(text: LocaleKeys.alerts_orderCreatedSuccessfully.tr(),
+      showToast(
+          text: LocaleKeys.alerts_orderCreatedSuccessfully.tr(),
           state: ToastStates.success);
       removeCart(cart[orderIndex]);
       getCart();
@@ -581,16 +658,17 @@ class ShopCubit extends Cubit<ShopStates> {
           .collection('users')
           .doc(CacheHelper.getData(key: 'token'))
           .update({
-        'cart': cart,
-      })
+            'cart': cart,
+          })
           .then((value) => emit(RemoveCartSuccessState()))
           .catchError((error) {
-        emit(RemoveCartErrorState());
-      });
+            emit(RemoveCartErrorState());
+          });
       emit(CreateOrderSuccessState());
     }).catchError((error) {
       log(error);
-      showToast(text: LocaleKeys.alerts_orderErrorCreatingOrder.tr(),
+      showToast(
+          text: LocaleKeys.alerts_orderErrorCreatingOrder.tr(),
           state: ToastStates.error);
       emit(CreateOrderErrorState());
     });
@@ -679,7 +757,8 @@ class ShopCubit extends Cubit<ShopStates> {
     });
   }
 
-  updateUserData({nameFirst, nameSecond, address, phone, uid, context}) {
+  updateUserData(
+      {nameFirst, nameSecond, address, phone, uid, city, email, context}) {
     emit(UpdateStateLoadingShopState());
 
     FirebaseFirestore.instance.collection('users').doc(uid).update({
@@ -687,12 +766,16 @@ class ShopCubit extends Cubit<ShopStates> {
       'firstName': nameFirst,
       'secondName': nameSecond,
       'phone': phone,
+      'city': EasyLocalization.of(context).locale.languageCode == 'en'
+          ? city
+          : itemsEn[itemsAr.indexOf(city)],
     }).then((value) async {
-      userLogin(
+      await userLogin(
           context: context,
           email: CacheHelper.getData(key: 'user'),
           password: CacheHelper.getData(key: 'pass'));
       emit(UpdateStateSuccessShopState());
+      currentIndex=0;
       Navigator.pop(context);
     }).catchError((err) {
       log(err.toString());
@@ -702,31 +785,40 @@ class ShopCubit extends Cubit<ShopStates> {
 
   changeUserPassword(newPassword, context) async {
     emit(UpdateStateLoadingShopState());
-    await FirebaseAuth.instance.currentUser.updatePassword(newPassword).then((
-        value) {
+    await FirebaseAuth.instance.currentUser
+        .updatePassword(newPassword)
+        .then((value) {
+      showToast(
+          text: LocaleKeys.alerts_passwordUpdatedSuccessfully.tr(), state: ToastStates.success);
       emit(UpdateStateSuccessShopState());
       signOut(context);
     }).catchError((err) {
+      if (err.toString().contains(
+          'This operation is sensitive and requires recent authentication. Log in again before retrying this request')) {
+        showToast(text: 'Please log in again', state: ToastStates.error);
+      }
       log(err.toString());
       emit(UpdateStateErrorShopState());
     });
   }
 
-  getData(context) {
-    userLogin(
+  getData(context) async {
+    emit(GetDataLoadingState());
+    await userLogin(
         context: context,
         email: CacheHelper.getData(key: 'user'),
         password: CacheHelper.getData(key: 'pass'));
-    getOffers();
-    getPromoCodes();
-    getAllProducts();
-    getProducts('Men');
-    getProducts('Women');
-    getProducts('Children');
-    getProducts('Bags');
-    getProducts('Accessories');
-    getProducts('Shoe');
-    getProducts('Sports');
+    await getOffers();
+    await getPromoCodes();
+    await getAllProducts();
+    // await getProducts('Men');
+    // await getProducts('Women');
+    // await getProducts('Children');
+    // await getProducts('Bags');
+    // await getProducts('Accessories');
+    // await getProducts('Shoe');
+    // await getProducts('Sports');
+    emit(GetDataSuccessState());
   }
 
   int group = 1;
@@ -758,37 +850,37 @@ class ShopCubit extends Cubit<ShopStates> {
     emit(ChangeLanguageState());
   }
 
-  void sendMessages({
-    @required String receiverId,
-    @required String dateTime,
-    @required String text
-  }) {
+  void sendMessages(
+      {@required String receiverId,
+      @required String dateTime,
+      @required String text}) {
     MessageModel model = MessageModel(
         senderId: loginModel.uId,
         receiverId: receiverId,
         dateTime: dateTime,
-        text: text
-    );
+        text: text);
 
-    FirebaseFirestore.instance.
-    collection("users").
-    doc(loginModel.uId).
-    collection("chats").
-    doc(model.receiverId).
-    collection("messages").
-    add(model.toMap()).then((value) {
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(loginModel.uId)
+        .collection("chats")
+        .doc(model.receiverId)
+        .collection("messages")
+        .add(model.toMap())
+        .then((value) {
       emit(ShopSendMessagesSuccessState());
     }).catchError((error) {
       emit(ShopSendMessagesErrorState());
     });
 
-    FirebaseFirestore.instance.
-    collection("users").
-    doc(receiverId).
-    collection("chats").
-    doc(loginModel.uId).
-    collection("messages").
-    add(model.toMap()).then((value) {
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(receiverId)
+        .collection("chats")
+        .doc(loginModel.uId)
+        .collection("messages")
+        .add(model.toMap())
+        .then((value) {
       emit(ShopSendMessagesSuccessState());
     }).catchError((error) {
       emit(ShopSendMessagesErrorState());
@@ -797,17 +889,16 @@ class ShopCubit extends Cubit<ShopStates> {
 
   List<MessageModel> messages = [];
 
-  void getMessages({
-    @required String receiverId
-  }) {
-    FirebaseFirestore.instance.
-    collection("users").
-    doc(loginModel.uId).
-    collection("chats").
-    doc(receiverId).
-    collection("messages").orderBy('dateTime').
-    snapshots().
-    listen((event) {
+  void getMessages({@required String receiverId}) {
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(loginModel.uId)
+        .collection("chats")
+        .doc(receiverId)
+        .collection("messages")
+        .orderBy('dateTime')
+        .snapshots()
+        .listen((event) {
       messages = [];
       for (var element in event.docs) {
         messages.add(MessageModel.fromJson(element.data()));
@@ -820,23 +911,24 @@ class ShopCubit extends Cubit<ShopStates> {
   MSellerModel mmodel;
 
   getProductUid(String productId) {
-    var uid;
-    for (var element in productsID) {
-      if (element == productId) {
-        uid = products[productsID.indexOf(element)].uid;
-      }
-    }
-    FirebaseFirestore.instance.collection('users').doc(uid).get().then((value) {
-      smodel = ProductSellerModel.fromJson(value.data());
-      // log(uid.toString());
-      // log(value.data().toString());
-      // log(value.data()['uId'].toString());
+    FirebaseFirestore.instance.collection('products').doc(productId).get().then((value) {
+      log(value.data()['uid'].toString());
+      FirebaseFirestore.instance.collection('users').doc(value.data()['uid']).get().then((value) {
+        smodel = ProductSellerModel.fromJson(value.data());
+        // log(value.data()['uId'].toString());
+        // log(value.data().toString());
+        // log(value.data()['uId'].toString());
+      });
     });
   }
 
-  getProductSellerModel(uid) async {
+  Future<void> getProductSellerModel(uid) async {
     emit(GetSellerIDLoadingState());
-    await FirebaseFirestore.instance.collection('users').doc(uid).get().then((value) {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .get()
+        .then((value) {
       mmodel = MSellerModel.fromJson(value.data());
       isSaturday = value.data()['sat'];
       isSunday = value.data()['sun'];
@@ -845,9 +937,11 @@ class ShopCubit extends Cubit<ShopStates> {
       isWednesday = value.data()['wed'];
       isThursday = value.data()['thu'];
       isFriday = value.data()['fri'];
+      city = value.data()['city'];
     });
     emit(GetSellerIDSuccessState());
   }
+
   Future<Position> getGeoLocationPosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -865,7 +959,6 @@ class ShopCubit extends Cubit<ShopStates> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-
         return Future.error('Location permissions are denied');
       }
     }
@@ -876,16 +969,104 @@ class ShopCubit extends Cubit<ShopStates> {
     }
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
-    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
   }
-  var Address='';
+
+  var address = '';
   Placemark place;
-  Future<void> GetAddressFromLatLong(Position position)async {
-    List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+
+  Future<void> getAddressFromLatLong(Position position) async {
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(position.latitude, position.longitude);
     log(placemarks.toString());
     place = placemarks[0];
-    Address = '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
-    log(Address);
+    address =
+        '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
+    log(address);
+  }
+
+  changeIsError(bool value) {
+    isError = value;
+    emit(ChangeIsErrorState());
+  }
+
+  IconData suffix1 = Icons.visibility_outlined;
+  bool isPassword1 = true;
+
+  changePasswordVisibility1() {
+    isPassword1 = !isPassword1;
+    if (isPassword1) {
+      suffix1 = Icons.visibility_outlined;
+    } else {
+      suffix1 = Icons.visibility_off_outlined;
+    }
+    emit(ChangePasswordVisibilityState());
+  }
+
+  IconData suffix2 = Icons.visibility_outlined;
+  bool isPassword2 = true;
+
+  changePasswordVisibility2() {
+    isPassword2 = !isPassword2;
+    if (isPassword2) {
+      suffix2 = Icons.visibility_outlined;
+    } else {
+      suffix2 = Icons.visibility_off_outlined;
+    }
+    emit(ChangePasswordVisibilityState());
+  }
+
+  IconData suffix3 = Icons.visibility_outlined;
+  bool isPassword3 = true;
+
+  changePasswordVisibility3() {
+    isPassword3 = !isPassword3;
+    if (isPassword3) {
+      suffix3 = Icons.visibility_outlined;
+    } else {
+      suffix3 = Icons.visibility_off_outlined;
+    }
+    emit(ChangePasswordVisibilityState());
+  }
+
+  userChangeDropValue(value, context) {
+    EasyLocalization.of(context).locale.languageCode == 'en'
+        ? userRegisterDropdownValueEn = value
+        : userRegisterDropdownValueAr = value;
+    emit(ShopRegisterChangeDropValueState());
+  }
+
+  userChangeDropHomeValue(value, context) {
+    EasyLocalization.of(context).locale.languageCode == 'en'
+        ? userRegisterDropdownHomeValueEn = value
+        : userRegisterDropdownHomeValueAr = value;
+    emit(ShopRegisterChangeDropValueState());
+  }
+
+  fState() {
+    emit(FSuccessState());
+  }
+
+  sState() {
+    emit(SLoadingState());
+  }
+
+  Future<void> resetEmailAddress(
+      {String newEmail, String oldEmail, String password,context}) async {
+    var authResult = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: oldEmail, password: password);
+    await authResult.user.updateEmail(newEmail);
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(authResult.user.uid)
+        .update({
+      'email': newEmail,
+      'uId': authResult.user.uid,
+    }).then((value) {
+      CacheHelper.saveData(key: 'user', value: newEmail);
+    });
+    userLogin(context: context, email: newEmail, password: password);
   }
 
 }
@@ -894,7 +1075,6 @@ class ProductSellerModel {
   String organization;
   String uId;
   String image;
-
 
   ProductSellerModel({
     @required this.uId,
