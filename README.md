@@ -19,8 +19,6 @@ flutter packages get
 flutter run
 ```
 #### Looks
-<table>
   <tr>
       <td><img src="./assets/mocups/Presentation.png"  alt="Image 1"></td>
  </tr>
-</table>
